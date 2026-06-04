@@ -2,7 +2,7 @@
 
 ## Current Conclusion
 - Status: DEPLOYED_WORKERS_DEV / CUSTOM_DOMAIN_BLOCKED_DNS
-- Summary: The site is deployed and smoke-tested on Cloudflare Workers at `https://pngtostl.wanglilong616.workers.dev`. The purchased domain `pngtostl.net` is not yet connected because DNS is still on registrar nameservers and points to a parking IP.
+- Summary: The site is deployed and smoke-tested on Cloudflare Workers at `https://pngtostl.wanglilong616.workers.dev`. A custom-domain binding attempt for `pngtostl.net` and `www.pngtostl.net` failed because the domain is not yet under Cloudflare DNS/routing control.
 
 ## Verified URL
 - `https://pngtostl.wanglilong616.workers.dev`

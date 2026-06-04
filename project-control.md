@@ -50,7 +50,7 @@ Fact source: /root/projects/pngtostl project files
 - Frontend Gate: DONE_LOCAL; lint and build pass locally.
 - SEO GO: DONE_WORKERS_DEV / BLOCKED_CUSTOM_DOMAIN_SUBMISSION; sitemap, robots, canonicals, language alternates, and basic JSON-LD exist and pass on workers.dev, but pngtostl.net custom domain/GSC/Bing/redirect checks are not confirmed.
 - QA GO: PASS_WORKERS_DEV / BLOCKED_CUSTOM_DOMAIN; local routes, API conversion, desktop visual QA, Cloudflare local worker runtime, workers.dev production smoke, lint, and build pass. Custom domain, GSC/Bing, analytics, and mobile screenshot matrix are not verified.
-- Launch Gate: DEPLOYED_WORKERS_DEV / BLOCKED_CUSTOM_DOMAIN; workers.dev production smoke passes, but pngtostl.net DNS is still on registrar nameservers and not routed to Cloudflare Worker.
+- Launch Gate: DEPLOYED_WORKERS_DEV / BLOCKED_CUSTOM_DOMAIN; workers.dev production smoke passes and workers.dev is explicitly enabled in wrangler config. A custom-domain deploy attempt failed because pngtostl.net DNS is still on registrar nameservers and not routed to Cloudflare Worker.
 
 ## Next Automatic Actions
 1. Verify the in-memory STL converter under the target Cloudflare/OpenNext runtime.

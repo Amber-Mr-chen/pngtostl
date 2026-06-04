@@ -52,5 +52,5 @@
   - custom domain, GSC/Bing, analytics, and mobile screenshot matrix remain unverified
 - 11 launch ops: DEPLOYED_WORKERS_DEV / BLOCKED_CUSTOM_DOMAIN
   - workers.dev deployment succeeds and production smoke passes
-  - custom domain pngtostl.net is blocked because DNS is still on registrar nameservers
+  - custom domain pngtostl.net is blocked because DNS is still on registrar nameservers; wrangler custom-domain deploy attempt failed at Cloudflare domains/records API
 - 12 data review: WAITING

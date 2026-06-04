@@ -33,10 +33,14 @@
 
 ## Custom Domain Status
 - Target domain: `pngtostl.net`
+- Attempted action: `wrangler deploy ... --domain pngtostl.net --domain www.pngtostl.net`
+- Result: failed at Cloudflare API `/workers/scripts/pngtostl/domains/records` with 400.
+- Recovery: `workers_dev` and `preview_urls` were explicitly enabled in `wrangler.jsonc`, then `npm run cf:deploy` restored the workers.dev deployment.
 - Current DNS evidence:
   - NS: `dns1.registrar-servers.com`, `dns2.registrar-servers.com`
   - A: `162.255.119.233`
 - Current HTTPS check: failed to connect to `https://pngtostl.net/`.
+- Current workers.dev check: `https://pngtostl.wanglilong616.workers.dev/` returns 200.
 - Conclusion: `pngtostl.net` is not yet managed by Cloudflare and is not routed to the deployed Worker.
 
 ## Required Domain Action
