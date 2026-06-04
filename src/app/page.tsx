@@ -126,11 +126,12 @@ export default function HomePage() {
       </header>
 
       <section className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start xl:gap-10">
-        <div className="relative rounded-[2rem] border border-slate-200 bg-white/85 p-6 shadow-[0_20px_70px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur md:p-10 lg:p-12">
+        <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white/88 p-6 shadow-[0_24px_90px_rgba(15,23,42,0.10)] ring-1 ring-white/70 backdrop-blur md:p-10 lg:p-12">
+          <div className="absolute right-0 top-0 h-28 w-28 -translate-y-1/3 translate-x-1/3 rounded-full bg-sky-200/40 blur-3xl" />
           <div className="inline-flex rounded-full border border-sky-200 bg-sky-50 px-4 py-2 text-sm font-medium text-sky-700">
             PNG to STL converter
           </div>
-          <h1 className="mt-5 max-w-2xl text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+          <h1 className="mt-5 max-w-2xl text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl lg:text-[4.1rem] lg:leading-[0.95]">
             A focused PNG to STL tool, with a real product surface around it.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
@@ -138,18 +139,25 @@ export default function HomePage() {
           </p>
 
           <div className="mt-7 flex flex-wrap gap-3">
-            <a
-              href="#converter"
-              className="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-6 py-3 font-semibold text-white transition hover:bg-slate-800"
-            >
+            <a href="#converter" className="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-6 py-3 font-semibold text-white transition hover:bg-slate-800">
               Start converting
             </a>
-            <a
-              href="#routes"
-              className="inline-flex min-h-12 items-center justify-center rounded-full border border-slate-300 bg-white px-6 py-3 font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
-            >
+            <a href="#routes" className="inline-flex min-h-12 items-center justify-center rounded-full border border-slate-300 bg-white px-6 py-3 font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50">
               Explore routes
             </a>
+          </div>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            {[
+              ["0 cost", "Free v0"],
+              ["No storage", "In-memory output"],
+              ["Inspectable", "Download before print"],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-600">{label}</p>
+                <p className="mt-2 text-sm font-medium text-slate-900">{value}</p>
+              </div>
+            ))}
           </div>
 
           <div className="mt-8 grid gap-3 sm:grid-cols-3">
