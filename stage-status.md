@@ -44,10 +44,13 @@
   - sitemap, robots, canonicals, language alternates, and JSON-LD exist locally
   - live deployment/GSC/Bing/redirect checks are not confirmed
 - 02 PM acceptance: WAITING
-- 09 QA: PASS_LOCAL / BLOCKED_PRODUCTION
+- 09 QA: PASS_WORKERS_DEV / BLOCKED_CUSTOM_DOMAIN
   - local public routes return 200
   - API returns STL for valid PNG and JSON 400 for invalid requests
   - desktop visual QA P1 issues were fixed and rechecked
-  - production runtime, production URL, analytics, and mobile screenshot matrix remain unverified
-- 11 launch ops: BLOCKED_SETUP
+  - Cloudflare local worker runtime and workers.dev production smoke pass
+  - custom domain, GSC/Bing, analytics, and mobile screenshot matrix remain unverified
+- 11 launch ops: DEPLOYED_WORKERS_DEV / BLOCKED_CUSTOM_DOMAIN
+  - workers.dev deployment succeeds and production smoke passes
+  - custom domain pngtostl.net is blocked because DNS is still on registrar nameservers
 - 12 data review: WAITING

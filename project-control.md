@@ -29,15 +29,15 @@ Fact source: /root/projects/pngtostl project files
 - 10 SEO recheck: DONE_LOCAL / BLOCKED_LIVE_SUBMISSION
 - 04 compliance recheck: WAITING
 - 02 PM acceptance: WAITING
-- 09 QA: PASS_LOCAL / BLOCKED_PRODUCTION
-- 11 launch ops: BLOCKED_SETUP
+- 09 QA: PASS_WORKERS_DEV / BLOCKED_CUSTOM_DOMAIN
+- 11 launch ops: DEPLOYED_WORKERS_DEV / BLOCKED_CUSTOM_DOMAIN
 - 12 data review: WAITING
 
 ## Current State
 - done: PRD v0, page matrix v0, copy freeze v0, isolated Next.js project scaffold, core route shell, local frontend lint/build, compliance page update, design/content-fit handoff docs, local STL backend, local QA report
 - running: research/pricing/backend/data contract review
 - waiting: approved design source, production runtime preview, PM gate, launch approval, data review
-- blocked: production deploy and public launch need GitHub/Cloudflare/DNS/GSC confirmation, Cloudflare runtime smoke, approved design source, and launch approval
+- blocked: custom domain pngtostl.net needs Cloudflare/DNS routing; public launch needs GSC/Bing, mobile QA, approved design source, and launch approval
 
 ## Gates
 - Research Gate: NEEDS_REVIEW; competitor evidence recorded, but paid keyword metrics and trend proof are missing.
@@ -48,9 +48,9 @@ Fact source: /root/projects/pngtostl project files
 - Design Source Gate: NEEDS_REVIEW; DESIGN_HANDOFF.md and CONTENT_FIT_MATRIX.md now exist, but no approved Stitch/Figma/high-fidelity design source is recorded.
 - Data Contract Gate: DONE_LOCAL / PASS_LOCAL_WORKER_RUNTIME; /api/convert now returns an in-memory ASCII STL for valid PNG uploads. Local Next.js and local Cloudflare worker runtime smoke both pass. Production deployment smoke is still required.
 - Frontend Gate: DONE_LOCAL; lint and build pass locally.
-- SEO GO: DONE_LOCAL / BLOCKED_LIVE_SUBMISSION; sitemap, robots, canonicals, language alternates, and basic JSON-LD exist locally, but live deployment/GSC/Bing/redirect checks are not confirmed.
-- QA GO: PASS_LOCAL / BLOCKED_PRODUCTION; local routes, API conversion, desktop visual QA, lint, and build pass, but production runtime, production URL, analytics, and mobile screenshot matrix are not verified.
-- Launch Gate: BLOCKED_SETUP until repo, Cloudflare, DNS, analytics, sitemap submission, and approval are confirmed.
+- SEO GO: DONE_WORKERS_DEV / BLOCKED_CUSTOM_DOMAIN_SUBMISSION; sitemap, robots, canonicals, language alternates, and basic JSON-LD exist and pass on workers.dev, but pngtostl.net custom domain/GSC/Bing/redirect checks are not confirmed.
+- QA GO: PASS_WORKERS_DEV / BLOCKED_CUSTOM_DOMAIN; local routes, API conversion, desktop visual QA, Cloudflare local worker runtime, workers.dev production smoke, lint, and build pass. Custom domain, GSC/Bing, analytics, and mobile screenshot matrix are not verified.
+- Launch Gate: DEPLOYED_WORKERS_DEV / BLOCKED_CUSTOM_DOMAIN; workers.dev production smoke passes, but pngtostl.net DNS is still on registrar nameservers and not routed to Cloudflare Worker.
 
 ## Next Automatic Actions
 1. Verify the in-memory STL converter under the target Cloudflare/OpenNext runtime.
