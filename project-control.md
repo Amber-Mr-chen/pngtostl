@@ -1,59 +1,58 @@
-# Project Control Board
+# PNGtoSTL Rebuild Control Board
 
-Project: pngtostl
-Domain: pngtostl.net
-Market: US / English primary, Chinese secondary
-Mode: automation_factory
-Status: RUNNING
-Fact source: /root/projects/pngtostl project files
+项目：pngtostl
+域名：pngtostl.net
+目标市场：US / English
+当前模式：manual-confirmed ShipSolo 13-step rebuild
+当前状态：STEP_01_ORCHESTRATOR_READY_FOR_OWNER_CONFIRMATION
+重做方式：option 2 - 在当前仓库内推倒重写，旧页面逐步替换
+事实源：project-control.md + stage-dag.md + stage-status.md + blocked-log.md
 
-## Student Handles
-- [x] Domain selected: pngtostl.net
-- [ ] DNS / Cloudflare access confirmed
-- [ ] GitHub repository confirmed
-- [ ] Cloudflare deploy permission confirmed
-- [ ] GSC / Bing access confirmed
-- [ ] Production deploy approved
-- [ ] Public promotion approved
+## Owner 已确认
+- 当前项目整体推倒重做。
+- 使用 ShipSolo 全套 13 个 skill / 13 个步骤。
+- 每一步必须先交付阶段产物，等 owner 确认后才能进入下一步。
+- 允许在当前仓库内逐步替换旧页面。
 
-## Automatic Pipeline
-- 00 setup / domain / repo / permissions: RUNNING
-- 01 research: NEEDS_REVIEW
-- 02 PRD / route contract: DONE
-- 03 pricing: NEEDS_REVIEW
-- 04 compliance: DONE_LOCAL
-- 05 SEO-copy freeze: DONE
-- 06 design source + content-fit matrix: NEEDS_REVIEW
-- 08 backend / data contract: DONE_LOCAL / PASS_LOCAL_WORKER_RUNTIME
-- 07 frontend implementation: DONE_LOCAL
-- 10 SEO recheck: DONE_LOCAL / BLOCKED_LIVE_SUBMISSION
-- 04 compliance recheck: WAITING
-- 02 PM acceptance: WAITING
-- 09 QA: PASS_CUSTOM_DOMAIN / NEEDS_MOBILE_MATRIX
-- 11 launch ops: DEPLOYED_CUSTOM_DOMAIN_GO
-- 12 data review: WAITING
+## 当前仓库状态
+- 工作目录：/root/projects/pngtostl
+- 分支：main
+- 现有站点版本：已从工作区清场，作为 git 历史中的旧版本存在，不再作为新方案设计依据。
+- 已删除旧站实现范围：`src/`、`.next/`、`.open-next/`、`.wrangler/`、上一轮 PRD/页面矩阵/文案冻结/交接等旧内容文档。
+- 当前只保留工程配置、依赖配置、部署配置、git 仓库和 13 步流程事实源文件。
+- 处理原则：清场后不进入 Step 2，等待 owner 明确确认。
 
-## Current State
-- done: PRD v0, page matrix v0, copy freeze v0, isolated Next.js project scaffold, core route shell, local frontend lint/build, compliance page update, design/content-fit handoff docs, local STL backend, local QA report
-- running: research/pricing/backend/data contract review
-- waiting: approved design source, production runtime preview, PM gate, launch approval, data review
-- blocked: public launch still needs GSC/Bing submission, mobile QA, approved design source, and launch approval
+## 13-step 流程
+1. Orchestrator / Preflight - site-orchestrator-playbook
+2. Keyword research - keyword-research-agent
+3. Product definition / PRD - product-definition-prd
+4. Pricing calibration - site-pricing-calibration
+5. Compliance pipeline - student-site-compliance-pipeline
+6. SEO copy freeze - site-copywriting-student
+7. Design source - site-design-student
+8. Backend/data contract - backend-auto-site-cloudflare-workers
+9. Frontend implementation - frontend-site-automation
+10. SEO launch workflow - seo-launch-workflow
+11. QA acceptance - student-site-qa-acceptance
+12. Ops/growth launch - site-ops-growth-launch
+13. Data review/iteration - site-data-review-iteration
 
-## Gates
-- Research Gate: NEEDS_REVIEW; competitor evidence recorded, but paid keyword metrics and trend proof are missing.
-- PRD / Route Contract Gate: DONE for v0; routes are listed in PRD.md and PAGE_MATRIX.md.
-- Pricing Gate: NEEDS_REVIEW; free v0 recommended, real engine cost unknown.
-- Compliance Gate: DONE_LOCAL / NEEDS_RUNTIME_RECHECK; legal pages now match simple in-memory STL generation and no persistent storage, but Cloudflare runtime behavior and any future storage/analytics/payment changes require recheck.
-- SEO-Copy Freeze Gate: DONE for v0; copy is frozen in COPY_FREEZE.md.
-- Design Source Gate: NEEDS_REVIEW; DESIGN_HANDOFF.md and CONTENT_FIT_MATRIX.md now exist, but no approved Stitch/Figma/high-fidelity design source is recorded.
-- Data Contract Gate: DONE_LOCAL / PASS_LOCAL_WORKER_RUNTIME; /api/convert now returns an in-memory ASCII STL for valid PNG uploads. Local Next.js and local Cloudflare worker runtime smoke both pass. Production deployment smoke is still required.
-- Frontend Gate: DONE_LOCAL; lint and build pass locally.
-- SEO GO: DONE_CUSTOM_DOMAIN / BLOCKED_GSC_BING_SUBMISSION; sitemap, robots, canonicals, language alternates, and basic JSON-LD exist and pass on `pngtostl.net`; GSC/Bing submission and redirect preference are not confirmed.
-- QA GO: PASS_CUSTOM_DOMAIN / NEEDS_MOBILE_MATRIX; local routes, API conversion, desktop visual QA, Cloudflare local worker runtime, workers.dev production smoke, custom-domain smoke, lint, and build pass. GSC/Bing, analytics, and mobile screenshot matrix are not verified.
-- Launch Gate: DEPLOYED_CUSTOM_DOMAIN_GO; `pngtostl.net`, `www.pngtostl.net`, and workers.dev production smoke pass.
+## 硬闸门
+- 每一步最后必须输出：DONE / BLOCKED / NEEDS_REVIEW。
+- 每一步 DONE 后必须等 owner 明确回复“确认 / 继续 / 通过”才进入下一步。
+- 设计、前端、部署、公开发布不能跳过上游 PRD、文案冻结、合规和 QA。
+- 任何线上部署、公开发布、支付、账号、真实用户数据动作前必须单独确认。
 
-## Next Automatic Actions
-1. Verify the in-memory STL converter under the target Cloudflare/OpenNext runtime.
-2. Add/approve design source before high-confidence frontend GO.
-3. Run production/preview browser-mobile QA for PNG upload, STL download, and error states.
-4. Only after runtime/design/compliance gates are clean, continue launch prep.
+## 当前步骤：Step 1 / 13
+阶段：Orchestrator / Preflight
+Skill：site-orchestrator-playbook
+状态：DONE_PENDING_OWNER_CONFIRMATION
+本阶段目的：建立总控事实源、13 步顺序、确认重做边界和阻塞项。
+
+## 当前已知阻塞/待确认
+- 是否接受 Step 1 的 13 步顺序。
+- 是否在 Step 2 继续以 `png to stl` / `image to stl` / `lithophane` / `3d print image` 作为种子词，还是重新给种子词。
+- 旧未提交改动是否保留到实现阶段统一清理，还是现在先丢弃。默认：先保留，不动。
+
+## 下一步
+等待 owner 确认 Step 1。确认后进入 Step 2：keyword-research-agent。

@@ -1,29 +1,24 @@
-# Blocked Log
+# PNGtoSTL Rebuild Blocked Log
 
-## BLOCK-001: Launch permissions not confirmed
-- type: setup_required
-- owner: student / project owner
-- blocking stages: 11 launch ops, live SEO submission, analytics verification
-- needed: GitHub repository, Cloudflare project/DNS access, GSC/Bing access, production deploy approval
-- unlock reply: GitHub/Cloudflare/DNS/GSC ready and production deploy approved
+## Active
 
-## BLOCK-002: Target runtime smoke not verified
-- type: product/backend
-- owner: backend/data stage
-- blocking stages: production deploy, full QA GO, public launch claims
-- current fallback: /api/convert returns simple in-memory ASCII STL locally; target runtime smoke is still required
-- unlock: verify PNG-to-STL generation under the target Cloudflare/OpenNext runtime and browser download flow
+### BLK-001 - Awaiting owner confirmation for Step 1
+- Stage: 01 orchestrator / preflight
+- Status: pending owner confirmation
+- Need: confirm 13-step order and rebuild boundary.
+- Owner action: reply `确认 Step 1，继续 Step 2` or provide corrections.
 
-## BLOCK-003: Research evidence missing
-- type: stage evidence
-- owner: research stage
-- blocking stages: final PRD DONE, pricing/compliance decisions, launch confidence
-- current fallback: PRD v0 uses seed keyword/domain logic
-- unlock: record SERP, competitor, trend, and risk evidence in research-opportunity-report.md
+### BLK-002 - Step 2 seed keyword choice
+- Stage: 02 keyword research
+- Status: pending owner input or default confirmation
+- Default seeds: `png to stl`, `image to stl`, `lithophane`, `3d print image`, `picture to stl`.
+- Owner action: accept defaults or provide replacement seeds.
 
-## BLOCK-004: Design source missing
-- type: design gate
-- owner: design stage
-- blocking stages: high-confidence frontend/design GO
-- current fallback: existing frontend scaffold only
-- unlock: approved design source or explicit owner approval to use current scaffold as v0 design
+### BLK-003 - Old site implementation cleared before Step 2
+- Stage: before keyword research
+- Status: resolved locally, pending owner review
+- Cleared scope: `src/`, `.next/`, `.open-next`, `.wrangler`, previous PRD/page matrix/copy freeze/handoff files.
+- Current rule: do not enter Step 2 until owner confirms cleanup and Step 1.
+
+## Resolved
+- None yet.
