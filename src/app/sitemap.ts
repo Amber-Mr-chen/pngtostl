@@ -19,6 +19,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/stl-size-estimator",
     "/print-settings-checker",
     "/image-contrast-guide",
+    "/lithophane-size-calculator",
+    "/image-threshold-tester",
+    "/print-preview-calculator",
     "/privacy",
     "/terms",
   ];
