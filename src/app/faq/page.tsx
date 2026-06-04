@@ -1,51 +1,93 @@
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "FAQ",
-  description: "Frequently asked questions about PNG to STL conversion, file handling, and current launch status.",
-  alternates: {
-    canonical: "/faq",
-  },
-};
+import Link from "next/link";
+import { useState } from "react";
 
 const faqs = [
-  ["What PNG works best?", "High-contrast images with clean edges usually work better for image-to-3D conversion than photos with many small details."],
-  ["Does the current v0 generate real STL files?", "Yes. The current v0 generates a simple in-memory relief STL from PNG luminance and alpha. The output is not CAD-grade and should be inspected before printing."],
-  ["Will you support other image formats?", "The planned expansion path is Image to STL. JPG, WEBP, and other formats should wait until the PNG workflow is reliable."],
-  ["Can I print the STL directly?", "Even after real STL generation is connected, you should inspect the output in a slicer or 3D tool before printing. Image-based geometry may need scaling, cleanup, or thickness adjustments."],
-  ["Are uploaded files stored?", "The current v0 does not intentionally persist uploaded PNG files or generated STL files in application storage. If storage is added later, the Privacy Policy must be updated before launch."],
-];
+  {
+    title: "What PNG works best?",
+    body: "High-contrast images with clean edges usually work better than photos with many small details.",
+  },
+  {
+    title: "Does the current v0 generate real STL files?",
+    body: "Yes. The current v0 generates a simple in-memory relief STL from PNG luminance and alpha. The output is not CAD-grade and should be inspected before printing.",
+  },
+  {
+    title: "Will you support other image formats?",
+    body: "The planned expansion path is Image to STL. JPG, WEBP, and other formats should wait until the PNG workflow is reliable.",
+  },
+  {
+    title: "Can I print the STL directly?",
+    body: "Inspect the output in a slicer or 3D tool before printing. Image-based geometry may need scaling, cleanup, or thickness adjustments.",
+  },
+  {
+    title: "Are uploaded files stored?",
+    body: "The current v0 does not intentionally persist uploaded PNG files or generated STL files in application storage.",
+  },
+] as const;
 
 export default function FaqPage() {
+  const [active, setActive] = useState(0);
+
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: faqs.map(([title, body]) => ({
+    mainEntity: faqs.map((item) => ({
       "@type": "Question",
-      name: title,
+      name: item.title,
       acceptedAnswer: {
         "@type": "Answer",
-        text: body,
+        text: item.body,
       },
     })),
   };
 
   return (
-    <main className="mx-auto min-h-screen max-w-4xl px-6 py-12 text-slate-900">
-      <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-        type="application/ld+json"
-      />
-      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">PNG to STL help</p>
-      <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">FAQ</h1>
-      <div className="mt-10 grid gap-4">
-        {faqs.map(([title, body]) => (
-          <section key={title} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-xl font-semibold">{title}</h2>
-            <p className="mt-2 leading-7 text-slate-600">{body}</p>
-          </section>
-        ))}
-      </div>
+    <main className="mx-auto min-h-screen max-w-5xl px-4 py-8 text-slate-900 sm:px-6 lg:px-8 lg:py-12">
+      <script dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} type="application/ld+json" />
+
+      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-10">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">Help center</p>
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight md:text-6xl">FAQ</h1>
+        <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+          Quick answers, action shortcuts, and a way to jump back to the tool instead of reading a static help page.
+        </p>
+
+        <div className="mt-8 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-sky-600">Quick actions</p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link href="/#converter" className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white">
+                Open converter
+              </Link>
+              <Link href="/how-it-works" className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700">
+                How it works
+              </Link>
+              <Link href="/contact" className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700">
+                Contact
+              </Link>
+            </div>
+            <div className="mt-5 grid gap-2">
+              {faqs.map((item, index) => (
+                <button
+                  key={item.title}
+                  className={`rounded-2xl border px-4 py-3 text-left text-sm transition ${active === index ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"}`}
+                  type="button"
+                  onClick={() => setActive(index)}
+                >
+                  {item.title}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <article className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-sky-600">Answer</p>
+            <h2 className="mt-2 text-2xl font-semibold text-slate-950">{faqs[active].title}</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-600">{faqs[active].body}</p>
+          </article>
+        </div>
+      </section>
     </main>
   );
 }

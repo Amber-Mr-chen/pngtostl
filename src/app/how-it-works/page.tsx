@@ -1,52 +1,76 @@
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "How it works",
-  description: "Learn how PNG to STL conversion is planned to work and what kind of PNG images perform best.",
-  alternates: {
-    canonical: "/how-it-works",
-  },
-};
+import { useMemo, useState } from "react";
 
 const steps = [
-  ["Upload", "Choose a PNG image and review the browser preview before sending it to a conversion endpoint."],
-  ["Process", "A real conversion engine will need to turn image contours, contrast, or relief settings into a 3D mesh."],
-  ["Review", "Generated geometry should be inspected before printing because image-based conversion can produce rough or simplified shapes."],
-  ["Export", "After the production engine is connected, the target output is a downloadable STL file for your 3D printing workflow."],
-];
+  {
+    title: "Upload",
+    body: "Choose a PNG image and review the browser preview before sending it to conversion.",
+  },
+  {
+    title: "Process",
+    body: "The current engine generates a simple in-memory STL relief from PNG luminance and alpha.",
+  },
+  {
+    title: "Review",
+    body: "Inspect the STL before printing, because image-based geometry can be rough or simplified.",
+  },
+  {
+    title: "Export",
+    body: "Download the STL file directly from the conversion flow and inspect it in a slicer.",
+  },
+] as const;
 
 const tips = [
-  "Use high-contrast images with clear edges.",
-  "Avoid tiny details that may become fragile in a printed model.",
-  "Check scale, thickness, and slicer settings before printing.",
-  "The current v0 generates a simple in-memory relief STL. It is useful for testing the workflow, but you should inspect the model before printing.",
-];
+  "Use high-contrast images with clean edges.",
+  "Avoid tiny details that may disappear in print.",
+  "Keep the subject centered so the relief reads clearly.",
+  "Check thickness and scale before printing.",
+] as const;
 
 export default function HowItWorksPage() {
+  const [activeTip, setActiveTip] = useState(0);
+  const currentTip = useMemo(() => tips[activeTip], [activeTip]);
+
   return (
-    <main className="mx-auto min-h-screen max-w-4xl px-6 py-12 text-slate-900">
-      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">PNG to STL workflow</p>
-      <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">How it works</h1>
-      <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
-        PNG to STL is designed around a simple workflow: choose a PNG, process the image into a 3D relief, review the downloaded STL, and inspect it before printing. The current v0 generates a simple in-memory STL and does not store uploads or output files.
-      </p>
+    <main className="mx-auto min-h-screen max-w-5xl px-4 py-8 text-slate-900 sm:px-6 lg:px-8 lg:py-12">
+      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-10">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">Workflow helper</p>
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight md:text-6xl">How it works</h1>
+        <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+          This page explains the current PNG to STL flow and gives users a few quick choices instead of a static wall of text.
+        </p>
 
-      <div className="mt-10 grid gap-4 md:grid-cols-2">
-        {steps.map(([title, body]) => (
-          <section key={title} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-xl font-semibold">{title}</h2>
-            <p className="mt-2 leading-7 text-slate-600">{body}</p>
-          </section>
-        ))}
-      </div>
+        <div className="mt-8 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-sky-600">Quick tips</p>
+            <div className="mt-4 grid gap-2">
+              {tips.map((tip, index) => (
+                <button
+                  key={tip}
+                  className={`rounded-2xl border px-4 py-3 text-left text-sm transition ${activeTip === index ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"}`}
+                  type="button"
+                  onClick={() => setActiveTip(index)}
+                >
+                  {tip}
+                </button>
+              ))}
+            </div>
+            <div className="mt-4 rounded-2xl border border-sky-200 bg-sky-50 p-4 text-sm leading-6 text-sky-950">
+              {currentTip}
+            </div>
+          </div>
 
-      <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="text-xl font-semibold">What works best?</h2>
-        <ul className="mt-3 space-y-2 leading-7 text-slate-600">
-          {tips.map((tip) => (
-            <li key={tip}>- {tip}</li>
-          ))}
-        </ul>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {steps.map((step, index) => (
+              <article key={step.title} className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-600">Step {index + 1}</p>
+                <h2 className="mt-2 text-2xl font-semibold text-slate-950">{step.title}</h2>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{step.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
     </main>
   );

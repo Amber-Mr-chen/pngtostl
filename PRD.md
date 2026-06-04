@@ -1,22 +1,22 @@
-# PNG to STL PRD v0
+# PNG to STL PRD v1
 
 ## 1. Product Summary
 
 - Product: PNG to STL converter
 - Domain: pngtostl.net
-- Site type: utility-first tool site
+- Site type: utility-first tool suite
 - Languages: English + Chinese
-- Core promise: upload a PNG image, preview the workflow, and connect a real STL output path before public launch.
+- Core promise: upload a PNG image, preview the workflow, generate a simple STL relief, and provide adjacent support tools instead of a single thin demo page.
 
 ## 2. Positioning
 
 ### One-line positioning
-PNG to STL is a lightweight conversion tool for makers and hobbyists who want to turn PNG images into STL files quickly.
+PNG to STL is a lightweight conversion tool for makers and hobbyists who want to turn PNG images into STL files quickly, with supporting pages and helper tools that make the site feel complete.
 
 ### Primary angle
 - First release focuses on PNG -> STL
 - Brand remains flexible enough to expand into Image -> STL later
-- Site stays tool-first, not content-first
+- Site stays tool-first, but tool-first does not mean single-page
 
 ## 3. Target Users
 
@@ -28,6 +28,7 @@ PNG to STL is a lightweight conversion tool for makers and hobbyists who want to
 ### Secondary ICP
 - designers who need a fast image-to-3D workflow
 - users searching for a simple online converter instead of CAD software
+- users who want to inspect related workflow pages, not just upload a file
 
 ## 4. User Jobs
 
@@ -36,6 +37,7 @@ PNG to STL is a lightweight conversion tool for makers and hobbyists who want to
 3. Generate an STL-ready result.
 4. Download the output.
 5. Understand basic limits, file handling, and usage rules.
+6. Explore adjacent tools and support pages without leaving the site.
 
 ## 5. Scope
 
@@ -52,6 +54,7 @@ PNG to STL is a lightweight conversion tool for makers and hobbyists who want to
 - Terms page
 - Contact page
 - conversion API contract endpoint
+- interactive helper pages for image inspection, workflow review, and support discovery
 
 ### Out of scope for v1
 - account system
@@ -68,12 +71,14 @@ PNG to STL is a lightweight conversion tool for makers and hobbyists who want to
 - `/` main English landing/tool page
 - `/zh` Chinese landing/tool page
 - `/image-to-stl` expansion page
-- `/how-it-works` explanation page
-- `/faq` FAQ page
+- `/how-it-works` interactive workflow page
+- `/faq` interactive FAQ page
 - `/privacy` privacy page
 - `/terms` terms page
-- `/contact` contact page
-- `/api/convert` conversion contract endpoint
+- `/contact` interactive support page
+- `/image-checker` image inspection helper
+- `/palette-to-relief` helper for future relief exploration
+- `/api/convert` conversion API endpoint
 
 ### SEO focus
 - Primary keyword: PNG to STL
@@ -87,15 +92,18 @@ PNG to STL is a lightweight conversion tool for makers and hobbyists who want to
 - explain PNG -> STL clearly
 - keep the interaction simple
 - leave room for broader image-based workflows later
+- surface the rest of the site as real tool surfaces, not filler pages
 
 ### Page responsibilities
 - `/`: conversion entry point and primary conversion intent
 - `/image-to-stl`: broader expansion path for future formats
-- `/how-it-works`: explain the workflow and what works best
-- `/faq`: answer conversion, file, and output questions
+- `/how-it-works`: interactive workflow explainer and image tips
+- `/faq`: interactive FAQs and action shortcuts
 - `/privacy`: clarify file handling
 - `/terms`: clarify usage and disclaimer
-- `/contact`: provide support route
+- `/contact`: provide support route and self-serve helpers
+- `/image-checker`: file/format/size sanity checks before upload
+- `/palette-to-relief`: preview contrast and relief ideas for future use
 
 ## 8. Functional Requirements
 
@@ -118,6 +126,12 @@ PNG to STL is a lightweight conversion tool for makers and hobbyists who want to
 - upload before generate
 - backend-not-connected state
 
+### Adjacent utility interactions
+- image inspection helper should let users preview and validate a chosen PNG
+- workflow page should expose tip toggles and CTA shortcuts
+- FAQ page should let users jump to conversion, policy, and support actions
+- contact page should offer self-serve options before showing support copy
+
 ## 9. Non-Goals
 
 - no full 3D modeling studio
@@ -134,6 +148,7 @@ PNG to STL is a lightweight conversion tool for makers and hobbyists who want to
 - mobile experience must be usable
 - page structure must be indexable
 - English and Chinese copy must not conflict
+- adjacent pages should feel usable, not decorative
 - `image-to-stl` should expand the brand without diluting the main PNG intent
 
 ## 11. Metrics for v1
@@ -144,6 +159,7 @@ PNG to STL is a lightweight conversion tool for makers and hobbyists who want to
 - conversion CTA click rate
 - SEO indexability of core pages
 - bounce rate on homepage
+- click-through to adjacent helper pages
 
 ## 12. Risks
 
@@ -151,6 +167,7 @@ PNG to STL is a lightweight conversion tool for makers and hobbyists who want to
 - conversion backend is not connected yet
 - unclear file handling rules can hurt trust
 - if the site tries to do too many formats too early, the first release will lose focus
+- if supporting pages stay static, the site will still feel thin even with more routes
 
 ## 13. Delivery Plan
 
@@ -171,7 +188,7 @@ PNG to STL is a lightweight conversion tool for makers and hobbyists who want to
 
 ## 14. Current status
 
-- PRD version: v0
-- current build status: frontend scaffold complete
-- backend status: contract only, not connected to real STL generation yet
-- next required step: connect conversion engine or service
+- PRD version: v1
+- current build status: frontend scaffold and early interactive helpers in progress
+- backend status: simple in-memory STL generation is live
+- next required step: convert supporting pages from static explanation into real helper tools

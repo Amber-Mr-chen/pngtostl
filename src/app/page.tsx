@@ -37,6 +37,18 @@ const routeCards = [
     body: "A cleaner umbrella for future JPG, WEBP, and mixed image workflows.",
   },
   {
+    href: "/image-checker",
+    label: "Image checker",
+    title: "Preflight validation",
+    body: "Check format, preview readiness, and file size before upload.",
+  },
+  {
+    href: "/palette-to-relief",
+    label: "Palette to relief",
+    title: "Relief exploration",
+    body: "Experiment with contrast-driven shape ideas before conversion.",
+  },
+  {
     href: "/how-it-works",
     label: "How it works",
     title: "Workflow explanation",
@@ -47,12 +59,6 @@ const routeCards = [
     label: "FAQ",
     title: "Common questions",
     body: "Clarify image quality, file handling, and what the current release does today.",
-  },
-  {
-    href: "/zh",
-    label: "中文",
-    title: "Language path",
-    body: "A localized route for Chinese users keeps the brand more than one-dimensional.",
   },
   {
     href: "/contact",

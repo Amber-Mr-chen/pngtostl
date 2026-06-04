@@ -8,6 +8,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: baseUrl, lastModified: now },
     { url: `${baseUrl}/zh`, lastModified: now },
     { url: `${baseUrl}/image-to-stl`, lastModified: now },
+    { url: `${baseUrl}/image-checker`, lastModified: now },
+    { url: `${baseUrl}/palette-to-relief`, lastModified: now },
     { url: `${baseUrl}/how-it-works`, lastModified: now },
     { url: `${baseUrl}/faq`, lastModified: now },
     { url: `${baseUrl}/privacy`, lastModified: now },

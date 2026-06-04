@@ -17,7 +17,7 @@ Define the routing, purpose, SEO intent, and content responsibilities for each p
   - hero
   - upload/preview/convert UI
   - feature highlights
-  - how it works summary
+  - helper route shortcuts
   - FAQ summary
 - Indexability: index
 
@@ -47,12 +47,13 @@ Define the routing, purpose, SEO intent, and content responsibilities for each p
   - positioning explanation
   - why the page exists
   - future format support note
+  - route shortcuts to helper tools
 - Indexability: index
 
 ### `/how-it-works`
 - Purpose: explain the workflow and expectations
 - Language: English
-- Intent: informational support
+- Intent: informational support + interactive helper
 - Primary keyword: how PNG to STL works
 - H1: How it works
 - CTA: Start converting
@@ -61,12 +62,13 @@ Define the routing, purpose, SEO intent, and content responsibilities for each p
   - process
   - preview
   - planned export
+  - tips or interaction toggles
 - Indexability: index
 
 ### `/faq`
 - Purpose: answer common conversion questions
 - Language: English
-- Intent: informational support
+- Intent: informational support + interactive helper
 - Primary keyword: PNG to STL FAQ
 - H1: FAQ
 - CTA: Start converting
@@ -74,6 +76,7 @@ Define the routing, purpose, SEO intent, and content responsibilities for each p
   - file type questions
   - printing questions
   - support scope questions
+  - quick action buttons or jump links
 - Indexability: index
 
 ### `/privacy`
@@ -101,15 +104,40 @@ Define the routing, purpose, SEO intent, and content responsibilities for each p
 ### `/contact`
 - Purpose: support and feedback entry
 - Language: English
-- Intent: support
+- Intent: support + self-serve routing
 - H1: Contact
 - Required blocks:
   - support route
   - feedback route
+  - self-serve shortcuts
+- Indexability: index
+
+### `/image-checker`
+- Purpose: file sanity checker before upload
+- Language: English
+- Intent: utility support
+- H1: Image checker
+- CTA: Upload PNG
+- Required blocks:
+  - file preview
+  - type/size validation
+  - readiness status
+- Indexability: index
+
+### `/palette-to-relief`
+- Purpose: explore contrast and relief ideas for future conversions
+- Language: English
+- Intent: utility support + experimentation
+- H1: Palette to relief
+- CTA: Generate preview
+- Required blocks:
+  - palette input or sample cards
+  - contrast preview
+  - relief guidance
 - Indexability: index
 
 ### `/api/convert`
-- Purpose: conversion contract endpoint
+- Purpose: conversion endpoint
 - Type: API route
 - Required behavior:
   - accept multipart form data
@@ -121,6 +149,7 @@ Define the routing, purpose, SEO intent, and content responsibilities for each p
 - Avoid making the site feel like a generic multi-tool platform in v1
 - Keep `PNG to STL` as the dominant homepage intent
 - Use `Image to STL` as a controlled expansion path, not a competing homepage theme
+- Interactive helper pages are allowed when they support the main intent and provide real user value
 - Chinese page should not cannibalize the English homepage intent; it is a separate language entry point
 
 ## Dependency Notes
