@@ -3,7 +3,7 @@
 ## Status
 - Project: pngtostl.net
 - Date: 2026-06-04
-- Result: DEPLOYED_WORKERS_DEV / CUSTOM_DOMAIN_BLOCKED_DNS
+- Result: DEPLOYED_CUSTOM_DOMAIN_GO
 
 ## Source Control
 - GitHub repository: https://github.com/Amber-Mr-chen/pngtostl
@@ -32,34 +32,28 @@
 - STL first line: `solid pngtostl_relief`
 
 ## Custom Domain Status
-- Target domain: `pngtostl.net`
-- Attempted action: `wrangler deploy ... --domain pngtostl.net --domain www.pngtostl.net`
-- Result: failed at Cloudflare API `/workers/scripts/pngtostl/domains/records` with 400.
-- Recovery: `workers_dev` and `preview_urls` were explicitly enabled in `wrangler.jsonc`, then `npm run cf:deploy` restored the workers.dev deployment.
+- Target domains: `pngtostl.net`, `www.pngtostl.net`
+- Result: both domains are deployed as Worker custom domains.
 - Current DNS evidence:
-  - NS: `dns1.registrar-servers.com`, `dns2.registrar-servers.com`
-  - A: `162.255.119.233`
-- Current HTTPS check: failed to connect to `https://pngtostl.net/`.
-- Current workers.dev check: `https://pngtostl.wanglilong616.workers.dev/` returns 200.
-- Conclusion: `pngtostl.net` is not yet managed by Cloudflare and is not routed to the deployed Worker.
-
-## Required Domain Action
-Choose one:
-1. Move `pngtostl.net` DNS to Cloudflare nameservers, then attach the Worker as a custom domain.
-2. Keep current registrar DNS and add the records/routes required by Cloudflare after the zone is created.
+  - NS: `huxley.ns.cloudflare.com`, `luciana.ns.cloudflare.com`
+  - Authoritative A for root: Cloudflare proxy IPs
+  - Authoritative A for www: Cloudflare proxy IPs
+- Production checks:
+  - `https://pngtostl.net/`: 200
+  - `https://www.pngtostl.net/`: 200
+  - `https://pngtostl.net/sitemap.xml`: 200
+  - `https://www.pngtostl.net/sitemap.xml`: 200
+  - `POST /api/convert` on both domains: 200, `model/stl`, triangle count `320`
+- Conclusion: custom domain launch is complete.
 
 ## Remaining Launch Tasks
-- Add `pngtostl.net` to Cloudflare zone or move nameservers.
-- Attach custom domain to Worker.
-- Verify `https://pngtostl.net/` returns 200.
-- Verify `http://pngtostl.net` redirects to HTTPS.
-- Verify `www.pngtostl.net` redirects or canonicalizes to the chosen host.
-- Submit `https://pngtostl.net/sitemap.xml` to GSC and Bing after domain works.
+- Submit `https://pngtostl.net/sitemap.xml` to GSC and Bing.
 - Run mobile screenshot matrix on production domain.
+- Decide whether `www.pngtostl.net` should remain directly accessible or redirect to root.
 
 ## Dependency Audit
 - `npm audit --omit=dev` reports a moderate PostCSS advisory through Next.
 - `npm audit fix --force` would downgrade/install `next@9.3.3`, so it was not run.
 - Recommended action: monitor Next patched release and upgrade without force downgrade.
 
-[BLOCKED_CUSTOM_DOMAIN]
+[DONE_CUSTOM_DOMAIN_GO]
