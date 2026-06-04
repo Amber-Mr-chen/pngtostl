@@ -15,6 +15,7 @@ export type ConverterCopy = {
   outputReady: string;
   outputErrorTitle: string;
   outputErrorHint: string;
+  secondaryLabel: string;
   stats: {
     file: string;
     format: string;
@@ -35,6 +36,7 @@ const DEFAULT_COPY: ConverterCopy = {
   outputReady: "Ready to connect to /api/convert",
   outputErrorTitle: "Upload requirements",
   outputErrorHint: "PNG only, under the size limit, with a valid image MIME type.",
+  secondaryLabel: "Simple workflow",
   stats: {
     file: "No file selected",
     format: "PNG only for first release",
@@ -163,49 +165,52 @@ export function ConverterDemo({ copy = DEFAULT_COPY }: { copy?: ConverterCopy })
   }
 
   return (
-    <section id="converter" className="rounded-3xl border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50">
-      <div className="mb-4 flex items-start justify-between gap-4">
+    <section id="converter" className="rounded-[2rem] border border-slate-200 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)] sm:p-5">
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">{copy.title}</p>
-          <p className="mt-2 text-sm text-slate-600">{copy.subtitle}</p>
+          <p className="mt-2 max-w-lg text-sm leading-6 text-slate-600">{copy.subtitle}</p>
         </div>
-        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">PNG input</span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">PNG input</span>
+          <span className="rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700">{copy.secondaryLabel}</span>
+        </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-2xl border-2 border-dashed border-slate-300 p-6">
-          <label className="block cursor-pointer text-center">
+      <div className="mt-5 grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+        <div className="rounded-[1.5rem] border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4 sm:p-5">
+          <label className="block cursor-pointer text-left">
             <input
               accept="image/png"
               className="sr-only"
               type="file"
               onChange={onFileChange}
             />
-            <span className="inline-flex rounded-full bg-slate-900 px-5 py-3 font-medium text-white">
+            <span className="inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-5 py-3 font-medium text-white transition hover:bg-slate-800">
               {copy.uploadLabel}
             </span>
-            <p className="mt-4 text-sm text-slate-500">{fileName}</p>
-            <p className="mt-2 text-xs text-slate-400">{fileSize}</p>
+            <p className="mt-4 text-sm font-medium text-slate-800">{fileName}</p>
+            <p className="mt-1 text-xs text-slate-500">{fileSize}</p>
           </label>
 
-          <div className="mt-6 rounded-2xl bg-slate-50 p-4">
+          <div className="mt-5 rounded-[1.25rem] border border-slate-200 bg-white p-4">
             <p className="text-sm font-medium text-slate-700">{copy.previewLabel}</p>
-            <div className="mt-3 flex min-h-52 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white">
+            <div className="mt-3 flex min-h-48 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 px-4 py-6">
               {previewUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img alt="Selected PNG preview" className="max-h-52 max-w-full object-contain" src={previewUrl} />
+                <img alt="Selected PNG preview" className="max-h-48 max-w-full object-contain" src={previewUrl} />
               ) : (
-                <p className="max-w-xs text-center text-sm text-slate-400">{previewState}</p>
+                <p className="max-w-xs text-center text-sm leading-6 text-slate-400">{previewState}</p>
               )}
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+        <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 sm:p-5">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">{copy.outputTitle}</p>
-          <p className="mt-2 text-sm text-slate-600">{copy.outputHint}</p>
+          <p className="mt-2 text-sm leading-6 text-slate-600">{copy.outputHint}</p>
 
-          <div className="mt-5 space-y-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+          <div className="mt-5 space-y-3 rounded-2xl border border-slate-200 bg-white p-4">
             <div className="flex items-center justify-between gap-4 text-sm">
               <span className="text-slate-500">File</span>
               <span className="font-medium text-slate-800">{fileName}</span>
@@ -225,7 +230,7 @@ export function ConverterDemo({ copy = DEFAULT_COPY }: { copy?: ConverterCopy })
           </div>
 
           <button
-            className="mt-5 w-full rounded-full bg-sky-500 px-5 py-3 font-medium text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+            className="mt-5 w-full rounded-full bg-sky-500 px-5 py-3 font-medium text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:bg-slate-300"
             disabled={!previewUrl || Boolean(errorMessage) || isConverting}
             onClick={onGenerate}
             type="button"
@@ -233,9 +238,9 @@ export function ConverterDemo({ copy = DEFAULT_COPY }: { copy?: ConverterCopy })
             {isConverting ? "Converting..." : copy.primaryAction}
           </button>
 
-          <div className="mt-4 rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+          <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4">
             <p className="text-sm font-semibold text-slate-700">{copy.outputErrorTitle}</p>
-            <p className="mt-2 text-sm text-slate-600">{copy.outputErrorHint}</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{copy.outputErrorHint}</p>
             {errorMessage ? <p className="mt-3 text-sm font-medium text-rose-600">{errorMessage}</p> : <p className="mt-3 text-sm font-medium text-emerald-600">{copy.outputReady}</p>}
           </div>
         </div>
