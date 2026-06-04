@@ -96,22 +96,6 @@ export default function HomePage() {
       <div className="absolute inset-x-0 top-0 -z-10 h-[38rem] bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.22),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(15,23,42,0.72),_transparent_24%),linear-gradient(180deg,rgba(2,6,23,0.98),rgba(15,23,42,0.95),rgba(241,245,249,0.15))]" />
       <div className="absolute inset-x-0 top-[32rem] -z-10 h-80 bg-[linear-gradient(180deg,rgba(15,23,42,0),rgba(255,255,255,0.72))]" />
 
-      <header className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-full border border-white/10 bg-slate-950/70 px-4 py-3 shadow-[0_20px_70px_rgba(15,23,42,0.35)] backdrop-blur md:px-5">
-        <span className="text-sm font-semibold tracking-[0.24em] uppercase text-sky-200">pngtostl.net</span>
-        <nav className="flex flex-wrap gap-2 text-sm text-slate-200">
-          {[
-            ["Image to STL", "/image-to-stl"],
-            ["How it works", "/how-it-works"],
-            ["FAQ", "/faq"],
-            ["中文", "/zh"],
-          ].map(([label, href]) => (
-            <Link key={href} href={href} className="rounded-full border border-white/10 bg-white/5 px-4 py-2 transition hover:border-sky-300/30 hover:bg-white/10">
-              {label}
-            </Link>
-          ))}
-        </nav>
-      </header>
-
       <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start xl:gap-8">
         <div className="relative overflow-hidden rounded-[2.4rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.96),rgba(2,6,23,0.92))] p-6 shadow-[0_28px_100px_rgba(15,23,42,0.32)] md:p-10 lg:p-12">
           <div className="absolute right-0 top-0 h-40 w-40 -translate-y-1/3 translate-x-1/3 rounded-full bg-sky-400/15 blur-3xl" />
@@ -132,6 +116,9 @@ export default function HomePage() {
             <a href="#suite" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-3 font-medium text-slate-100 transition hover:border-white/25 hover:bg-white/10">
               Explore tools
             </a>
+            <Link href="/pricing" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/15 px-6 py-3 font-medium text-slate-200 transition hover:border-sky-300/35 hover:bg-white/8">
+              View pricing
+            </Link>
           </div>
 
           <div className="mt-8 grid gap-3 sm:grid-cols-3">

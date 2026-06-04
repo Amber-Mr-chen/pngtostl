@@ -4,19 +4,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const baseUrl = "https://pngtostl.net";
 
-  return [
-    { url: baseUrl, lastModified: now },
-    { url: `${baseUrl}/zh`, lastModified: now },
-    { url: `${baseUrl}/image-to-stl`, lastModified: now },
-    { url: `${baseUrl}/image-checker`, lastModified: now },
-    { url: `${baseUrl}/palette-to-relief`, lastModified: now },
-    { url: `${baseUrl}/how-it-works`, lastModified: now },
-    { url: `${baseUrl}/faq`, lastModified: now },
-    { url: `${baseUrl}/privacy`, lastModified: now },
-    { url: `${baseUrl}/terms`, lastModified: now },
-    { url: `${baseUrl}/contact`, lastModified: now },
-    { url: `${baseUrl}/stl-size-estimator`, lastModified: now },
-    { url: `${baseUrl}/print-settings-checker`, lastModified: now },
-    { url: `${baseUrl}/image-contrast-guide`, lastModified: now },
+  const routes = [
+    "/",
+    "/pricing",
+    "/login",
+    "/profile",
+    "/zh",
+    "/image-to-stl",
+    "/image-checker",
+    "/palette-to-relief",
+    "/how-it-works",
+    "/faq",
+    "/contact",
+    "/stl-size-estimator",
+    "/print-settings-checker",
+    "/image-contrast-guide",
+    "/privacy",
+    "/terms",
   ];
+
+  return routes.map((route) => ({ url: `${baseUrl}${route}`, lastModified: now }));
 }
