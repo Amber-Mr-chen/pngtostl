@@ -22,6 +22,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/lithophane-size-calculator",
     "/image-threshold-tester",
     "/print-preview-calculator",
+    "/relief-depth-estimator",
+    "/image-crop-assistant",
+    "/dpi-calculator",
     "/privacy",
     "/terms",
   ];
