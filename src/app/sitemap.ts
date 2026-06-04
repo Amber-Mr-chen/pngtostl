@@ -15,5 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/privacy`, lastModified: now },
     { url: `${baseUrl}/terms`, lastModified: now },
     { url: `${baseUrl}/contact`, lastModified: now },
+    { url: `${baseUrl}/stl-size-estimator`, lastModified: now },
+    { url: `${baseUrl}/print-settings-checker`, lastModified: now },
+    { url: `${baseUrl}/image-contrast-guide`, lastModified: now },
   ];
 }

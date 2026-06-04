@@ -78,6 +78,9 @@ PNG to STL is a lightweight conversion tool for makers and hobbyists who want to
 - `/contact` interactive support page
 - `/image-checker` image inspection helper
 - `/palette-to-relief` helper for future relief exploration
+- `/stl-size-estimator` utility calculator
+- `/print-settings-checker` utility checklist
+- `/image-contrast-guide` utility guide
 - `/api/convert` conversion API endpoint
 
 ### SEO focus
