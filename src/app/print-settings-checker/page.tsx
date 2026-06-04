@@ -68,11 +68,11 @@ export default function PrintSettingsCheckerPage() {
               ))}
             </div>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link href="/#converter" className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white">
-                Open converter
-              </Link>
-              <Link href="/stl-size-estimator" className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700">
+              <Link href="/stl-size-estimator" className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white">
                 Estimate STL size
+              </Link>
+              <Link href="/image-checker" className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700">
+                Check a PNG
               </Link>
             </div>
           </div>

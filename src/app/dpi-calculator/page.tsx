@@ -89,11 +89,15 @@ export default function DpiCalculatorPage() {
             </div>
 
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white" href="/image-checker">
+              <button className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white" type="button" onClick={() => {
+                setDpi(300);
+                setWidth(4);
+                setHeight(3);
+              }}>
+                Reset calculator
+              </button>
+              <Link className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700" href="/image-checker">
                 Check source image
-              </Link>
-              <Link className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700" href="/print-preview-calculator">
-                Preview print
               </Link>
             </div>
           </div>

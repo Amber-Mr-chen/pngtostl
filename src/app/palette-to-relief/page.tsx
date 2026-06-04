@@ -80,8 +80,8 @@ export default function PaletteToReliefPage() {
             </div>
             <p className="mt-5 text-sm leading-7 text-slate-600">{note}</p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link href="/#converter" className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white">Open converter</Link>
-              <Link href="/image-checker" className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700">Check a PNG</Link>
+              <Link href="/image-checker" className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white">Check a PNG</Link>
+              <Link href="/image-threshold-tester" className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700">Test threshold</Link>
             </div>
           </div>
         </div>

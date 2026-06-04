@@ -56,8 +56,8 @@ export default function FaqPage() {
         <div className="mt-8 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-sky-600">Quick actions</p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <Link href="/#converter" className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white">
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/image-to-stl" className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white">
                 Open converter
               </Link>
               <Link href="/how-it-works" className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700">

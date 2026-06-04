@@ -51,7 +51,7 @@ export default function ImageToStlPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-sky-600">Route shortcuts</p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {[
-                ["Start converting", "/#converter"],
+                ["Start converting", "/image-to-stl"],
                 ["Image checker", "/image-checker"],
                 ["How it works", "/how-it-works"],
                 ["FAQ", "/faq"],

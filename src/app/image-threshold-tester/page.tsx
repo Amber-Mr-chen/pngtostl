@@ -86,8 +86,15 @@ export default function ImageThresholdTesterPage() {
             </div>
 
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white" href="/image-checker">Check PNG</Link>
-              <Link className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700" href="/palette-to-relief">Compare palettes</Link>
+              <button className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white" type="button" onClick={() => {
+                setThreshold(62);
+                setEdge(70);
+              }}>
+                Reset tester
+              </button>
+              <Link className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700" href="/image-checker">
+                Check PNG
+              </Link>
             </div>
           </div>
         </div>

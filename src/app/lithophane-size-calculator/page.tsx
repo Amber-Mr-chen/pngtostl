@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
 const presets = [
   { title: "Pocket lithophane", width: 60, height: 40, thickness: 1.6 },
@@ -88,8 +89,20 @@ export default function LithophaneSizeCalculatorPage() {
             </div>
 
             <div className="mt-5 flex flex-wrap gap-3">
-              <a className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white" href="/image-checker">Check PNG first</a>
-              <a className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700" href="/image-to-stl">Open converter</a>
+              <button
+                className="rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white"
+                type="button"
+                onClick={() => {
+                  setWidth(100);
+                  setHeight(70);
+                  setThickness(2.4);
+                }}
+              >
+                Reset estimator
+              </button>
+              <Link className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700" href="/image-checker">
+                Check a PNG
+              </Link>
             </div>
           </div>
         </div>
