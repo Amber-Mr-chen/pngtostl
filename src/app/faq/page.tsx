@@ -10,15 +10,15 @@ const faqs = [
   },
   {
     title: "Does the current v0 generate real STL files?",
-    body: "Yes. The current v0 generates a simple in-memory relief STL from PNG luminance and alpha. The output is not CAD-grade and should be inspected before printing.",
+    body: "Yes. The current v0 generates a simple in-memory relief STL from PNG luminance and alpha. Inspect it before printing.",
   },
   {
     title: "Will you support other image formats?",
-    body: "The planned expansion path is Image to STL. JPG, WEBP, and other formats should wait until the PNG workflow is reliable.",
+    body: "The expansion path is Image to STL. JPG, WEBP, and related formats can follow once the PNG flow stays stable.",
   },
   {
     title: "Can I print the STL directly?",
-    body: "Inspect the output in a slicer or 3D tool before printing. Image-based geometry may need scaling, cleanup, or thickness adjustments.",
+    body: "Inspect the output in a slicer or 3D tool before printing. Image-based geometry may need scaling or cleanup.",
   },
   {
     title: "Are uploaded files stored?",
@@ -43,12 +43,12 @@ export default function FaqPage() {
   };
 
   return (
-    <main className="mx-auto min-h-screen max-w-5xl px-4 py-8 text-slate-900 sm:px-6 lg:px-8 lg:py-12">
+    <main className="mx-auto min-h-screen max-w-6xl px-4 py-8 text-slate-900 sm:px-6 lg:px-8 lg:py-12">
       <script dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} type="application/ld+json" />
 
       <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-10">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">Help center</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight md:text-6xl">FAQ</h1>
+        <h1 className="display-font mt-3 text-4xl font-semibold tracking-tight md:text-6xl">FAQ</h1>
         <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
           Quick answers, action shortcuts, and a way to jump back to the tool instead of reading a static help page.
         </p>
@@ -75,7 +75,8 @@ export default function FaqPage() {
                   type="button"
                   onClick={() => setActive(index)}
                 >
-                  {item.title}
+                  <span className="block font-medium">{item.title}</span>
+                  <span className="mt-1 block text-xs leading-5 opacity-80">Tap to view the answer</span>
                 </button>
               ))}
             </div>
@@ -83,7 +84,7 @@ export default function FaqPage() {
 
           <article className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-sky-600">Answer</p>
-            <h2 className="mt-2 text-2xl font-semibold text-slate-950">{faqs[active].title}</h2>
+            <h2 className="display-font mt-2 text-2xl font-semibold text-slate-950">{faqs[active].title}</h2>
             <p className="mt-4 text-sm leading-7 text-slate-600">{faqs[active].body}</p>
           </article>
         </div>

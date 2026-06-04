@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 const modes = [
   {
@@ -25,10 +26,10 @@ export const metadata: Metadata = {
 
 export default function ImageToStlPage() {
   return (
-    <main className="mx-auto min-h-screen max-w-5xl px-4 py-8 text-slate-900 sm:px-6 lg:px-8 lg:py-12">
+    <main className="mx-auto min-h-screen max-w-6xl px-4 py-8 text-slate-900 sm:px-6 lg:px-8 lg:py-12">
       <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-10">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">Expanded workflow</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight md:text-6xl">Image to STL</h1>
+        <h1 className="display-font mt-3 text-4xl font-semibold tracking-tight md:text-6xl">Image to STL</h1>
         <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
           This page keeps the brand flexible while still giving users a real place to compare use cases, route back to conversion, and understand where the product can expand.
         </p>

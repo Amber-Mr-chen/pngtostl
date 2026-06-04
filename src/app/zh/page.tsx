@@ -5,7 +5,7 @@ import { ConverterDemo } from "@/components/converter-demo";
 
 export default function ZhHomePage() {
   return (
-    <main className="mx-auto min-h-screen max-w-5xl px-4 py-8 text-slate-900 sm:px-6 lg:px-8 lg:py-12">
+    <main className="mx-auto min-h-screen max-w-6xl px-4 py-8 text-slate-900 sm:px-6 lg:px-8 lg:py-12">
       <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-10">
         <div className="mb-6 flex items-center justify-between text-sm text-slate-500">
           <span className="font-semibold tracking-[0.2em] uppercase">pngtostl.net</span>
@@ -14,7 +14,7 @@ export default function ZhHomePage() {
           </Link>
         </div>
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">中文入口</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight md:text-6xl">PNG 转 STL 工具</h1>
+        <h1 className="display-font mt-3 text-4xl font-semibold tracking-tight md:text-6xl">PNG 转 STL 工具</h1>
         <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
           上传 PNG 图片，预览转换流程，并检查 STL 输出。这个页面不是静态说明，而是中文用户的真实操作入口。
         </p>
@@ -24,6 +24,9 @@ export default function ZhHomePage() {
           </a>
           <a href="#faq" className="rounded-full border border-slate-300 px-6 py-3 font-medium text-slate-700">
             常见问题
+          </a>
+          <a href="/image-checker" className="rounded-full border border-slate-300 px-6 py-3 font-medium text-slate-700">
+            图片检查器
           </a>
         </div>
       </section>

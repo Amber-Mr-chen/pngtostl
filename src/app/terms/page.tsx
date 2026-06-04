@@ -45,21 +45,23 @@ const sections = [
 
 export default function TermsPage() {
   return (
-    <main className="mx-auto min-h-screen max-w-4xl px-6 py-12 text-slate-900">
-      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">pngtostl.net</p>
-      <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">Terms of Use</h1>
-      <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
-        Last updated: June 4, 2026. These terms are written for the current v0 implementation and must be reviewed again before paid plans, accounts, persistent file storage, queues, or production-grade conversion guarantees are launched.
-      </p>
+    <main className="mx-auto min-h-screen max-w-6xl px-4 py-8 text-slate-900 sm:px-6 lg:px-8 lg:py-12">
+      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-10">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">pngtostl.net</p>
+        <h1 className="display-font mt-4 text-4xl font-semibold tracking-tight md:text-6xl">Terms of Use</h1>
+        <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+          Last updated: June 4, 2026. These terms are written for the current v0 implementation and must be reviewed again before paid plans, accounts, persistent file storage, queues, or production-grade conversion guarantees are launched.
+        </p>
 
-      <div className="mt-10 grid gap-4">
-        {sections.map((section) => (
-          <section key={section.title} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-xl font-semibold">{section.title}</h2>
-            <p className="mt-3 leading-7 text-slate-600">{section.body}</p>
-          </section>
-        ))}
-      </div>
+        <div className="mt-8 grid gap-4 lg:grid-cols-2">
+          {sections.map((section) => (
+            <section key={section.title} className="rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
+              <h2 className="text-xl font-semibold text-slate-950">{section.title}</h2>
+              <p className="mt-3 leading-7 text-slate-600">{section.body}</p>
+            </section>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
