@@ -128,9 +128,17 @@ function SamplesPage() {
       </section>
       <section className="sampleGallery">
         {sampleWorkflows.map((sample) => (
-          <article className="sampleCard" key={sample.title}>
-            <div className="sampleArt" aria-hidden="true"><span /></div>
-            <div>
+          <article className="sampleCard proSampleCard" key={sample.title}>
+            <div className={`sampleArt proSampleArt ${sample.route.replace('/', '')}`} aria-hidden="true">
+              <span className="sampleSourceShape" />
+              <span className="sampleTransformArrow">→</span>
+              <span className="sampleMeshShape" />
+            </div>
+            <div className="sampleCopy">
+              <div className="sampleMetaLine">
+                <span>{sample.input}</span>
+                <span>{sample.metrics}</span>
+              </div>
               <h2>{sample.title}</h2>
               <p><strong>Input:</strong> {sample.input}</p>
               <p><strong>Output:</strong> {sample.output}</p>

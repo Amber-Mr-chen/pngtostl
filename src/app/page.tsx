@@ -11,6 +11,33 @@ const heroTools = [
 
 const primaryTools = ["image-to-stl", "logo-to-stl", "lithophane-generator", "heightmap-to-stl"];
 
+const proofSamples = [
+  {
+    label: "Logo badge",
+    input: "transparent PNG",
+    output: "95 mm raised plate",
+    metric: "18k–42k triangles",
+    route: "/logo-to-stl",
+    kind: "logo",
+  },
+  {
+    label: "Photo lithophane",
+    input: "portrait JPG",
+    output: "0.8–3.2 mm panel",
+    metric: "thickness preview",
+    route: "/lithophane-generator",
+    kind: "litho",
+  },
+  {
+    label: "Heightmap surface",
+    input: "grayscale PNG",
+    output: "terrain-like relief",
+    metric: "detail-scaled mesh",
+    route: "/heightmap-to-stl",
+    kind: "heightmap",
+  },
+];
+
 const categories = [
   {
     eyebrow: "01",
@@ -85,7 +112,7 @@ export default function HomePage() {
             <span className="uploadIcon" aria-hidden="true">↑</span>
             <strong>Drop image here</strong>
             <p>Open the converter and generate a relief-style STL in your browser.</p>
-            <Link className="btnPrimary" href="/image-to-stl">Choose image</Link>
+            <Link className="btnPrimary" href="/image-to-stl">Upload image</Link>
             <small>No signup required · PNG, JPG, WebP, GIF, BMP</small>
           </div>
           <div className="workflowPicker" aria-label="Output workflows">
@@ -101,6 +128,27 @@ export default function HomePage() {
             <span>Relief, logo, lithophane, and heightmap modes share one focused workspace.</span>
           </div>
         </aside>
+      </section>
+
+      <section className="proofStrip" aria-label="Example outputs with source and mesh evidence">
+        <div className="proofIntro">
+          <p className="homeKicker">Pick an output type</p>
+          <h2>Start from the print result you want.</h2>
+        </div>
+        {proofSamples.map((sample) => (
+          <Link key={sample.label} className="proofCard" href={sample.route}>
+            <div className={`proofVisual ${sample.kind}`} aria-hidden="true">
+              <span className="proofSource" />
+              <span className="proofArrow">→</span>
+              <span className="proofMesh" />
+            </div>
+            <div>
+              <strong>{sample.label}</strong>
+              <p>{sample.input} → {sample.output}</p>
+              <small>{sample.metric}</small>
+            </div>
+          </Link>
+        ))}
       </section>
 
       <ShowcaseDemo />
