@@ -78,12 +78,11 @@ export function ToolPage({ tool }: { tool: ToolConfig }) {
               <a className="btnSecondary" href="#how-it-works">How it works</a>
             </div>
           </div>
-          <aside className="toolTrustCard">
-            <strong>What to expect</strong>
+          <aside className="toolTrustCard compactTrust">
+            <strong>Before you generate</strong>
             <ul>
-              <li>STL files store geometry, not image color.</li>
-              <li>Relief/lithophane outputs are front-facing printable surfaces.</li>
-              <li>Preview and mesh metrics appear after generation.</li>
+              <li>STL stores geometry, not image color.</li>
+              <li>Use preview and metrics before printing.</li>
             </ul>
           </aside>
         </section>

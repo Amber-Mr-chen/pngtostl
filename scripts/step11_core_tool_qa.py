@@ -105,7 +105,7 @@ def main():
     wait_server()
     homepage = urllib.request.urlopen(BASE + "/?qa=gate", timeout=5).read().decode("utf-8", "ignore")
     expect("Image to 3D printing toolkit" in homepage, "homepage must be a tool-directory landing page")
-    expect("Upload one image" in homepage and "Core STL workflows" in homepage, "homepage must present a universal upload entry and task-first directory")
+    expect("Turn images into printable STL files" in homepage and "Core STL workflows" in homepage, "homepage must present a universal upload entry and task-first directory")
     expect('/image-to-stl' in homepage and '/logo-to-stl' in homepage and '/lithophane-generator' in homepage and '/heightmap-to-stl' in homepage, "homepage must expose task-first tool entries")
 
     converter_page = urllib.request.urlopen(BASE + "/png-to-stl?qa=gate", timeout=5).read().decode("utf-8", "ignore")

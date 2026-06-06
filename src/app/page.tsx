@@ -70,9 +70,9 @@ export default function HomePage() {
       <section className="homeHero">
         <div className="homeHeroCopy">
           <p className="homeKicker">Image to 3D printing toolkit</p>
-          <h1>Upload one image. Choose the STL workflow that fits.</h1>
+          <h1>Turn images into printable STL files.</h1>
           <p>
-            Start with a single image upload for PNG, JPG, WebP, GIF, or BMP. Then choose relief, logo, lithophane, or heightmap output with the right defaults.
+            Upload PNG, JPG, WebP, GIF, or BMP and choose the right output: relief, logo badge, lithophane, or heightmap. Preview the mesh before you download.
           </p>
           <div className="heroActions" aria-label="Popular conversion tools">
             <Link className="btnPrimary" href="/image-to-stl">Upload image</Link>
@@ -84,9 +84,9 @@ export default function HomePage() {
           <div className="uploadMockDropzone">
             <span className="uploadIcon" aria-hidden="true">↑</span>
             <strong>Drop image here</strong>
-            <p>or start with the universal converter.</p>
+            <p>Open the converter and generate a relief-style STL in your browser.</p>
             <Link className="btnPrimary" href="/image-to-stl">Choose image</Link>
-            <small>PNG, JPG, WebP, GIF, BMP · STL preview after generation</small>
+            <small>No signup required · PNG, JPG, WebP, GIF, BMP</small>
           </div>
           <div className="workflowPicker" aria-label="Output workflows">
             {heroTools.map((tool, index) => (
@@ -97,8 +97,8 @@ export default function HomePage() {
             ))}
           </div>
           <div className="toolPanelNote">
-            <strong>No fake login wall</strong>
-            <span>Use the browser tool first. API and batch workflows can come after real usage data.</span>
+            <strong>Choose the output after upload</strong>
+            <span>Relief, logo, lithophane, and heightmap modes share one focused workspace.</span>
           </div>
         </aside>
       </section>

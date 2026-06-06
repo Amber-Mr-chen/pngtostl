@@ -281,11 +281,23 @@ export function ConverterPanel({ tool }: { tool: ToolConfig }) {
           </div>
 
           <div className="previewStage">
+            <div className="viewportToolbar" aria-label="Preview viewport controls">
+              <span>Solid</span>
+              <span>Wireframe</span>
+              <span>Reset view</span>
+            </div>
             <canvas data-stl-preview="true" aria-label="Generated STL preview" />
             <div data-converter-message>
               {converter?.preview ?? "Upload an image to generate STL geometry. STL files do not preserve color."}
             </div>
           </div>
+
+          <ol className="generationStepper" aria-label="Generation flow">
+            <li>Upload image</li>
+            <li>Generate mesh</li>
+            <li>Preview STL</li>
+            <li>Download</li>
+          </ol>
 
           <div data-result-metrics="true" className="resultMetrics" />
 
