@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { SampleGalleryFilter } from "@/components/SampleGalleryFilter";
 import { ToolPage } from "@/components/ToolPage";
 import { HelperUtilityPage } from "@/components/HelperUtilityPage";
 import { getTool, helperPages, sampleWorkflows, staticPages, tools } from "@/lib/tools";
@@ -127,46 +127,7 @@ function SamplesPage() {
         <h1>Image to STL examples</h1>
         <p>Use these examples to choose the right PNGtoSTL workflow before you upload. Each sample explains the input, output, recommended settings, and common failure cases.</p>
       </section>
-      <section className="sampleGallery">
-        {sampleWorkflows.map((sample) => (
-          <article className="sampleCard proSampleCard" key={sample.title}>
-            <div className={`sampleArt proSampleArt realSampleArt ${sample.route.replace('/', '')}`} aria-hidden="true">
-              <div className="sampleImageFrame sourceFrame">
-                <span>Source</span>
-                <Image src={sample.sourceImage} alt="" width={180} height={180} loading="lazy" />
-              </div>
-              <span className="sampleTransformArrow">→</span>
-              <div className="sampleImageFrame previewFrame">
-                <span>Generated STL preview</span>
-                <Image src={sample.previewImage} alt="" width={360} height={240} loading="lazy" />
-              </div>
-            </div>
-            <div className="sampleCopy">
-              <div className="sampleMetaLine">
-                <span>{sample.input}</span>
-                <span>{sample.metrics}</span>
-              </div>
-              <h2>{sample.title}</h2>
-              <p><strong>Input:</strong> {sample.input}</p>
-              <p><strong>Output:</strong> {sample.output}</p>
-              <div className="sampleEvidence">
-                <p><strong>Source preview:</strong> {sample.sourcePreview}</p>
-                <p><strong>Generated result:</strong> {sample.resultPreview}</p>
-                <p><strong>Expected metrics:</strong> {sample.metrics}</p>
-              </div>
-              <ul>
-                {sample.settings.map((setting) => <li key={setting}>{setting}</li>)}
-              </ul>
-              <p><strong>Best for:</strong> {sample.bestFor}</p>
-              <p><strong>Avoid:</strong> {sample.avoid}</p>
-              <Link className="btnSecondary" href={sample.route}>Open workflow</Link>
-              <a className="sampleDownload" href={sample.stlPath} download>
-                Download sample STL
-              </a>
-            </div>
-          </article>
-        ))}
-      </section>
+      <SampleGalleryFilter samples={sampleWorkflows} />
     </main>
   );
 }

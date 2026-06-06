@@ -139,8 +139,11 @@ export default function HomePage() {
 
       <section className="proofStrip" aria-label="Example outputs with source and mesh evidence">
         <div className="proofIntro">
-          <p className="homeKicker">Pick an output type</p>
-          <h2>Start from the print result you want.</h2>
+          <div>
+            <p className="homeKicker">Pick an output type</p>
+            <h2>Start from the print result you want.</h2>
+          </div>
+          <Link className="proofExamplesLink" href="/samples">View all examples</Link>
         </div>
         {proofSamples.map((sample) => (
           <Link key={sample.label} className="proofCard" href={sample.route}>
