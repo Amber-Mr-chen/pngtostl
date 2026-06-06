@@ -1,0 +1,46 @@
+[
+  {
+    "slug": "logo-badge",
+    "title": "Logo badge relief",
+    "mode": "logo",
+    "source": "/samples/logo-badge-source.png",
+    "stl": "/samples/logo-badge.stl",
+    "preview": "/samples/logo-badge-preview.png",
+    "triangles": 17940,
+    "bytes": 897084,
+    "sourceDescription": "transparent logo PNG"
+  },
+  {
+    "slug": "universal-relief",
+    "title": "Universal image relief",
+    "mode": "relief",
+    "source": "/samples/universal-relief-source.png",
+    "stl": "/samples/universal-relief.stl",
+    "preview": "/samples/universal-relief-preview.png",
+    "triangles": 65532,
+    "bytes": 3276684,
+    "sourceDescription": "high contrast illustration"
+  },
+  {
+    "slug": "lithophane-panel",
+    "title": "Backlit lithophane panel",
+    "mode": "lithophane",
+    "source": "/samples/lithophane-panel-source.png",
+    "stl": "/samples/lithophane-panel.stl",
+    "preview": "/samples/lithophane-panel-preview.png",
+    "triangles": 65532,
+    "bytes": 3276684,
+    "sourceDescription": "portrait-style photo"
+  },
+  {
+    "slug": "heightmap-surface",
+    "title": "Heightmap surface",
+    "mode": "heightmap",
+    "source": "/samples/heightmap-surface-source.png",
+    "stl": "/samples/heightmap-surface.stl",
+    "preview": "/samples/heightmap-surface-preview.png",
+    "triangles": 65532,
+    "bytes": 3276684,
+    "sourceDescription": "grayscale heightmap"
+  }
+]

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -129,10 +130,16 @@ function SamplesPage() {
       <section className="sampleGallery">
         {sampleWorkflows.map((sample) => (
           <article className="sampleCard proSampleCard" key={sample.title}>
-            <div className={`sampleArt proSampleArt ${sample.route.replace('/', '')}`} aria-hidden="true">
-              <span className="sampleSourceShape" />
+            <div className={`sampleArt proSampleArt realSampleArt ${sample.route.replace('/', '')}`} aria-hidden="true">
+              <div className="sampleImageFrame sourceFrame">
+                <span>Source</span>
+                <Image src={sample.sourceImage} alt="" width={180} height={180} loading="lazy" />
+              </div>
               <span className="sampleTransformArrow">→</span>
-              <span className="sampleMeshShape" />
+              <div className="sampleImageFrame previewFrame">
+                <span>Generated STL preview</span>
+                <Image src={sample.previewImage} alt="" width={360} height={240} loading="lazy" />
+              </div>
             </div>
             <div className="sampleCopy">
               <div className="sampleMetaLine">
@@ -153,6 +160,9 @@ function SamplesPage() {
               <p><strong>Best for:</strong> {sample.bestFor}</p>
               <p><strong>Avoid:</strong> {sample.avoid}</p>
               <Link className="btnSecondary" href={sample.route}>Open workflow</Link>
+              <a className="sampleDownload" href={sample.stlPath} download>
+                Download sample STL
+              </a>
             </div>
           </article>
         ))}

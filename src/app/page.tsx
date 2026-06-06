@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { MiniToolExample, ShowcaseDemo } from "@/components/HomeShowcase";
 import { helperPages, tools } from "@/lib/tools";
@@ -16,25 +17,31 @@ const proofSamples = [
     label: "Logo badge",
     input: "transparent PNG",
     output: "95 mm raised plate",
-    metric: "18k–42k triangles",
+    metric: "17,940 triangles",
     route: "/logo-to-stl",
     kind: "logo",
+    sourceImage: "/samples/logo-badge-source.png",
+    previewImage: "/samples/logo-badge-preview.png",
   },
   {
     label: "Photo lithophane",
-    input: "portrait JPG",
+    input: "portrait-style image",
     output: "0.8–3.2 mm panel",
-    metric: "thickness preview",
+    metric: "65,532 triangles",
     route: "/lithophane-generator",
     kind: "litho",
+    sourceImage: "/samples/lithophane-panel-source.png",
+    previewImage: "/samples/lithophane-panel-preview.png",
   },
   {
     label: "Heightmap surface",
     input: "grayscale PNG",
     output: "terrain-like relief",
-    metric: "detail-scaled mesh",
+    metric: "65,532 triangles",
     route: "/heightmap-to-stl",
     kind: "heightmap",
+    sourceImage: "/samples/heightmap-surface-source.png",
+    previewImage: "/samples/heightmap-surface-preview.png",
   },
 ];
 
@@ -137,10 +144,10 @@ export default function HomePage() {
         </div>
         {proofSamples.map((sample) => (
           <Link key={sample.label} className="proofCard" href={sample.route}>
-            <div className={`proofVisual ${sample.kind}`} aria-hidden="true">
-              <span className="proofSource" />
+            <div className={`proofVisual realProofVisual ${sample.kind}`} aria-hidden="true">
+              <Image className="proofSourceImage" src={sample.sourceImage} alt="" width={96} height={96} loading="lazy" />
               <span className="proofArrow">→</span>
-              <span className="proofMesh" />
+              <Image className="proofPreviewImage" src={sample.previewImage} alt="" width={220} height={160} loading="lazy" />
             </div>
             <div>
               <strong>{sample.label}</strong>
