@@ -1,8 +1,9 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ToolPage } from "@/components/ToolPage";
 import { HelperUtilityPage } from "@/components/HelperUtilityPage";
-import { getTool, helperPages, tools } from "@/lib/tools";
+import { getTool, helperPages, sampleWorkflows, staticPages, tools } from "@/lib/tools";
 
 function pageJsonLd(title: string, description: string, path: string) {
   return {
@@ -24,6 +25,7 @@ export function generateStaticParams() {
   return [
     ...tools.filter((tool) => tool.slug).map((tool) => ({ slug: tool.slug })),
     ...helperPages.map((page) => ({ slug: page.slug })),
+    ...staticPages.map((page) => ({ slug: page.slug })),
     { slug: "faq" },
   ];
 }
@@ -45,6 +47,15 @@ export async function generateMetadata({ params }: { params: SlugParams }): Prom
       title: helper.title,
       description: helper.description,
       alternates: { canonical: `/${helper.slug}` },
+    };
+  }
+
+  const staticPage = staticPages.find((page) => page.slug === slug);
+  if (staticPage) {
+    return {
+      title: staticPage.title,
+      description: staticPage.description,
+      alternates: { canonical: `/${staticPage.slug}` },
     };
   }
 
@@ -87,11 +98,106 @@ export default async function DynamicPage({ params }: { params: SlugParams }) {
     );
   }
 
+  const staticPage = staticPages.find((page) => page.slug === slug);
+  if (staticPage) {
+    return <StaticInfoPage slug={slug} />;
+  }
+
   if (slug === "faq") {
     return <FaqPage />;
   }
 
   notFound();
+}
+
+function StaticInfoPage({ slug }: { slug: string }) {
+  if (slug === "samples") return <SamplesPage />;
+  if (slug === "privacy") return <PrivacyPage />;
+  if (slug === "terms") return <TermsPage />;
+  if (slug === "contact") return <ContactPage />;
+  notFound();
+}
+
+function SamplesPage() {
+  return (
+    <main className="container infoPage">
+      <section className="shell infoHero">
+        <p className="pill">Real workflow examples</p>
+        <h1>Image to STL examples</h1>
+        <p>Use these examples to choose the right PNGtoSTL workflow before you upload. Each sample explains the input, output, recommended settings, and common failure cases.</p>
+      </section>
+      <section className="sampleGallery">
+        {sampleWorkflows.map((sample) => (
+          <article className="sampleCard" key={sample.title}>
+            <div className="sampleArt" aria-hidden="true"><span /></div>
+            <div>
+              <h2>{sample.title}</h2>
+              <p><strong>Input:</strong> {sample.input}</p>
+              <p><strong>Output:</strong> {sample.output}</p>
+              <ul>
+                {sample.settings.map((setting) => <li key={setting}>{setting}</li>)}
+              </ul>
+              <p><strong>Best for:</strong> {sample.bestFor}</p>
+              <p><strong>Avoid:</strong> {sample.avoid}</p>
+              <Link className="btnSecondary" href={sample.route}>Open workflow</Link>
+            </div>
+          </article>
+        ))}
+      </section>
+    </main>
+  );
+}
+
+function PrivacyPage() {
+  return (
+    <main className="container infoPage">
+      <section className="shell infoHero">
+        <p className="pill">Privacy</p>
+        <h1>Privacy Policy</h1>
+        <p>PNGtoSTL is a browser-first image-to-STL tool. This page explains what data is used when you upload an image, generate an STL, use lightweight analytics, or contact us.</p>
+      </section>
+      <section className="infoGrid">
+        <article className="shell"><h2>Uploaded images</h2><p>When you generate an STL, the selected image is sent to the conversion endpoint for that request. The current tool is designed to return the STL result directly; it does not provide public file hosting or account storage.</p></article>
+        <article className="shell"><h2>Generated STL files</h2><p>The generated STL is returned to your browser for download. You are responsible for checking scale, printability, and rights to the source image before printing or sharing output.</p></article>
+        <article className="shell"><h2>Analytics events</h2><p>The interface may emit lightweight product events such as upload selected, generate clicked, generate success, download clicked, and generate error. These events are used to understand tool reliability and do not need image file contents.</p></article>
+        <article className="shell"><h2>Contact messages</h2><p>If you contact us, we may use your message and reply address to respond. Do not send passwords, private keys, confidential files, or sensitive personal data through contact requests.</p></article>
+      </section>
+    </main>
+  );
+}
+
+function TermsPage() {
+  return (
+    <main className="container infoPage">
+      <section className="shell infoHero">
+        <p className="pill">Terms</p>
+        <h1>Terms of Use</h1>
+        <p>Use PNGtoSTL as a practical maker tool for image-based reliefs, logo badges, lithophanes, and heightmaps. The output is provided as-is and should be checked before printing.</p>
+      </section>
+      <section className="infoGrid">
+        <article className="shell"><h2>Your files and rights</h2><p>Only upload images you own, have permission to use, or are allowed to process. You are responsible for your source image rights and how you use the generated STL.</p></article>
+        <article className="shell"><h2>Output limitations</h2><p>PNGtoSTL does not create full CAD reconstruction from one photo. It creates relief, lithophane, logo, or heightmap-style STL surfaces depending on the selected workflow.</p></article>
+        <article className="shell"><h2>Printing responsibility</h2><p>Always inspect generated STL files in a slicer or viewer before printing. We do not guarantee that every generated model will be printable on every printer or material.</p></article>
+        <article className="shell"><h2>Service changes</h2><p>Features, free limits, analytics, API access, and future account workflows may change. If paid features are introduced later, pricing and refund terms should be published before purchase.</p></article>
+      </section>
+    </main>
+  );
+}
+
+function ContactPage() {
+  return (
+    <main className="container infoPage">
+      <section className="shell infoHero">
+        <p className="pill">Contact</p>
+        <h1>Contact PNGtoSTL</h1>
+        <p>Send feedback, report conversion issues, or suggest example workflows. Include the page, browser, image type, and what you expected when reporting a bug.</p>
+      </section>
+      <section className="infoGrid">
+        <article className="shell"><h2>Support</h2><p>Email: <a href="mailto:support@pngtostl.net">support@pngtostl.net</a></p><p>For conversion issues, mention the tool route, input format, selected mode, and whether the STL downloaded.</p></article>
+        <article className="shell"><h2>Useful links</h2><p><Link href="/samples">Examples</Link></p><p><Link href="/image-to-stl">Image to STL</Link></p><p><Link href="/faq">FAQ</Link></p></article>
+      </section>
+    </main>
+  );
 }
 
 function FaqPage() {

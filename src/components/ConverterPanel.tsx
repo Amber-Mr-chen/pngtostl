@@ -204,6 +204,7 @@ export function ConverterPanel({ tool }: { tool: ToolConfig }) {
     <div data-converter-root="true" className="converterWorkspace">
       <form
         data-converter-form="true"
+        data-tool={tool.slug}
         data-mode={mode}
         data-filename={converter?.filename ?? "pngtostl-output.stl"}
         data-min-thickness-mm={converter?.minThicknessMm ?? 0.8}

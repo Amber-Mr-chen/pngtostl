@@ -45,8 +45,8 @@ export const tools: ToolConfig[] = [
     navLabel: "PNG entry",
     eyebrow: "Format-specific starting point",
     title: "PNG to STL Converter",
-    description: "A PNG-focused entry into the same image-to-STL converter, tuned for transparent icons, emojis, and simple graphics.",
-    promise: "Upload a PNG or open the universal image converter when you want broader format support.",
+    description: "A PNG-focused image-to-STL workflow for transparent icons, emojis, stamps, silhouettes, and simple graphics that need clean raised relief.",
+    promise: "Use this page when alpha transparency, flat colors, and crisp icon edges matter more than photo detail.",
     primaryCta: "Upload PNG",
     secondaryCta: "Use Universal Converter",
     uploadLabel: "Drag and drop your PNG here",
@@ -70,8 +70,10 @@ export const tools: ToolConfig[] = [
       { label: "Image Contrast Guide", href: "/image-contrast-guide" },
     ],
     faq: [
-      { q: "Is this a real 3D model?", a: "It creates a relief-style STL based on image brightness, not a CAD reconstruction." },
-      { q: "Why keep a PNG page if Image to STL accepts more formats?", a: "PNG searches are common, and transparent PNG icons often need different relief defaults. The core generation flow is the same." },
+      { q: "Is this a real 3D model?", a: "It creates a relief-style STL based on PNG brightness and transparency, not a CAD reconstruction." },
+      { q: "How is transparent PNG handled?", a: "Transparent or empty areas are treated as background so icons and silhouettes can become cleaner raised relief plates." },
+      { q: "What PNG images work best?", a: "Flat icons, black-and-white art, emojis, stamps, silhouettes, and simple logos usually work better than noisy screenshots." },
+      { q: "Why keep a PNG page if Image to STL accepts more formats?", a: "PNG users often need alpha transparency, crisp edges, and icon-style defaults. The universal converter remains the best broad-format entry." },
     ],
   },
   {
@@ -79,8 +81,8 @@ export const tools: ToolConfig[] = [
     navLabel: "Image to STL",
     eyebrow: "Universal image converter",
     title: "Image to STL Converter",
-    description: "Upload PNG, JPG, WebP, GIF, or BMP and choose the STL workflow that matches your print: relief, logo, lithophane, or heightmap.",
-    promise: "One upload entry for common image formats, with output modes and route-specific presets for printable STL files.",
+    description: "Upload PNG, JPG, WebP, GIF, or BMP and choose the STL workflow that matches your print: relief, logo badge, lithophane, or heightmap surface.",
+    promise: "Start here when you are unsure which image-to-STL workflow fits the source image and print goal.",
     primaryCta: "Upload Image",
     secondaryCta: "Choose STL Mode",
     uploadLabel: "Drop an image to choose an STL workflow",
@@ -104,8 +106,10 @@ export const tools: ToolConfig[] = [
       { label: "Convert Image to STL", href: "/convert-image-to-stl" },
     ],
     faq: [
-      { q: "What images work best?", a: "Simple, high-contrast images with clear edges usually produce cleaner relief." },
-      { q: "Can every photo become a model?", a: "No. This page creates relief-style STL output, not full object reconstruction." },
+      { q: "What images work best?", a: "Simple, high-contrast images with clear subjects usually produce cleaner relief or lithophane output." },
+      { q: "Which mode should I choose?", a: "Use relief for icons and simple art, logo for badges, lithophane for backlit photos, and heightmap for grayscale depth maps." },
+      { q: "Can every photo become a model?", a: "No. A single image can become a relief, lithophane, or heightmap-style STL, but not a full reconstructed 3D object." },
+      { q: "Do colors appear in the STL?", a: "No. STL is single-material geometry. Brightness, contrast, and transparency influence shape, not color output." },
     ],
   },
   {
@@ -249,8 +253,8 @@ export const tools: ToolConfig[] = [
     navLabel: "JPG entry",
     eyebrow: "Format-specific starting point",
     title: "JPG to STL Converter",
-    description: "A JPG/photo-focused entry into the universal image-to-STL converter, with relief defaults for common photo files.",
-    promise: "Upload a JPG or other browser-readable image, then generate a printable STL relief with preview and metrics.",
+    description: "A JPG/photo-focused image-to-STL entry for relief prints, photo cleanup decisions, and lithophane alternatives.",
+    promise: "Use this page for common camera or downloaded JPG files, with clear guidance that ordinary photos usually work better as lithophanes than raised reliefs.",
     primaryCta: "Upload JPG",
     secondaryCta: "Generate STL",
     uploadLabel: "Drop a JPG, PNG, WebP, GIF, or BMP image here",
@@ -275,7 +279,9 @@ export const tools: ToolConfig[] = [
     ],
     faq: [
       { q: "How does JPG and WebP input work?", a: "The browser normalizes supported non-PNG images to PNG first, then sends the image to the STL relief generator." },
-      { q: "Is this photo reconstruction?", a: "No. It prepares a relief-style STL path." },
+      { q: "Should I use JPG to STL or lithophane?", a: "Use lithophane for portraits and photos with subtle shading. Use JPG relief when the subject has strong contrast and clear edges." },
+      { q: "Why can photo relief look noisy?", a: "JPG photos contain shadows, texture, compression artifacts, and backgrounds. Those values can become unwanted bumps in a relief STL." },
+      { q: "Is this photo reconstruction?", a: "No. It prepares a relief or lithophane-style STL path, not a full 3D reconstructed object." },
     ],
   },
   {
@@ -398,6 +404,68 @@ export const helperPages = [
     cta: "Check Print Settings",
     href: "/lithophane-generator",
     checks: ["Layer height suggestion.", "Orientation suggestion.", "Thickness guidance.", "Material note."],
+  },
+];
+
+export const staticPages = [
+  {
+    slug: "samples",
+    title: "Image to STL Examples",
+    description: "Sample image-to-STL workflows for logo reliefs, lithophanes, heightmaps, and photo reliefs.",
+  },
+  {
+    slug: "privacy",
+    title: "Privacy Policy",
+    description: "How PNGtoSTL handles uploads, conversion requests, analytics events, and contact messages.",
+  },
+  {
+    slug: "terms",
+    title: "Terms of Use",
+    description: "Rules and limitations for using PNGtoSTL image-to-STL tools and generated files.",
+  },
+  {
+    slug: "contact",
+    title: "Contact PNGtoSTL",
+    description: "Contact PNGtoSTL for support, feedback, bug reports, and business inquiries.",
+  },
+];
+
+export const sampleWorkflows = [
+  {
+    title: "Logo badge relief",
+    input: "High-contrast PNG or SVG logo",
+    output: "Raised logo STL with base plate",
+    route: "/logo-to-stl",
+    settings: ["Mode: Transparent logo relief", "Width: 95 mm", "Relief height: 2.4 mm", "Smoothing: low"],
+    bestFor: "badges, signs, makerspace labels, product marks",
+    avoid: "photos, gradients, tiny text, complex mascot art",
+  },
+  {
+    title: "Universal image relief",
+    input: "PNG, JPG, WebP, GIF, or BMP with clear subject edges",
+    output: "Front-facing relief STL with preview and metrics",
+    route: "/image-to-stl",
+    settings: ["Mode: Photo-style relief", "Width: 110 mm", "Relief height: 2.4 mm", "Detail: 128"],
+    bestFor: "icons, line art, simple illustrations, high-contrast photos",
+    avoid: "low contrast photos and images where the background is the subject",
+  },
+  {
+    title: "Backlit lithophane panel",
+    input: "Portrait or photo with balanced contrast",
+    output: "Lithophane STL where thickness controls light",
+    route: "/lithophane-generator",
+    settings: ["Mode: Lithophane", "Min thickness: 0.8 mm", "Max thickness: 3.2 mm", "Invert: on"],
+    bestFor: "portraits, memorial photos, night lights, window panels",
+    avoid: "very dark photos, blown-out highlights, cluttered backgrounds",
+  },
+  {
+    title: "Heightmap surface",
+    input: "Grayscale PNG heightmap",
+    output: "Surface STL where brightness becomes height",
+    route: "/heightmap-to-stl",
+    settings: ["Mode: Heightmap terrain", "Width: 120 mm", "Max height: 6 mm", "Smoothing: low"],
+    bestFor: "terrain reliefs, texture plates, grayscale depth maps",
+    avoid: "normal photos that are not intended as height data",
   },
 ];
 

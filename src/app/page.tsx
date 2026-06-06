@@ -173,7 +173,11 @@ export default function HomePage() {
           <Link href="/logo-to-stl">Logo to STL</Link>
           <Link href="/lithophane-generator">Lithophane</Link>
           <Link href="/heightmap-to-stl">Heightmap</Link>
+          <Link href="/samples">Examples</Link>
           <Link href="/faq">FAQ</Link>
+          <Link href="/privacy">Privacy</Link>
+          <Link href="/terms">Terms</Link>
+          <Link href="/contact">Contact</Link>
           <Link href="/sitemap.xml">Sitemap</Link>
         </nav>
       </footer>

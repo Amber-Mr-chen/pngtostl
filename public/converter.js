@@ -25,6 +25,13 @@
       if (el) el.textContent = text;
     }
 
+    function track(eventName, detail) {
+      const payload = Object.assign({ tool: form.dataset.tool || form.dataset.mode || 'converter', mode: selectedMode(), path: location.pathname }, detail || {});
+      window.dispatchEvent(new CustomEvent('pngtostl:event', { detail: { name: eventName, payload } }));
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: eventName, ...payload });
+    }
+
     function selectedMode() {
       return modeInput ? modeInput.value : form.dataset.mode || 'icon';
     }
@@ -98,6 +105,7 @@
         if (ctx) ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
       }
       setText(message, file.name + ' selected.\nTune the basic settings, then generate a previewable STL.');
+      track('pngtostl_upload_selected', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       setMetrics([]);
     }
 
@@ -148,6 +156,7 @@
       }
 
       setButtonState('Generating STL...', true);
+      track('pngtostl_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       setText(status, 'Processing');
       setText(message, 'Generating a fast preview STL at detail level ' + (detailInput ? detailInput.value : '96') + '...');
 
@@ -157,6 +166,7 @@
       } catch (error) {
         setText(status, 'Needs fix');
         setText(message, error && error.message ? error.message : 'Use a PNG, JPG, WebP, GIF, BMP, or SVG image.');
+        track('pngtostl_generate_error', { reason: 'normalize_failed' });
         setButtonState('Generate STL', false);
         return;
       }
@@ -184,6 +194,7 @@
           try { body = await response.json(); } catch (_) {}
           setText(status, 'Needs fix');
           setText(message, body.message || 'Conversion failed.');
+          track('pngtostl_generate_error', { reason: body.message || 'response_not_ok', status: response.status });
           return;
         }
         const blob = await response.blob();
@@ -200,11 +211,13 @@
           downloadLink.dataset.objectUrl = url;
           downloadLink.download = filename;
           downloadLink.style.display = 'block';
+          downloadLink.onclick = () => track('pngtostl_download_clicked', { filename, bytes: blob.size, triangles: triangleCount });
         }
         if (previewCanvas && window.PNGTOSTLPreview && typeof window.PNGTOSTLPreview.mount === 'function') {
           window.PNGTOSTLPreview.mount(previewCanvas, blob);
         }
         setText(status, 'STL ready');
+        track('pngtostl_generate_success', { outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
         setMetrics([
           { label: 'Triangles', value: triangleCount },
           { label: 'File size', value: Math.round(blob.size / 1024) + ' KB' },
