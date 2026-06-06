@@ -2665,3 +2665,151 @@ box-shadow: inset 0 0 0 1px rgba(7,17,31,0.08), 0 16px 22px rgba(7,17,31,0.1);
   z-index: 121;
 }
 
+
+
+/* Owner QA: universal sticky home header + one-step-smaller titles. */
+.homeNav,
+.toolHeader,
+.infoHeader {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 120 !important;
+  background: rgba(255,255,255,0.94) !important;
+  backdrop-filter: blur(18px) !important;
+  border-bottom: 1px solid rgba(15,23,42,0.08) !important;
+}
+
+.infoPage,
+.helperPage,
+.faqPage {
+  padding-top: 24px !important;
+}
+
+.homeHero h1 {
+  font-size: clamp(2.25rem, 4vw, 3.45rem) !important;
+  line-height: 1.04 !important;
+  letter-spacing: -0.038em !important;
+}
+
+.toolHero h1 {
+  font-size: clamp(2.25rem, 6vw, 4.75rem) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.052em !important;
+}
+
+.infoHero h1,
+.faqPage h1,
+.helperPage h1 {
+  font-size: clamp(1.85rem, 4.8vw, 3.55rem) !important;
+  line-height: 1.04 !important;
+  letter-spacing: -0.04em !important;
+}
+
+.showcaseHeader h2,
+.sampleGalleryShell h2,
+.sectionIntro h2,
+.directoryHeading h2,
+.utilityBand h2,
+.sectionTitle {
+  font-size: clamp(1.35rem, 2.7vw, 2.35rem) !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.03em !important;
+}
+
+.sampleCard h2,
+.infoGrid h2 {
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem) !important;
+  line-height: 1.18 !important;
+}
+
+.infoHero p:not(.pill),
+.faqPage .shell > p,
+.helperPage .shell > p {
+  font-size: 1rem !important;
+  line-height: 1.58 !important;
+}
+
+@media (max-width: 640px) {
+  .homeHero h1 { font-size: clamp(2rem, 11vw, 3.05rem) !important; }
+  .toolHero h1 { font-size: clamp(2.05rem, 12vw, 3.55rem) !important; }
+  .infoHero h1,
+  .faqPage h1,
+  .helperPage h1 { font-size: clamp(1.85rem, 10vw, 2.85rem) !important; }
+}
+
+/* Final owner typography override: reduce oversized headings everywhere. */
+html body .homeHero h1 {
+  font-size: clamp(2.2rem, 3.8vw, 3.35rem) !important;
+  line-height: 1.05 !important;
+}
+
+html body .toolPage .toolHero h1,
+html body .toolHero h1 {
+  font-size: clamp(2.15rem, 5.2vw, 4.25rem) !important;
+  line-height: 1 !important;
+}
+
+html body .infoPage .infoHero h1,
+html body .faqPage h1,
+html body .helperPage h1,
+html body main.infoPage h1 {
+  font-size: clamp(1.85rem, 4.1vw, 3rem) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.035em !important;
+}
+
+html body .sampleGalleryShell h2,
+html body .showcaseHeader h2,
+html body .sectionIntro h2,
+html body .directoryHeading h2,
+html body .utilityBand h2,
+html body .sectionTitle {
+  font-size: clamp(1.3rem, 2.25vw, 2.05rem) !important;
+  line-height: 1.16 !important;
+}
+
+html body .sampleCard h2,
+html body .infoGrid h2,
+html body article.shell h2 {
+  font-size: clamp(1.05rem, 1.45vw, 1.28rem) !important;
+  line-height: 1.2 !important;
+}
+
+/* Final compact typography pass after owner review. */
+html body .homeHero h1 {
+  font-size: clamp(2.05rem, 3.4vw, 3.1rem) !important;
+  line-height: 1.06 !important;
+}
+
+html body .toolPage .toolHero h1,
+html body .toolHero h1 {
+  font-size: clamp(2.05rem, 4.2vw, 3.6rem) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.045em !important;
+}
+
+html body .infoPage .infoHero h1,
+html body .faqPage h1,
+html body .helperPage h1,
+html body main.infoPage h1 {
+  font-size: clamp(1.75rem, 3.8vw, 2.75rem) !important;
+  line-height: 1.1 !important;
+}
+
+html body .sampleGalleryShell h2,
+html body .showcaseHeader h2,
+html body .sectionIntro h2,
+html body .directoryHeading h2,
+html body .utilityBand h2,
+html body .sectionTitle,
+html body .converterWorkspace h2,
+html body .supportGrid h2 {
+  font-size: clamp(1.24rem, 2vw, 1.85rem) !important;
+  line-height: 1.18 !important;
+}
+
+html body .sampleCard h2,
+html body .infoGrid h2,
+html body article.shell h2 {
+  font-size: clamp(1rem, 1.3vw, 1.22rem) !important;
+}

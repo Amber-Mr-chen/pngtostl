@@ -3,6 +3,34 @@ import { ImageAnalyzer } from "@/components/ImageAnalyzer";
 import { UtilityAdvisor } from "@/components/UtilityAdvisor";
 import { helperPages, tools } from "@/lib/tools";
 
+const helperNav = [
+  { href: "/image-to-stl", label: "Image to STL" },
+  { href: "/logo-to-stl", label: "Logo to STL" },
+  { href: "/lithophane-generator", label: "Lithophane" },
+  { href: "/heightmap-to-stl", label: "Heightmap" },
+  { href: "/samples", label: "Examples" },
+];
+
+function HelperHeader() {
+  return (
+    <header className="container toolHeader infoHeader">
+      <nav>
+        <Link href="/" className="brandMark" aria-label="PNGtoSTL home">
+          <span aria-hidden="true" />
+          PNGtoSTL
+        </Link>
+        <div className="toolNavLinks">
+          {helperNav.map((item) => (
+            <Link key={item.href} className="pill" href={item.href}>
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      </nav>
+    </header>
+  );
+}
+
 function advisorKindFromSlug(slug: string) {
   if (slug === "print-settings-checker") return "print-settings";
   return "contrast";
@@ -13,11 +41,10 @@ export function HelperUtilityPage({ slug }: { slug: string }) {
   if (!page) return null;
 
   return (
-    <main className="container" style={{ padding: "32px 0 56px" }}>
-      <Link className="pill" href="/">
-        PNGtoSTL
-      </Link>
-      <section className="shell" style={{ padding: 30, marginTop: 18 }}>
+    <>
+      <HelperHeader />
+      <main className="container infoPage helperPage">
+      <section className="shell" style={{ padding: 30 }}>
         <h1 style={{ fontSize: "clamp(2.2rem, 6vw, 4.6rem)", margin: "0 0 12px", lineHeight: 0.98 }}>
           {page.title}
         </h1>
@@ -42,6 +69,7 @@ export function HelperUtilityPage({ slug }: { slug: string }) {
           ))}
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

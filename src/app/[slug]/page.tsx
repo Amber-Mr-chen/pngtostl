@@ -20,6 +20,36 @@ function pageJsonLd(title: string, description: string, path: string) {
 }
 
 
+
+const primaryInfoNav = [
+  { href: "/image-to-stl", label: "Image to STL" },
+  { href: "/logo-to-stl", label: "Logo to STL" },
+  { href: "/lithophane-generator", label: "Lithophane" },
+  { href: "/heightmap-to-stl", label: "Heightmap" },
+  { href: "/samples", label: "Examples" },
+  { href: "/pricing", label: "Pricing" },
+];
+
+function InfoHeader() {
+  return (
+    <header className="container toolHeader infoHeader">
+      <nav>
+        <Link href="/" className="brandMark" aria-label="PNGtoSTL home">
+          <span aria-hidden="true" />
+          PNGtoSTL
+        </Link>
+        <div className="toolNavLinks">
+          {primaryInfoNav.map((item) => (
+            <Link key={item.href} className="pill" href={item.href}>
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      </nav>
+    </header>
+  );
+}
+
 type SlugParams = Promise<{ slug: string }>;
 
 export function generateStaticParams() {
@@ -135,7 +165,9 @@ function LegalSupportLinks() {
 
 function SamplesPage() {
   return (
-    <main className="container infoPage">
+    <>
+      <InfoHeader />
+      <main className="container infoPage">
       <section className="shell infoHero">
         <p className="pill">Real workflow examples</p>
         <h1>Image to STL examples</h1>
@@ -143,13 +175,16 @@ function SamplesPage() {
       </section>
       <SampleGalleryFilter samples={sampleWorkflows} />
       <LegalSupportLinks />
-    </main>
+      </main>
+    </>
   );
 }
 
 function PrivacyPage() {
   return (
-    <main className="container infoPage">
+    <>
+      <InfoHeader />
+      <main className="container infoPage">
       <section className="shell infoHero">
         <p className="pill">Privacy</p>
         <h1>Privacy Policy</h1>
@@ -163,13 +198,16 @@ function PrivacyPage() {
         <article className="shell"><h2>Contact and IP requests</h2><p>If you contact us, we may use your message and reply address to respond. Do not send passwords, private keys, confidential files, or sensitive personal data through contact requests. For rights or IP complaints, include the page URL, the material at issue, and your contact information.</p></article>
       </section>
       <LegalSupportLinks />
-    </main>
+      </main>
+    </>
   );
 }
 
 function TermsPage() {
   return (
-    <main className="container infoPage">
+    <>
+      <InfoHeader />
+      <main className="container infoPage">
       <section className="shell infoHero">
         <p className="pill">Terms</p>
         <h1>Terms of Use</h1>
@@ -184,13 +222,16 @@ function TermsPage() {
         <article className="shell"><h2>Abuse and access</h2><p>Automated abuse, excessive requests, attempts to bypass limits, or use that interferes with service reliability may be blocked.</p></article>
       </section>
       <LegalSupportLinks />
-    </main>
+      </main>
+    </>
   );
 }
 
 function DevelopersPage() {
   return (
-    <main className="container infoPage">
+    <>
+      <InfoHeader />
+      <main className="container infoPage">
       <section className="shell infoHero">
         <p className="pill">API and batch workflows</p>
         <h1>Developers, batch conversion, and commercial image-to-STL workflows</h1>
@@ -209,13 +250,16 @@ function DevelopersPage() {
         <article className="shell"><h2>Not promised yet</h2><p>Self-serve API keys, uptime commitments, saved project libraries, billing, and team dashboards are planned only after enough real demand is confirmed.</p></article>
       </section>
       <LegalSupportLinks />
-    </main>
+      </main>
+    </>
   );
 }
 
 function PricingPage() {
   return (
-    <main className="container infoPage">
+    <>
+      <InfoHeader />
+      <main className="container infoPage">
       <section className="shell infoHero">
         <p className="pill">Pricing</p>
         <h1>PNGtoSTL pricing</h1>
@@ -234,13 +278,16 @@ function PricingPage() {
         <article className="shell"><h2>Future terms</h2><p>If paid features launch, limits, cancellation, refunds, commercial terms, privacy behavior, and billing details will be published before purchase.</p><p><Link href="/terms">Read current terms</Link></p></article>
       </section>
       <LegalSupportLinks />
-    </main>
+      </main>
+    </>
   );
 }
 
 function ContactPage() {
   return (
-    <main className="container infoPage">
+    <>
+      <InfoHeader />
+      <main className="container infoPage">
       <section className="shell infoHero">
         <p className="pill">Contact</p>
         <h1>Contact PNGtoSTL</h1>
@@ -254,7 +301,8 @@ function ContactPage() {
         <article className="shell"><h2>Useful links</h2><p><Link href="/samples">Examples</Link></p><p><Link href="/pricing">Pricing</Link></p><p><Link href="/developers">API and batch access</Link></p><p><Link href="/image-to-stl">Image to STL</Link></p><p><Link href="/faq">FAQ</Link></p></article>
       </section>
       <LegalSupportLinks />
-    </main>
+      </main>
+    </>
   );
 }
 
@@ -274,7 +322,9 @@ function FaqPage() {
   };
 
   return (
-    <main className="container" style={{ padding: "32px 0 56px" }}>
+    <>
+      <InfoHeader />
+      <main className="container infoPage faqPage">
       <section className="shell" style={{ padding: 30 }}>
         <h1 style={{ fontSize: "clamp(2.2rem, 6vw, 4.6rem)", margin: "0 0 12px", lineHeight: 0.98 }}>
           PNG to STL FAQ
@@ -295,6 +345,7 @@ function FaqPage() {
         </div>
       </section>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-    </main>
+      </main>
+    </>
   );
 }
