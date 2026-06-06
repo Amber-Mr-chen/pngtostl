@@ -6,12 +6,12 @@ content-type: model/stl
 x-tool-grid-columns: 128
 x-tool-grid-rows: 128
 x-tool-mode: lithophane
-x-tool-occupied-ratio: 0.2119
+x-tool-occupied-ratio: 0.8138
 x-tool-output-kind: lithophane
 x-tool-source-height: 512
 x-tool-source-width: 512
 x-tool-triangle-count: 65532
-Date: Sat, 06 Jun 2026 10:03:08 GMT
+Date: Sat, 06 Jun 2026 12:48:00 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 

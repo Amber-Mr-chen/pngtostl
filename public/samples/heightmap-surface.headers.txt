@@ -6,12 +6,12 @@ content-type: model/stl
 x-tool-grid-columns: 128
 x-tool-grid-rows: 128
 x-tool-mode: heightmap
-x-tool-occupied-ratio: 0.8961
+x-tool-occupied-ratio: 0.9268
 x-tool-output-kind: heightmap
 x-tool-source-height: 512
 x-tool-source-width: 512
 x-tool-triangle-count: 65532
-Date: Sat, 06 Jun 2026 10:03:22 GMT
+Date: Sat, 06 Jun 2026 12:48:03 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 
