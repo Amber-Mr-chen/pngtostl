@@ -54,18 +54,16 @@ export default function HomePage() {
           PNGtoSTL
         </Link>
         <div className="homeNavRight">
-          <nav className="homeNavLinks" aria-label="Primary">
-            <Link href="/image-to-stl">Image to STL</Link>
-            <Link href="/logo-to-stl">Logo</Link>
-            <Link href="/lithophane-generator">Lithophane</Link>
-            <Link href="/heightmap-to-stl">Heightmap</Link>
-            <Link href="#tools">Tools</Link>
-          </nav>
-          <div className="accountActions" aria-label="Account and product actions">
-            <a href="#api-note">API</a>
-            <span aria-disabled="true">Log in</span>
-            <a className="signupButton" href="/image-to-stl">Start free</a>
-          </div>
+        <nav className="homeNavLinks" aria-label="Primary">
+          <Link href="/image-to-stl">Image to STL</Link>
+          <Link href="/logo-to-stl">Logo to STL</Link>
+          <Link href="/lithophane-generator">Lithophane</Link>
+          <Link href="/heightmap-to-stl">Heightmap</Link>
+          <Link href="/faq">Guides</Link>
+        </nav>
+        <div className="accountActions" aria-label="Primary action">
+          <a className="signupButton" href="/image-to-stl">Start converting</a>
+        </div>
         </div>
       </header>
 
@@ -82,22 +80,25 @@ export default function HomePage() {
           </div>
         </div>
 
-        <aside className="heroToolPanel" aria-label="Choose a tool">
-          <div className="toolPanelHeader">
-            <span>Choose your tool</span>
-            <strong>Start here</strong>
+        <aside className="heroUploadPanel" aria-label="Start image upload">
+          <div className="uploadMockDropzone">
+            <span className="uploadIcon" aria-hidden="true">↑</span>
+            <strong>Drop image here</strong>
+            <p>or start with the universal converter.</p>
+            <Link className="btnPrimary" href="/image-to-stl">Choose image</Link>
+            <small>PNG, JPG, WebP, GIF, BMP · STL preview after generation</small>
           </div>
-          <div className="heroToolList">
+          <div className="workflowPicker" aria-label="Output workflows">
             {heroTools.map((tool, index) => (
-              <Link key={tool.href} className={index === 0 ? "heroToolLink primary" : "heroToolLink"} href={tool.href}>
+              <Link key={tool.href} className={index === 0 ? "heroToolLink workflowChoice primary" : "heroToolLink workflowChoice"} href={tool.href}>
                 <span>{tool.label}</span>
                 <small>{tool.note}</small>
               </Link>
             ))}
           </div>
-          <div className="toolPanelNote" id="api-note">
-            <strong>API and batch tools</strong>
-            <span>Planned after the core browser converters are finalized.</span>
+          <div className="toolPanelNote">
+            <strong>No fake login wall</strong>
+            <span>Use the browser tool first. API and batch workflows can come after real usage data.</span>
           </div>
         </aside>
       </section>
@@ -161,6 +162,21 @@ export default function HomePage() {
           <Link href="/faq">FAQ</Link>
         </div>
       </section>
+
+      <footer className="siteFooter homeFooter">
+        <div>
+          <strong>PNGtoSTL</strong>
+          <p>Image-to-STL tools for makers who need reliefs, logo badges, lithophanes, and heightmaps without opening CAD first.</p>
+        </div>
+        <nav aria-label="Footer">
+          <Link href="/image-to-stl">Image to STL</Link>
+          <Link href="/logo-to-stl">Logo to STL</Link>
+          <Link href="/lithophane-generator">Lithophane</Link>
+          <Link href="/heightmap-to-stl">Heightmap</Link>
+          <Link href="/faq">FAQ</Link>
+          <Link href="/sitemap.xml">Sitemap</Link>
+        </nav>
+      </footer>
     </main>
   );
 }

@@ -84,7 +84,7 @@ const toolPresets: Record<string, Partial<NonNullable<ToolConfig["converter"]>>>
     detail: 160,
     hiddenControls: ["mode"],
     helper: "Logo preset locks to crisp transparent-logo relief with sharper edges.",
-    preview: "Upload a high-contrast PNG logo to generate a raised badge or sign STL.",
+    preview: "Upload a high-contrast PNG or SVG logo to generate a raised badge or sign STL.",
     filename: "logo-relief.stl",
   },
   "heightmap-to-stl": {
@@ -173,6 +173,19 @@ function hasHidden(converter: NonNullable<ToolConfig["converter"]>, key: "mode" 
   return converter.hiddenControls?.includes(key);
 }
 
+function RangeField({ name, label, value, min, max, step, help }: { name: string; label: string; value: string | number; min: string; max: string; step?: string; help: string }) {
+  return (
+    <label className="converterField">
+      <span>
+        {label} <b data-value={name}>{value}</b>
+      </span>
+      <input className="inputRange" name={name} type="range" min={min} max={max} step={step} defaultValue={String(value).replace(/[^0-9.]/g, "")} />
+      <small>{help}</small>
+      <em>{min}–{max}{name === "widthMm" || name === "depth" || name === "baseMm" ? " mm" : name === "threshold" || name === "smoothing" ? "%" : ""}</em>
+    </label>
+  );
+}
+
 export function ConverterPanel({ tool }: { tool: ToolConfig }) {
   const fallback = fallbackConverter(tool);
   const converter = fallback ? { ...fallback, ...toolPresets[tool.slug], ...tool.converter } : null;
@@ -185,125 +198,111 @@ export function ConverterPanel({ tool }: { tool: ToolConfig }) {
   const threshold = converter?.threshold ?? 55;
   const smoothing = converter?.smoothing ?? 25;
   const detail = converter?.detail ?? 96;
+  const depthLabel = mode === "lithophane" ? "Max thickness" : mode === "heightmap" ? "Max height" : "Relief height";
 
   return (
-    <div data-converter-root="true">
+    <div data-converter-root="true" className="converterWorkspace">
       <form
         data-converter-form="true"
         data-mode={mode}
         data-filename={converter?.filename ?? "pngtostl-output.stl"}
         data-min-thickness-mm={converter?.minThicknessMm ?? 0.8}
         data-max-thickness-mm={converter?.maxThicknessMm ?? 3.2}
+        data-empty-message={converter?.preview ?? "Upload an image to generate STL geometry. STL files do not preserve color."}
         action="javascript:void(0)"
-        style={{ display: "grid", gap: 18 }}
       >
-        <div style={{ border: "1px dashed #b9c6d6", background: "#f8fbff", borderRadius: 14, padding: 20 }}>
-          <strong>{tool.uploadLabel}</strong>
-          <p className="smallMuted" style={{ margin: "0.4rem 0 0.8rem" }}>Supported: {tool.supported}</p>
-          <input type="file" name="file" accept={accept} disabled={!canConvert} />
-          <p className="smallMuted" style={{ margin: "0.8rem 0 0" }}>{converter?.helper ?? tool.promise}</p>
-        </div>
-
-        {canConvert && !hasHidden(converter!, "mode") ? (
-          <label style={{ display: "grid", gap: 7 }}>
-            <span style={{ fontWeight: 700 }}>Output mode</span>
-            <select name="mode" defaultValue={mode} style={{ border: "1px solid var(--line)", borderRadius: 10, padding: "0.75rem", font: "inherit", background: "#fff" }}>
-              {Object.entries(modeLabels).map(([value, label]) => (
-                <option key={value} value={value}>{label}</option>
-              ))}
-            </select>
-            <span className="smallMuted">Default: {modeLabels[mode]} for this tool.</span>
-          </label>
-        ) : null}
-
-        <div style={{ display: "grid", gap: 14 }}>
-          <label style={{ display: "grid", gap: 7 }}>
-            <span style={{ display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
-              Output width <span data-value="widthMm" style={{ color: "var(--accent-strong)" }}>{widthMm} mm</span>
-            </span>
-            <input className="inputRange" name="widthMm" type="range" min="30" max="180" defaultValue={String(widthMm)} />
-            <span className="smallMuted">Set the printable width for this output.</span>
-          </label>
-
-          {!converter || !hasHidden(converter, "depth") ? (
-            <label style={{ display: "grid", gap: 7 }}>
-              <span style={{ display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
-                {mode === "lithophane" ? "Max thickness" : mode === "heightmap" ? "Max height" : "Relief height"} <span data-value="depth" style={{ color: "var(--accent-strong)" }}>{depth.toFixed(1)} mm</span>
-              </span>
-              <input className="inputRange" name="depth" type="range" min="0.3" max="8" step="0.1" defaultValue={String(depth)} />
-              <span className="smallMuted">{mode === "lithophane" ? "Controls the darkest/thickest areas of the lithophane." : mode === "heightmap" ? "Controls the tallest terrain or surface peaks." : "Controls raised surface height."}</span>
-            </label>
-          ) : null}
-
-          {!converter || !hasHidden(converter, "base") ? (
-            <label style={{ display: "grid", gap: 7 }}>
-              <span style={{ display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
-                Base thickness <span data-value="baseMm" style={{ color: "var(--accent-strong)" }}>{baseMm.toFixed(1)} mm</span>
-              </span>
-              <input className="inputRange" name="baseMm" type="range" min="0.4" max="4" step="0.2" defaultValue={String(baseMm)} />
-              <span className="smallMuted">Adds printable support under the generated geometry when this mode needs it.</span>
-            </label>
-          ) : null}
-
-          {!converter || !hasHidden(converter, "threshold") ? (
-            <label style={{ display: "grid", gap: 7 }}>
-              <span style={{ display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
-                Edge threshold <span data-value="threshold" style={{ color: "var(--accent-strong)" }}>{threshold}%</span>
-              </span>
-              <input className="inputRange" name="threshold" type="range" min="5" max="95" step="1" defaultValue={String(threshold)} />
-              <span className="smallMuted">Higher values keep only darker, clearer lines.</span>
-            </label>
-          ) : null}
-
-          <label style={{ display: "grid", gap: 7 }}>
-            <span style={{ display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
-              Smoothing <span data-value="smoothing" style={{ color: "var(--accent-strong)" }}>{smoothing}%</span>
-            </span>
-            <input className="inputRange" name="smoothing" type="range" min="0" max="100" step="5" defaultValue={String(smoothing)} />
-            <span className="smallMuted">Softens jagged pixel edges before STL export.</span>
-          </label>
-
-          <label style={{ display: "grid", gap: 7 }}>
-            <span style={{ display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
-              Detail level <span data-value="detail" style={{ color: "var(--accent-strong)" }}>{detail}</span>
-            </span>
-            <input className="inputRange" name="detail" type="range" min="48" max="320" step="4" defaultValue={String(detail)} />
-            <span className="smallMuted">Higher detail keeps more image shape. Large files take longer.</span>
-          </label>
-
-          {!converter || !hasHidden(converter, "invert") ? (
-            <label style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 700 }}>
-              <input type="checkbox" name="invert" defaultChecked={Boolean(converter?.invert)} />
-              {mode === "lithophane" ? "Invert for lithophane" : "Invert height"}
-            </label>
-          ) : null}
-        </div>
-
-        <button data-generate-stl="true" className="btnPrimary" type="button" style={{ width: "100%" }}>
-          {canConvert ? "Generate STL" : tool.primaryCta}
-        </button>
-        <a data-download-stl="true" className="btnSecondary" href="#" download={converter?.filename ?? "pngtostl-output.stl"} style={{ width: "100%", textAlign: "center", display: "none" }}>
-          Download STL
-        </a>
-        <div data-result-metrics="true" style={{ display: "none", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 10 }} />
-
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-          <h2 className="sectionTitle">Output Preview</h2>
-          <span data-converter-status className="pill" style={{ color: "var(--success)", borderColor: "rgba(15,157,88,.25)" }}>
-            {canConvert ? "Waiting for image" : "Helper tool"}
-          </span>
-        </div>
-        <div
-          style={{ minHeight: 260, borderRadius: 14, border: "1px solid var(--line)", background: "#f8fbff", display: "grid", gridTemplateRows: "minmax(180px, 1fr) auto", overflow: "hidden" }}
-        >
-          <canvas data-stl-preview="true" aria-label="Generated STL preview" style={{ width: "100%", height: 210, display: "block" }} />
-          <div
-            data-converter-message
-            style={{ minHeight: 74, borderTop: "1px solid var(--line)", display: "grid", placeItems: "center", color: "var(--muted)", textAlign: "center", padding: 16, whiteSpace: "pre-line", background: "rgba(255,255,255,.72)" }}
-          >
-            {converter?.preview ?? "Upload an image to generate STL geometry. STL files do not preserve color."}
+        <section className="converterControls" aria-label="Upload and STL settings">
+          <div className="uploadDropzone">
+            <div>
+              <strong>{tool.uploadLabel}</strong>
+              <p>Drop an image here or choose a file. Supported: {tool.supported}</p>
+            </div>
+            <input type="file" name="file" accept={accept} disabled={!canConvert} />
+            <small>{converter?.helper ?? tool.promise}</small>
+            <ul className="trustNotes" aria-label="Processing notes">
+              <li>STL output is single-material geometry, not color.</li>
+              <li>Files are processed only for this conversion request.</li>
+              <li>Recommended image size: under 2048×2048 for faster previews.</li>
+            </ul>
           </div>
-        </div>
+
+          {canConvert && !hasHidden(converter!, "mode") ? (
+            <label className="converterField">
+              <span>Output mode</span>
+              <select name="mode" defaultValue={mode}>
+                {Object.entries(modeLabels).map(([value, label]) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </select>
+              <small>Choose relief, logo, lithophane, or heightmap defaults before generating.</small>
+            </label>
+          ) : null}
+
+          <div className="basicSettings">
+            <RangeField name="widthMm" label="Output width" value={`${widthMm} mm`} min="30" max="180" help="Set the printable width for this output." />
+            {!converter || !hasHidden(converter, "depth") ? (
+              <RangeField name="depth" label={depthLabel} value={`${depth.toFixed(1)} mm`} min="0.3" max="8" step="0.1" help={mode === "lithophane" ? "Controls the darkest/thickest areas of the lithophane." : mode === "heightmap" ? "Controls the tallest terrain or surface peaks." : "Controls raised surface height."} />
+            ) : null}
+          </div>
+
+          <details className="advancedSettings">
+            <summary>Advanced print settings</summary>
+            <div>
+              {!converter || !hasHidden(converter, "base") ? (
+                <RangeField name="baseMm" label="Base thickness" value={`${baseMm.toFixed(1)} mm`} min="0.4" max="4" step="0.2" help="Adds printable support under generated geometry when this mode needs it." />
+              ) : null}
+              {!converter || !hasHidden(converter, "threshold") ? (
+                <RangeField name="threshold" label="Edge threshold" value={`${threshold}%`} min="5" max="95" step="1" help="Higher values keep only darker, clearer lines." />
+              ) : null}
+              <RangeField name="smoothing" label="Smoothing" value={`${smoothing}%`} min="0" max="100" step="5" help="Softens jagged pixel edges before STL export." />
+              <RangeField name="detail" label="Detail level" value={detail} min="48" max="320" step="4" help="Higher detail keeps more image shape. Large files take longer." />
+              {!converter || !hasHidden(converter, "invert") ? (
+                <label className="checkField">
+                  <input type="checkbox" name="invert" defaultChecked={Boolean(converter?.invert)} />
+                  {mode === "lithophane" ? "Invert for lithophane" : "Invert height"}
+                </label>
+              ) : null}
+            </div>
+          </details>
+
+          <button data-generate-stl="true" className="btnPrimary" type="button" disabled={!canConvert}>
+            Upload an image first
+          </button>
+        </section>
+
+        <section className="resultWorkspace" aria-label="STL preview and download">
+          <div className="resultHeader">
+            <div>
+              <span className="smallMuted">Result workspace</span>
+              <h2 className="sectionTitle">Preview, validate, download</h2>
+            </div>
+            <span data-converter-status className="pill statusPill">Waiting for image</span>
+          </div>
+
+          <div className="previewStage">
+            <canvas data-stl-preview="true" aria-label="Generated STL preview" />
+            <div data-converter-message>
+              {converter?.preview ?? "Upload an image to generate STL geometry. STL files do not preserve color."}
+            </div>
+          </div>
+
+          <div data-result-metrics="true" className="resultMetrics" />
+
+          <a data-download-stl="true" className="btnPrimary downloadButton" href="#" download={converter?.filename ?? "pngtostl-output.stl"}>
+            Download STL
+          </a>
+
+          <div className="outputFacts">
+            {tool.outputFacts.map((fact) => (
+              <div key={fact.label}>
+                <span>{fact.label}</span>
+                <strong>{fact.value}</strong>
+              </div>
+            ))}
+          </div>
+
+          <p className="outputLimit">{tool.limit}</p>
+        </section>
       </form>
     </div>
   );

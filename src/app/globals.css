@@ -1076,3 +1076,119 @@ a {
     flex-direction: column;
   }
 }
+
+
+/* Mature converter workspace refinements */
+.toolHeader {
+  padding: 22px 0 12px;
+}
+
+.toolHeader nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.toolNavLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  justify-content: flex-end;
+}
+
+.toolPage {
+  padding: 22px 0 56px;
+}
+
+.toolHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 22px;
+  align-items: stretch;
+  margin-bottom: 22px;
+}
+
+.toolHero > div,
+.toolTrustCard {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 18px 46px rgba(16, 24, 40, 0.06);
+}
+
+.toolHero > div { padding: 30px; }
+.toolHero h1 { margin: 18px 0 16px; font-size: clamp(2.35rem, 6vw, 5.25rem); line-height: 0.96; letter-spacing: -0.04em; }
+.toolHero p { color: var(--muted); line-height: 1.58; font-size: 1.05rem; }
+.toolHero > div > p:nth-of-type(2) { color: var(--text); font-weight: 650; }
+.toolTrustCard { display: grid; gap: 12px; align-content: start; padding: 24px; background: linear-gradient(135deg, #ffffff, #f8fbff); }
+.toolTrustCard ul, .supportGrid ul { margin: 0; padding-left: 20px; color: var(--muted); line-height: 1.7; }
+
+.converterWorkspace form { display: grid; grid-template-columns: minmax(300px, 0.78fr) minmax(420px, 1.22fr); gap: 18px; align-items: stretch; }
+.converterControls, .resultWorkspace { border: 1px solid var(--line); border-radius: 22px; background: #fff; box-shadow: 0 18px 46px rgba(16, 24, 40, 0.06); }
+.converterControls { display: grid; gap: 16px; align-content: start; padding: 20px; }
+.resultWorkspace { display: grid; gap: 16px; align-content: start; padding: 20px; background: linear-gradient(180deg, #fff, #f8fbff); }
+.uploadDropzone { display: grid; gap: 12px; border: 1px dashed #aebdd0; border-radius: 18px; background: linear-gradient(135deg, #f8fbff, #ffffff); padding: 18px; }
+.uploadDropzone strong { display: block; font-size: 1.04rem; }
+.uploadDropzone p, .uploadDropzone small { margin: 0; color: var(--muted); line-height: 1.5; }
+.uploadDropzone input[type="file"] { width: 100%; border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 0.8rem; font: inherit; }
+.trustNotes { display: grid; gap: 5px; margin: 0; padding: 10px 0 0 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.86rem; line-height: 1.45; }
+.converterField { display: grid; gap: 7px; }
+.converterField > span { display: flex; justify-content: space-between; gap: 12px; font-weight: 780; }
+.converterField b { color: var(--accent-strong); }
+.converterField small, .converterField em { color: var(--muted); font-size: 0.84rem; line-height: 1.35; font-style: normal; }
+.converterField select { border: 1px solid var(--line); border-radius: 10px; padding: 0.75rem; font: inherit; background: #fff; }
+.basicSettings, .advancedSettings > div { display: grid; gap: 14px; }
+.advancedSettings { border: 1px solid var(--line); border-radius: 16px; background: #f8fafc; padding: 12px; }
+.advancedSettings summary { cursor: pointer; font-weight: 820; color: #344054; }
+.advancedSettings[open] summary { margin-bottom: 12px; }
+.checkField { display: flex; align-items: center; gap: 10px; font-weight: 760; }
+.resultHeader { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
+.statusPill { color: var(--warning); border-color: rgba(178,106,0,.26); background: #fffaf0; }
+.previewStage { min-height: 430px; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: #f8fafc; display: grid; grid-template-rows: minmax(320px, 1fr) auto; }
+.previewStage canvas { width: 100%; height: 100%; min-height: 320px; display: block; }
+.previewStage [data-converter-message] { min-height: 92px; display: grid; place-items: center; border-top: 1px solid var(--line); background: rgba(255,255,255,.84); color: var(--muted); text-align: center; padding: 16px; line-height: 1.5; white-space: pre-line; }
+.resultMetrics { display: none; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.resultMetrics > div, .outputFacts > div { border: 1px solid var(--line); border-radius: 14px; background: #fff; padding: 12px; }
+.resultMetrics span, .outputFacts span { display: block; color: var(--muted); font-size: 0.78rem; font-weight: 750; }
+.resultMetrics strong, .outputFacts strong { display: block; margin-top: 4px; }
+.downloadButton { display: none; width: 100%; }
+.outputFacts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.outputLimit { margin: 0; border-left: 3px solid var(--warning); padding-left: 12px; color: var(--muted); line-height: 1.55; }
+.stepGrid, .supportGrid { display: grid; gap: 18px; margin-top: 22px; }
+.stepGrid { grid-template-columns: repeat(3, 1fr); }
+.stepGrid .shell, .supportGrid .shell, .faqBlock { padding: 22px; }
+.stepGrid h3 { margin: 0.35rem 0 0.35rem; }
+.stepGrid p { margin: 0; color: var(--muted); line-height: 1.55; }
+.supportGrid { grid-template-columns: 1fr 1fr; }
+.relatedTools { display: flex; flex-wrap: wrap; gap: 10px; }
+.faqBlock { margin-top: 22px; }
+.faqBlock > div { display: grid; gap: 12px; }
+.faqBlock details { border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 14px; }
+.faqBlock summary { cursor: pointer; font-weight: 780; }
+.faqBlock p { margin-bottom: 0; color: var(--muted); line-height: 1.6; }
+.siteFooter { width: min(1160px, calc(100% - 40px)); margin: 0 auto 40px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: start; border: 1px solid var(--line); border-radius: 20px; background: #101828; color: #fff; padding: 24px; }
+.siteFooter p { max-width: 620px; margin: 8px 0 0; color: rgba(255,255,255,.72); line-height: 1.55; }
+.siteFooter nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+.siteFooter a { color: rgba(255,255,255,.78); font-weight: 720; font-size: 0.9rem; }
+.homeFooter { margin-top: 34px; margin-bottom: 0; }
+.heroUploadPanel { display: grid; gap: 14px; align-content: start; border: 1px solid var(--line); border-radius: 20px; background: #fff; padding: 18px; box-shadow: 0 18px 42px rgba(16, 24, 40, 0.08); }
+.uploadMockDropzone { display: grid; justify-items: center; gap: 9px; min-height: 230px; border: 1px dashed #9fb0c6; border-radius: 18px; background: linear-gradient(135deg, #f8fbff, #fff); padding: 22px; text-align: center; }
+.uploadIcon { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 16px; background: var(--accent-soft); color: var(--accent-strong); font-size: 1.8rem; font-weight: 900; }
+.uploadMockDropzone strong { font-size: 1.22rem; }
+.uploadMockDropzone p, .uploadMockDropzone small { margin: 0; color: var(--muted); line-height: 1.45; }
+.workflowPicker { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.workflowChoice { display: grid; gap: 4px; border: 1px solid var(--line); border-radius: 14px; background: #fff; padding: 12px; }
+.workflowChoice.primary { background: var(--accent-soft); border-color: rgba(23,105,255,.32); }
+.workflowChoice span { font-weight: 840; }
+.workflowChoice small { color: var(--muted); font-size: 0.8rem; line-height: 1.3; }
+@media (max-width: 980px) { .toolHero, .converterWorkspace form, .supportGrid, .siteFooter { grid-template-columns: 1fr; } .stepGrid { grid-template-columns: 1fr; } .toolHeader nav { align-items: flex-start; flex-direction: column; } .toolNavLinks, .siteFooter nav { justify-content: flex-start; } }
+@media (max-width: 640px) { .toolHero > div, .toolTrustCard, .converterControls, .resultWorkspace { padding: 18px; border-radius: 18px; } .toolHero h1 { font-size: 2.4rem; } .previewStage { min-height: 340px; grid-template-rows: minmax(240px, 1fr) auto; } .previewStage canvas { min-height: 240px; } .resultMetrics, .outputFacts, .workflowPicker { grid-template-columns: 1fr; } }
+
+.workflowChoice.heroToolLink { min-height: auto; padding: 12px; }
+.workflowChoice.heroToolLink:hover { transform: translateY(-1px); }
+@media (max-width: 620px) {
+  .uploadMockDropzone { min-height: 190px; padding: 18px; }
+  .heroUploadPanel { padding: 14px; }
+  .workflowChoice.heroToolLink { padding: 11px; }
+}

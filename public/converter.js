@@ -57,8 +57,18 @@
         metrics.innerHTML = '';
         return;
       }
-      metrics.innerHTML = items.map((item) => '<div style="border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff"><span class="smallMuted">' + item.label + '</span><strong style="display:block;margin-top:4px">' + item.value + '</strong></div>').join('');
+      metrics.innerHTML = items.map((item) => '<div><span>' + item.label + '</span><strong>' + item.value + '</strong></div>').join('');
       metrics.style.display = 'grid';
+    }
+
+    function setButtonState(label, disabled) {
+      if (!button) return;
+      button.disabled = Boolean(disabled);
+      button.textContent = label;
+    }
+
+    function emptyMessage() {
+      return form.dataset.emptyMessage || 'Upload an image to generate STL geometry. STL files do not preserve color.';
     }
 
     [widthInput, depthInput, baseInput, thresholdInput, smoothingInput, detailInput].forEach(bindRange);
@@ -66,12 +76,18 @@
     function syncFile() {
       const file = fileInput && fileInput.files && fileInput.files[0];
       if (!file) {
-        setText(status, 'Waiting for PNG');
-        setText(message, 'Upload a PNG to generate a front-facing STL relief. STL files do not preserve color.');
+        setText(status, 'Waiting for image');
+        setText(message, emptyMessage());
+        setButtonState('Upload an image first', true);
+        if (downloadLink) {
+          downloadLink.style.display = 'none';
+          downloadLink.removeAttribute('href');
+        }
         setMetrics([]);
         return;
       }
       setText(status, 'File selected');
+      setButtonState('Generate STL', false);
       if (downloadLink) {
         downloadLink.style.display = 'none';
         downloadLink.removeAttribute('href');
@@ -81,7 +97,7 @@
         const ctx = previewCanvas.getContext('2d');
         if (ctx) ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
       }
-      setText(message, file.name + ' selected.\nTip: STL stores geometry only, so colors will not appear in Paint 3D.');
+      setText(message, file.name + ' selected.\nTune the basic settings, then generate a previewable STL.');
       setMetrics([]);
     }
 
@@ -125,15 +141,13 @@
       if (event) event.preventDefault();
       const file = fileInput && fileInput.files && fileInput.files[0];
       if (!file) {
-        setText(status, 'Needs fix');
-        setText(message, 'Choose a PNG file first.');
+        setText(status, 'Waiting for image');
+        setText(message, 'Upload an image before generating an STL.');
+        setButtonState('Upload an image first', true);
         return;
       }
 
-      if (button) {
-        button.disabled = true;
-        button.textContent = 'Generating...';
-      }
+      setButtonState('Generating STL...', true);
       setText(status, 'Processing');
       setText(message, 'Generating a fast preview STL at detail level ' + (detailInput ? detailInput.value : '96') + '...');
 
@@ -143,10 +157,7 @@
       } catch (error) {
         setText(status, 'Needs fix');
         setText(message, error && error.message ? error.message : 'Use a PNG, JPG, WebP, GIF, BMP, or SVG image.');
-        if (button) {
-          button.disabled = false;
-          button.textContent = 'Generate STL';
-        }
+        setButtonState('Generate STL', false);
         return;
       }
 
@@ -209,12 +220,10 @@
         );
       } catch (_) {
         setText(status, 'Needs fix');
-        setText(message, 'Conversion failed. Please try another PNG or lower the detail level.');
+        setText(message, 'Conversion failed. Please try another image or lower the detail level.');
       } finally {
-        if (button) {
-          button.disabled = false;
-          button.textContent = 'Generate STL';
-        }
+        const hasFile = fileInput && fileInput.files && fileInput.files[0];
+        setButtonState(hasFile ? 'Generate STL' : 'Upload an image first', !hasFile);
       }
     }
 
