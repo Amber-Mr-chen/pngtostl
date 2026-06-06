@@ -56,7 +56,6 @@ const stageCopy = [
 function DemoArt({ sample, side }: { sample: Sample; side: "before" | "after" }) {
   const isAfter = side === "after";
   const imageSrc = isAfter ? sample.previewImage : sample.sourceImage;
-  const label = isAfter ? sample.after : sample.before;
 
   return (
     <div className={`demoArt realDemoArt ${isAfter ? "isAfter" : "isBefore"}`}>
@@ -68,7 +67,6 @@ function DemoArt({ sample, side }: { sample: Sample; side: "before" | "after" })
         height={isAfter ? 492 : 360}
         loading="lazy"
       />
-      <span className="demoArtLabel">{label}</span>
     </div>
   );
 }

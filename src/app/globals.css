@@ -1990,23 +1990,104 @@ box-shadow: inset 0 0 0 1px rgba(7,17,31,0.08), 0 16px 22px rgba(7,17,31,0.1);
 .sampleTabs { margin: 16px 0; }
 .workflowStages {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-  margin: 14px auto 16px;
-  max-width: 780px;
+  gap: 12px;
+  margin: 18px auto 20px;
+  max-width: 880px;
+  align-items: start;
 }
-.stageArt { min-height: 112px; border-radius: 12px; }
-.workflowStage figcaption { font-size: 0.8rem; font-weight: 600; color: #667085; }
-.compareFrame {
-  min-height: 350px;
-  max-width: 760px;
+.workflowStage {
+  grid-template-rows: auto minmax(22px, auto);
+  gap: 8px;
+}
+.stageArt {
+  min-height: 0;
+  aspect-ratio: 4 / 3;
   border-radius: 16px;
+}
+.stageArt .demoArt,
+.stagePrintArt,
+.stageGridArt {
+  position: absolute;
+  inset: 0;
+}
+.stageArt .realDemoArt {
+  padding: 10px;
+}
+.stageArt .demoArtImage {
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 0;
+  border-radius: 10px;
+  object-fit: contain;
+  box-shadow: inset 0 0 0 1px rgba(7,17,31,0.06), 0 8px 16px rgba(7,17,31,0.1);
+}
+.stageArt .realDemoArt.isBefore .demoArtImage {
+  width: min(82%, 132px);
+  padding: 5px;
+}
+.stagePrintArt .demoArt { inset: 0; }
+.stagePrintArt > span { display: none; }
+.stageGridArt {
+  padding: 8px;
+  gap: 6px;
+}
+.stageGridArt > .demoArt {
+  position: relative;
+  inset: auto;
+  border-radius: 10px;
+}
+.stageGridArt .realDemoArt { padding: 5px; }
+.stageGridArt .demoArtImage {
+  width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+}
+.workflowStage figcaption {
+  min-height: 22px;
+  font-size: 0.78rem;
+  font-weight: 720;
+  line-height: 1.25;
+  color: #667085;
+}
+.compareFrame {
+  min-height: 420px;
+  max-width: 860px;
+  border-radius: 20px;
+}
+.compareFrame .realDemoArt { padding: 54px 28px 28px; }
+.compareFrame .demoArtImage {
+  width: min(90%, 640px);
+  max-height: calc(100% - 34px);
+  object-fit: contain;
+}
+.compareFrame .realDemoArt.isBefore .demoArtImage {
+  width: min(52%, 360px);
+  padding: 10px;
+}
+.demoArtLabel { display: none; }
+.compareLabels {
+  top: 14px;
+  left: 16px;
+  right: 16px;
+  gap: 12px;
+  align-items: start;
+  pointer-events: none;
+}
+.compareLabels span {
+  max-width: 44%;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 8px 18px rgba(7,17,31,0.08);
+  line-height: 1.2;
 }
 .logoSample,
 .lithoSample,
 .terrainSample { width: min(46%, 280px); }
 .compareDivider span { width: 42px; height: 42px; }
 .showcaseFooter {
-  max-width: 760px;
+  max-width: 860px;
   margin-inline: auto;
 }
 .showcaseFooter .btnPrimary,
@@ -2037,6 +2118,83 @@ box-shadow: inset 0 0 0 1px rgba(7,17,31,0.08), 0 16px 22px rgba(7,17,31,0.1);
   .uploadMockDropzone { min-height: 180px; }
   .toolPanelNote { display: none; }
   .compareFrame { min-height: 300px; }
+}
+
+/* Homepage examples visual QA override: keep real sample images complete, aligned, and label-safe. */
+.showcaseBlock .workflowStages {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  max-width: 980px;
+  margin: 20px auto 24px;
+}
+.showcaseBlock .stageArt {
+  aspect-ratio: 1.28 / 1;
+  min-height: 146px;
+  border-radius: 18px;
+}
+.showcaseBlock .stageArt .realDemoArt {
+  padding: 12px;
+}
+.showcaseBlock .stageArt .demoArtImage {
+  width: auto;
+  height: auto;
+  max-width: calc(100% - 4px);
+  max-height: calc(100% - 4px);
+  object-fit: contain;
+}
+.showcaseBlock .stageArt .realDemoArt.isBefore .demoArtImage {
+  width: auto;
+  height: min(78%, 132px);
+  max-width: min(78%, 132px);
+  padding: 6px;
+}
+.showcaseBlock .stageArt .realDemoArt.isAfter .demoArtImage {
+  width: min(96%, 210px);
+  max-height: 90%;
+}
+.showcaseBlock .stageGridArt {
+  padding: 8px;
+}
+.showcaseBlock .stageGridArt .realDemoArt {
+  padding: 4px;
+}
+.showcaseBlock .stageGridArt .realDemoArt.isBefore .demoArtImage,
+.showcaseBlock .stageGridArt .realDemoArt.isAfter .demoArtImage {
+  width: auto;
+  height: auto;
+  max-width: 88%;
+  max-height: 82%;
+  padding: 2px;
+}
+.showcaseBlock .compareFrame {
+  min-height: 420px;
+  max-width: 860px;
+}
+.showcaseBlock .compareAfter .demoArt {
+  width: min(860px, calc(100vw - 40px));
+}
+.showcaseBlock .compareFrame .realDemoArt {
+  padding: 54px 28px 28px;
+}
+.showcaseBlock .compareFrame .demoArtImage {
+  width: min(90%, 640px);
+  max-height: 90%;
+}
+.showcaseBlock .compareFrame .realDemoArt.isBefore .demoArtImage {
+  width: auto;
+  height: min(70%, 320px);
+  max-width: min(55%, 360px);
+}
+.showcaseBlock .demoArtLabel { display: none !important; }
+
+@media (max-width: 980px) {
+  .showcaseBlock .workflowStages { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 620px; }
+  .showcaseBlock .stageArt { min-height: 150px; }
+}
+@media (max-width: 640px) {
+  .showcaseBlock .workflowStages { grid-template-columns: 1fr; max-width: 360px; }
+  .showcaseBlock .stageArt { min-height: 180px; }
+  .showcaseBlock .compareFrame { min-height: 320px; }
 }
 
 /* Tool page final pass — workbench-first density and viewport affordances */
