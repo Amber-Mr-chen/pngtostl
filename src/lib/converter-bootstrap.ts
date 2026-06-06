@@ -26,6 +26,17 @@ export const converterBootstrapScript = `
     const button = form.querySelector('[data-generate-stl="true"]');
 
     function setText(el, text) { if (el) el.textContent = text; }
+    function trackEvent(event, payload) {
+      if (typeof window === 'undefined') return;
+      const cleanPayload = {};
+      Object.keys(payload || {}).forEach((key) => {
+        if (payload[key] !== undefined) cleanPayload[key] = payload[key];
+      });
+      window.pngtostlEvents = window.pngtostlEvents || [];
+      window.pngtostlEvents.push({ event, payload: cleanPayload, ts: Date.now() });
+      if (typeof window.gtag === 'function') window.gtag('event', event, cleanPayload);
+      if (Array.isArray(window.dataLayer)) window.dataLayer.push(Object.assign({ event }, cleanPayload));
+    }
     function mode() { return modeInput ? modeInput.value : (form.dataset.mode || ''); }
     function syncWidth() { setText(widthValue, (widthInput ? widthInput.value : '90') + ' mm'); }
     function syncDepth() { setText(depthValue, Number(depthInput ? depthInput.value : 1.8).toFixed(1) + ' mm'); }
@@ -99,6 +110,15 @@ export const converterBootstrapScript = `
         const gridRows = response.headers.get('x-tool-grid-rows');
         const occupiedRatio = response.headers.get('x-tool-occupied-ratio');
         const url = URL.createObjectURL(blob);
+        trackEvent('converter_generate_success', {
+          tool: form.dataset.tool || form.dataset.mode || 'converter',
+          mode: selectedMode,
+          path: location.pathname,
+          output_kind: outputKind,
+          bytes: blob.size,
+          triangles: triangleCount,
+          coverage: occupiedRatio || 'n/a'
+        });
         const anchor = document.createElement('a');
         anchor.href = url;
         anchor.download = outputKind === 'lithophane' ? 'pngtostl-lithophane.stl' : 'pngtostl-' + outputKind + '.stl';

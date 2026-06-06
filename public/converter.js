@@ -27,7 +27,10 @@
 
     function track(eventName, detail) {
       const payload = Object.assign({ tool: form.dataset.tool || form.dataset.mode || 'converter', mode: selectedMode(), path: location.pathname }, detail || {});
+      window.pngtostlEvents = window.pngtostlEvents || [];
+      window.pngtostlEvents.push({ event: eventName, payload, ts: Date.now() });
       window.dispatchEvent(new CustomEvent('pngtostl:event', { detail: { name: eventName, payload } }));
+      if (typeof window.gtag === 'function') window.gtag('event', eventName, payload);
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: eventName, ...payload });
     }
@@ -211,13 +214,13 @@
           downloadLink.dataset.objectUrl = url;
           downloadLink.download = filename;
           downloadLink.style.display = 'block';
-          downloadLink.onclick = () => track('pngtostl_download_clicked', { filename, bytes: blob.size, triangles: triangleCount });
+          downloadLink.onclick = () => track('converter_download_click', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount });
         }
         if (previewCanvas && window.PNGTOSTLPreview && typeof window.PNGTOSTLPreview.mount === 'function') {
           window.PNGTOSTLPreview.mount(previewCanvas, blob);
         }
         setText(status, 'STL ready');
-        track('pngtostl_generate_success', { outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
+        track('converter_generate_success', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
         setMetrics([
           { label: 'Triangles', value: triangleCount },
           { label: 'File size', value: Math.round(blob.size / 1024) + ' KB' },

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { trackEvent } from "@/lib/analytics";
 import type { sampleWorkflows } from "@/lib/tools";
 
 type SampleWorkflow = (typeof sampleWorkflows)[number];
@@ -39,7 +40,13 @@ export function SampleGalleryFilter({ samples }: { samples: SampleWorkflow[] }) 
               role="tab"
               aria-selected={active === filter.key}
               className={active === filter.key ? "active" : undefined}
-              onClick={() => setActive(filter.key)}
+              onClick={() => {
+                setActive(filter.key);
+                trackEvent("samples_filter_click", {
+                  filter: filter.key,
+                  label: filter.label,
+                });
+              }}
             >
               {filter.label}
             </button>
@@ -81,8 +88,28 @@ export function SampleGalleryFilter({ samples }: { samples: SampleWorkflow[] }) 
               <p><strong>Best for:</strong> {sample.bestFor}</p>
               <p><strong>Avoid:</strong> {sample.avoid}</p>
               <div className="sampleActions">
-                <Link className="btnSecondary" href={sample.route}>Open workflow</Link>
-                <a className="sampleDownload" href={sample.stlPath} download>
+                <Link
+                  className="btnSecondary"
+                  href={sample.route}
+                  onClick={() => trackEvent("sample_open_workflow_click", {
+                    sample: sample.title,
+                    category: sample.category,
+                    route: sample.route,
+                  })}
+                >
+                  Open workflow
+                </Link>
+                <a
+                  className="sampleDownload"
+                  href={sample.stlPath}
+                  download
+                  onClick={() => trackEvent("sample_download_click", {
+                    sample: sample.title,
+                    category: sample.category,
+                    stl_path: sample.stlPath,
+                    file_size_label: sample.fileSizeLabel,
+                  })}
+                >
                   Download sample STL <span>{sample.fileSizeLabel}</span>
                 </a>
               </div>

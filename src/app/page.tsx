@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { TrackedLink } from "@/components/TrackedLink";
 import { MiniToolExample, ShowcaseDemo } from "@/components/HomeShowcase";
 import { helperPages, tools } from "@/lib/tools";
 
@@ -143,7 +144,14 @@ export default function HomePage() {
             <p className="homeKicker">Pick an output type</p>
             <h2>Start from the print result you want.</h2>
           </div>
-          <Link className="proofExamplesLink" href="/samples">View all examples</Link>
+          <TrackedLink
+            className="proofExamplesLink"
+            href="/samples"
+            eventName="homepage_view_examples_click"
+            eventPayload={{ location: "home_proof_strip" }}
+          >
+            View all examples
+          </TrackedLink>
         </div>
         {proofSamples.map((sample) => (
           <Link key={sample.label} className="proofCard" href={sample.route}>
