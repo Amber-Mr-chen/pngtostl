@@ -1391,7 +1391,25 @@ body {
 
 .container,
 .homePage { width: min(1180px, calc(100% - 48px)); }
-.homePage { padding-top: 18px; }
+.homePage { padding-top: 0; }
+
+.homeNav,
+.toolHeader {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.homeNav {
+  padding-top: 18px;
+}
+
+.toolHeader {
+  padding-top: 18px;
+}
 
 .homeNav,
 .toolHeader nav {
@@ -2629,3 +2647,21 @@ box-shadow: inset 0 0 0 1px rgba(7,17,31,0.08), 0 16px 22px rgba(7,17,31,0.1);
   .sampleSourceShape,
   .sampleMeshShape { width: 76px; height: 76px; }
 }
+
+/* Global sticky brand header: keep PNGtoSTL home link available on every page while scrolling. */
+.homeNav,
+.toolHeader {
+  position: sticky !important;
+  top: 0;
+  z-index: 120;
+  background: rgba(255, 255, 255, 0.94);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.homeNav .brandMark,
+.toolHeader .brandMark {
+  position: relative;
+  z-index: 121;
+}
+
