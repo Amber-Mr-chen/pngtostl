@@ -115,6 +115,8 @@ function StaticInfoPage({ slug }: { slug: string }) {
   if (slug === "samples") return <SamplesPage />;
   if (slug === "privacy") return <PrivacyPage />;
   if (slug === "terms") return <TermsPage />;
+  if (slug === "developers") return <DevelopersPage />;
+  if (slug === "pricing") return <PricingPage />;
   if (slug === "contact") return <ContactPage />;
   notFound();
 }
@@ -170,19 +172,68 @@ function TermsPage() {
   );
 }
 
+function DevelopersPage() {
+  return (
+    <main className="container infoPage">
+      <section className="shell infoHero">
+        <p className="pill">API and batch workflows</p>
+        <h1>Developers, batch conversion, and commercial image-to-STL workflows</h1>
+        <p>PNGtoSTL is free for instant single-file conversion today. If you need batch processing, repeatable API access, higher-detail STL output, or commercial workflow support, tell us what you are building so we can prioritize the right Pro/API features.</p>
+        <div className="heroActions compactActions">
+          <Link className="btnPrimary" href="mailto:support@pngtostl.net?subject=PNGtoSTL%20API%20or%20batch%20access&body=Use%20case%3A%0AExpected%20monthly%20conversions%3A%0AInput%20formats%3A%0AOutput%20workflow%20%28relief%2Flogo%2Flithophane%2Fheightmap%29%3A%0ACommercial%20or%20personal%20use%3A%0A">Request API access</Link>
+          <Link className="btnSecondary" href="/pricing">View planned options</Link>
+        </div>
+      </section>
+      <section className="infoGrid">
+        <article className="shell"><h2>Batch image-to-STL conversion</h2><p>Tell us if you need to convert many PNG, JPG, WebP, GIF, or BMP files into relief, logo badge, lithophane, or heightmap STL outputs. Include approximate monthly volume, average image size, and target output mode.</p></article>
+        <article className="shell"><h2>API access</h2><p>API access is not self-serve yet. Early requests help define the limits, authentication, file-size caps, response format, and pricing before a public API is released.</p></article>
+        <article className="shell"><h2>Commercial use</h2><p>If you use generated STL files for client work, shops, print farms, education, or internal production, contact us with your expected workflow. PNGtoSTL does not currently require login for normal single-file conversion.</p></article>
+        <article className="shell"><h2>What to include</h2><p>Use case, monthly conversion estimate, input formats, output modes, required detail level, whether you need saved history, and whether you need invoice or team access later.</p></article>
+        <article className="shell"><h2>Current free path</h2><p>For single images, use the no-signup converter first. It is the fastest way to validate whether the relief, logo, lithophane, or heightmap output fits your source image.</p><p><Link href="/image-to-stl">Open Image to STL</Link></p></article>
+        <article className="shell"><h2>Not promised yet</h2><p>Self-serve API keys, guaranteed uptime, saved project libraries, billing, and team dashboards are planned only after enough real demand is confirmed.</p></article>
+      </section>
+    </main>
+  );
+}
+
+function PricingPage() {
+  return (
+    <main className="container infoPage">
+      <section className="shell infoHero">
+        <p className="pill">Pricing</p>
+        <h1>PNGtoSTL pricing</h1>
+        <p>The current converter is free for no-signup single-file image-to-STL use. Pro, batch, and API options are planned around real usage demand, not launched payment pages yet.</p>
+        <div className="heroActions compactActions">
+          <Link className="btnPrimary" href="/image-to-stl">Use free converter</Link>
+          <Link className="btnSecondary" href="/developers">Request API or batch access</Link>
+        </div>
+      </section>
+      <section className="infoGrid">
+        <article className="shell"><h2>Free</h2><p><strong>Available now.</strong> Single-file conversion for relief, logo badge, lithophane, and heightmap workflows. No signup required. Best for makers testing images before printing.</p><p><Link href="/samples">See sample STL outputs</Link></p></article>
+        <article className="shell"><h2>Pro</h2><p><strong>Planned.</strong> Higher practical limits, more detail controls, faster repeat workflows, and saved defaults may be added after usage data shows where serious users need help.</p><p>No payment is collected on this page.</p></article>
+        <article className="shell"><h2>Batch</h2><p><strong>By request.</strong> For schools, print farms, shops, and teams that need many image-to-STL conversions. Contact us with volume, formats, and output mode.</p><p><Link href="mailto:support@pngtostl.net?subject=PNGtoSTL%20batch%20conversion%20request">Ask about batch conversion</Link></p></article>
+        <article className="shell"><h2>API</h2><p><strong>Early access interest.</strong> API keys and programmatic conversion are not self-serve yet. Requests help define usage limits and price points before launch.</p><p><Link href="/developers">Developer access details</Link></p></article>
+        <article className="shell"><h2>Why no forced account?</h2><p>Most users arrive from search and want one result quickly. The free converter keeps the core path simple: upload, generate, download. Accounts make sense later for history, quota, API keys, and billing.</p></article>
+        <article className="shell"><h2>Future terms</h2><p>If paid features launch, limits, cancellation, refunds, commercial terms, privacy behavior, and billing details will be published before purchase.</p><p><Link href="/terms">Read current terms</Link></p></article>
+      </section>
+    </main>
+  );
+}
+
 function ContactPage() {
   return (
     <main className="container infoPage">
       <section className="shell infoHero">
         <p className="pill">Contact</p>
         <h1>Contact PNGtoSTL</h1>
-        <p>Send feedback, report conversion issues, or suggest example workflows. Include the page, browser, image type, and what you expected when reporting a bug.</p>
+        <p>Send feedback, report conversion issues, request API or batch conversion access, or suggest example workflows. Include the page, browser, image type, and what you expected when reporting a bug.</p>
       </section>
       <section className="infoGrid">
         <article className="shell"><h2>Support</h2><p>Email: <a href="mailto:support@pngtostl.net">support@pngtostl.net</a></p><p>For conversion issues, mention the tool route, input format, selected mode, browser, approximate image size, and whether the STL downloaded.</p></article>
         <article className="shell"><h2>Bug report template</h2><p>Page: /image-to-stl or another route. Input: PNG/JPG/WebP/GIF/BMP. Mode: relief, logo, lithophane, or heightmap. Expected result: what you wanted. Actual result: error text, missing download, or unexpected geometry.</p></article>
+        <article className="shell"><h2>API, batch, or commercial use</h2><p>For API access, batch image-to-STL conversion, school/shop workflows, or commercial use questions, include expected monthly conversions, input formats, output mode, and whether you need invoices or team access.</p><p><Link href="/developers">Developer and batch access</Link></p></article>
         <article className="shell"><h2>Rights or IP concerns</h2><p>Send the URL, the material you believe is affected, your relationship to that material, and a reply address. Do not send private keys, passwords, or unrelated confidential files.</p></article>
-        <article className="shell"><h2>Useful links</h2><p><Link href="/samples">Examples</Link></p><p><Link href="/image-to-stl">Image to STL</Link></p><p><Link href="/faq">FAQ</Link></p></article>
+        <article className="shell"><h2>Useful links</h2><p><Link href="/samples">Examples</Link></p><p><Link href="/pricing">Pricing</Link></p><p><Link href="/developers">API and batch access</Link></p><p><Link href="/image-to-stl">Image to STL</Link></p><p><Link href="/faq">FAQ</Link></p></article>
       </section>
     </main>
   );

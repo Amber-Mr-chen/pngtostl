@@ -424,9 +424,19 @@ export const staticPages = [
     description: "Rules and limitations for using PNGtoSTL image-to-STL tools and generated files.",
   },
   {
+    slug: "developers",
+    title: "PNGtoSTL Developers and Batch Conversion",
+    description: "Request early access for batch image-to-STL conversion, API workflows, and commercial PNGtoSTL use cases.",
+  },
+  {
+    slug: "pricing",
+    title: "PNGtoSTL Pricing",
+    description: "Current free image-to-STL access and planned Pro, batch, and API options for commercial workflows.",
+  },
+  {
     slug: "contact",
     title: "Contact PNGtoSTL",
-    description: "Contact PNGtoSTL for support, feedback, bug reports, and business inquiries.",
+    description: "Contact PNGtoSTL for support, feedback, bug reports, API access, batch conversion, and business inquiries.",
   },
 ];
 
