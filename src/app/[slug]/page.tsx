@@ -121,6 +121,18 @@ function StaticInfoPage({ slug }: { slug: string }) {
   notFound();
 }
 
+function LegalSupportLinks() {
+  return (
+    <nav className="shell legalSupportLinks" aria-label="Legal and support links">
+      <Link href="/privacy">Privacy</Link>
+      <Link href="/terms">Terms</Link>
+      <Link href="/contact">Contact</Link>
+      <Link href="/pricing">Pricing</Link>
+      <Link href="/developers">API and batch access</Link>
+    </nav>
+  );
+}
+
 function SamplesPage() {
   return (
     <main className="container infoPage">
@@ -130,6 +142,7 @@ function SamplesPage() {
         <p>Use these examples to choose the right PNGtoSTL workflow before you upload. Each sample explains the input, output, recommended settings, and common failure cases.</p>
       </section>
       <SampleGalleryFilter samples={sampleWorkflows} />
+      <LegalSupportLinks />
     </main>
   );
 }
@@ -146,8 +159,10 @@ function PrivacyPage() {
         <article className="shell"><h2>Uploaded images</h2><p>When you generate an STL, the selected image is sent to the conversion endpoint for that request. The current tool is designed to return the STL result directly; it does not provide public file hosting or account storage. Server and platform logs may record technical request metadata needed to operate and protect the service.</p></article>
         <article className="shell"><h2>Generated STL files</h2><p>The generated STL is returned to your browser for download. PNGtoSTL does not provide a saved project library in this version. You are responsible for checking scale, printability, and rights to the source image before printing or sharing output.</p></article>
         <article className="shell"><h2>Analytics and cookies</h2><p>The interface may emit lightweight product events such as upload selected, generate clicked, generate success, download clicked, and generate error. These events are used to understand tool reliability and do not need image file contents. If third-party analytics is added, this page should be updated with the provider and cookie behavior.</p></article>
+        <article className="shell"><h2>Service providers</h2><p>PNGtoSTL runs on hosting and edge infrastructure providers that process technical request data needed to deliver pages, conversion responses, security controls, and logs. If we later add named analytics, email, payment, authentication, storage, or API-key providers, this policy should be updated before those features are launched.</p></article>
         <article className="shell"><h2>Contact and IP requests</h2><p>If you contact us, we may use your message and reply address to respond. Do not send passwords, private keys, confidential files, or sensitive personal data through contact requests. For rights or IP complaints, include the page URL, the material at issue, and your contact information.</p></article>
       </section>
+      <LegalSupportLinks />
     </main>
   );
 }
@@ -164,10 +179,11 @@ function TermsPage() {
         <article className="shell"><h2>Your files and rights</h2><p>Only upload images you own, have permission to use, or are allowed to process. You are responsible for your source image rights and how you use the generated STL.</p></article>
         <article className="shell"><h2>Output limitations</h2><p>PNGtoSTL does not create full CAD reconstruction from one photo. It creates relief, lithophane, logo, or heightmap-style STL surfaces depending on the selected workflow. STL files store geometry, not source image color.</p></article>
         <article className="shell"><h2>Printing responsibility</h2><p>Always inspect generated STL files in a slicer or viewer before printing. We do not guarantee that every generated model will be printable on every printer, material, nozzle, slicer profile, or scale.</p></article>
-        <article className="shell"><h2>Availability and changes</h2><p>Features, free limits, analytics, API access, and future account workflows may change. If paid features are introduced later, pricing, limits, cancellation, and refund terms should be published before purchase.</p></article>
+        <article className="shell"><h2>Availability and changes</h2><p>Features, free limits, analytics, API access, and future account workflows may change. PNGtoSTL does not currently collect payment for the public single-file converter. If paid features are introduced later, pricing, limits, cancellation, and refund terms should be published before purchase.</p></article>
         <article className="shell"><h2>No professional advice</h2><p>Print settings and workflow notes are practical starting points, not engineering, manufacturing, safety, or legal advice.</p></article>
         <article className="shell"><h2>Abuse and access</h2><p>Automated abuse, excessive requests, attempts to bypass limits, or use that interferes with service reliability may be blocked.</p></article>
       </section>
+      <LegalSupportLinks />
     </main>
   );
 }
@@ -190,8 +206,9 @@ function DevelopersPage() {
         <article className="shell"><h2>Commercial use</h2><p>If you use generated STL files for client work, shops, print farms, education, or internal production, contact us with your expected workflow. PNGtoSTL does not currently require login for normal single-file conversion.</p></article>
         <article className="shell"><h2>What to include</h2><p>Use case, monthly conversion estimate, input formats, output modes, required detail level, whether you need saved history, and whether you need invoice or team access later.</p></article>
         <article className="shell"><h2>Current free path</h2><p>For single images, use the no-signup converter first. It is the fastest way to validate whether the relief, logo, lithophane, or heightmap output fits your source image.</p><p><Link href="/image-to-stl">Open Image to STL</Link></p></article>
-        <article className="shell"><h2>Not promised yet</h2><p>Self-serve API keys, guaranteed uptime, saved project libraries, billing, and team dashboards are planned only after enough real demand is confirmed.</p></article>
+        <article className="shell"><h2>Not promised yet</h2><p>Self-serve API keys, uptime commitments, saved project libraries, billing, and team dashboards are planned only after enough real demand is confirmed.</p></article>
       </section>
+      <LegalSupportLinks />
     </main>
   );
 }
@@ -216,6 +233,7 @@ function PricingPage() {
         <article className="shell"><h2>Why no forced account?</h2><p>Most users arrive from search and want one result quickly. The free converter keeps the core path simple: upload, generate, download. Accounts make sense later for history, quota, API keys, and billing.</p></article>
         <article className="shell"><h2>Future terms</h2><p>If paid features launch, limits, cancellation, refunds, commercial terms, privacy behavior, and billing details will be published before purchase.</p><p><Link href="/terms">Read current terms</Link></p></article>
       </section>
+      <LegalSupportLinks />
     </main>
   );
 }
@@ -235,6 +253,7 @@ function ContactPage() {
         <article className="shell"><h2>Rights or IP concerns</h2><p>Send the URL, the material you believe is affected, your relationship to that material, and a reply address. Do not send private keys, passwords, or unrelated confidential files.</p></article>
         <article className="shell"><h2>Useful links</h2><p><Link href="/samples">Examples</Link></p><p><Link href="/pricing">Pricing</Link></p><p><Link href="/developers">API and batch access</Link></p><p><Link href="/image-to-stl">Image to STL</Link></p><p><Link href="/faq">FAQ</Link></p></article>
       </section>
+      <LegalSupportLinks />
     </main>
   );
 }

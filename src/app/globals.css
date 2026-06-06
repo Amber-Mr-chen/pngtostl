@@ -1273,6 +1273,25 @@ a {
 }
 .infoGrid .shell { padding: 22px; }
 .infoGrid a { color: var(--primary); font-weight: 750; }
+.legalSupportLinks {
+  margin-top: 18px;
+  padding: 18px 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.legalSupportLinks a {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 750;
+}
+.legalSupportLinks a:hover {
+  color: var(--ink);
+}
 @media (max-width: 820px) {
   .sampleGallery,
   .infoGrid { grid-template-columns: 1fr; }
