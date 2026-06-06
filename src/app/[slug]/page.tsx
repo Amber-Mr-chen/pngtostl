@@ -134,6 +134,11 @@ function SamplesPage() {
               <h2>{sample.title}</h2>
               <p><strong>Input:</strong> {sample.input}</p>
               <p><strong>Output:</strong> {sample.output}</p>
+              <div className="sampleEvidence">
+                <p><strong>Source preview:</strong> {sample.sourcePreview}</p>
+                <p><strong>Generated result:</strong> {sample.resultPreview}</p>
+                <p><strong>Expected metrics:</strong> {sample.metrics}</p>
+              </div>
               <ul>
                 {sample.settings.map((setting) => <li key={setting}>{setting}</li>)}
               </ul>
@@ -154,13 +159,13 @@ function PrivacyPage() {
       <section className="shell infoHero">
         <p className="pill">Privacy</p>
         <h1>Privacy Policy</h1>
-        <p>PNGtoSTL is a browser-first image-to-STL tool. This page explains what data is used when you upload an image, generate an STL, use lightweight analytics, or contact us.</p>
+        <p>Last updated: 2026-06-06. PNGtoSTL is a browser-first image-to-STL tool. This page explains what data is used when you upload an image, generate an STL, use lightweight analytics, or contact us.</p>
       </section>
       <section className="infoGrid">
-        <article className="shell"><h2>Uploaded images</h2><p>When you generate an STL, the selected image is sent to the conversion endpoint for that request. The current tool is designed to return the STL result directly; it does not provide public file hosting or account storage.</p></article>
-        <article className="shell"><h2>Generated STL files</h2><p>The generated STL is returned to your browser for download. You are responsible for checking scale, printability, and rights to the source image before printing or sharing output.</p></article>
-        <article className="shell"><h2>Analytics events</h2><p>The interface may emit lightweight product events such as upload selected, generate clicked, generate success, download clicked, and generate error. These events are used to understand tool reliability and do not need image file contents.</p></article>
-        <article className="shell"><h2>Contact messages</h2><p>If you contact us, we may use your message and reply address to respond. Do not send passwords, private keys, confidential files, or sensitive personal data through contact requests.</p></article>
+        <article className="shell"><h2>Uploaded images</h2><p>When you generate an STL, the selected image is sent to the conversion endpoint for that request. The current tool is designed to return the STL result directly; it does not provide public file hosting or account storage. Server and platform logs may record technical request metadata needed to operate and protect the service.</p></article>
+        <article className="shell"><h2>Generated STL files</h2><p>The generated STL is returned to your browser for download. PNGtoSTL does not provide a saved project library in this version. You are responsible for checking scale, printability, and rights to the source image before printing or sharing output.</p></article>
+        <article className="shell"><h2>Analytics and cookies</h2><p>The interface may emit lightweight product events such as upload selected, generate clicked, generate success, download clicked, and generate error. These events are used to understand tool reliability and do not need image file contents. If third-party analytics is added, this page should be updated with the provider and cookie behavior.</p></article>
+        <article className="shell"><h2>Contact and IP requests</h2><p>If you contact us, we may use your message and reply address to respond. Do not send passwords, private keys, confidential files, or sensitive personal data through contact requests. For rights or IP complaints, include the page URL, the material at issue, and your contact information.</p></article>
       </section>
     </main>
   );
@@ -172,13 +177,15 @@ function TermsPage() {
       <section className="shell infoHero">
         <p className="pill">Terms</p>
         <h1>Terms of Use</h1>
-        <p>Use PNGtoSTL as a practical maker tool for image-based reliefs, logo badges, lithophanes, and heightmaps. The output is provided as-is and should be checked before printing.</p>
+        <p>Last updated: 2026-06-06. Use PNGtoSTL as a practical maker tool for image-based reliefs, logo badges, lithophanes, and heightmaps. The output is provided as-is and should be checked before printing.</p>
       </section>
       <section className="infoGrid">
         <article className="shell"><h2>Your files and rights</h2><p>Only upload images you own, have permission to use, or are allowed to process. You are responsible for your source image rights and how you use the generated STL.</p></article>
-        <article className="shell"><h2>Output limitations</h2><p>PNGtoSTL does not create full CAD reconstruction from one photo. It creates relief, lithophane, logo, or heightmap-style STL surfaces depending on the selected workflow.</p></article>
-        <article className="shell"><h2>Printing responsibility</h2><p>Always inspect generated STL files in a slicer or viewer before printing. We do not guarantee that every generated model will be printable on every printer or material.</p></article>
-        <article className="shell"><h2>Service changes</h2><p>Features, free limits, analytics, API access, and future account workflows may change. If paid features are introduced later, pricing and refund terms should be published before purchase.</p></article>
+        <article className="shell"><h2>Output limitations</h2><p>PNGtoSTL does not create full CAD reconstruction from one photo. It creates relief, lithophane, logo, or heightmap-style STL surfaces depending on the selected workflow. STL files store geometry, not source image color.</p></article>
+        <article className="shell"><h2>Printing responsibility</h2><p>Always inspect generated STL files in a slicer or viewer before printing. We do not guarantee that every generated model will be printable on every printer, material, nozzle, slicer profile, or scale.</p></article>
+        <article className="shell"><h2>Availability and changes</h2><p>Features, free limits, analytics, API access, and future account workflows may change. If paid features are introduced later, pricing, limits, cancellation, and refund terms should be published before purchase.</p></article>
+        <article className="shell"><h2>No professional advice</h2><p>Print settings and workflow notes are practical starting points, not engineering, manufacturing, safety, or legal advice.</p></article>
+        <article className="shell"><h2>Abuse and access</h2><p>Automated abuse, excessive requests, attempts to bypass limits, or use that interferes with service reliability may be blocked.</p></article>
       </section>
     </main>
   );
@@ -193,7 +200,9 @@ function ContactPage() {
         <p>Send feedback, report conversion issues, or suggest example workflows. Include the page, browser, image type, and what you expected when reporting a bug.</p>
       </section>
       <section className="infoGrid">
-        <article className="shell"><h2>Support</h2><p>Email: <a href="mailto:support@pngtostl.net">support@pngtostl.net</a></p><p>For conversion issues, mention the tool route, input format, selected mode, and whether the STL downloaded.</p></article>
+        <article className="shell"><h2>Support</h2><p>Email: <a href="mailto:support@pngtostl.net">support@pngtostl.net</a></p><p>For conversion issues, mention the tool route, input format, selected mode, browser, approximate image size, and whether the STL downloaded.</p></article>
+        <article className="shell"><h2>Bug report template</h2><p>Page: /image-to-stl or another route. Input: PNG/JPG/WebP/GIF/BMP. Mode: relief, logo, lithophane, or heightmap. Expected result: what you wanted. Actual result: error text, missing download, or unexpected geometry.</p></article>
+        <article className="shell"><h2>Rights or IP concerns</h2><p>Send the URL, the material you believe is affected, your relationship to that material, and a reply address. Do not send private keys, passwords, or unrelated confidential files.</p></article>
         <article className="shell"><h2>Useful links</h2><p><Link href="/samples">Examples</Link></p><p><Link href="/image-to-stl">Image to STL</Link></p><p><Link href="/faq">FAQ</Link></p></article>
       </section>
     </main>

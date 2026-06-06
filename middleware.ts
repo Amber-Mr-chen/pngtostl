@@ -2,8 +2,12 @@ import { NextResponse, type NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const host = request.headers.get("host");
+  const forwardedProto = request.headers.get("x-forwarded-proto");
+  const isCanonicalHost = host === "pngtostl.net";
+  const isWwwHost = host === "www.pngtostl.net";
+  const isHttpRequest = forwardedProto === "http" || request.nextUrl.protocol === "http:";
 
-  if (host === "www.pngtostl.net") {
+  if (isWwwHost || (isCanonicalHost && isHttpRequest)) {
     const url = request.nextUrl.clone();
     url.hostname = "pngtostl.net";
     url.protocol = "https:";

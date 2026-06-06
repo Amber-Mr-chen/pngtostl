@@ -62,7 +62,7 @@ export default function HomePage() {
           <Link href="/faq">Guides</Link>
         </nav>
         <div className="accountActions" aria-label="Primary action">
-          <a className="signupButton" href="/image-to-stl">Start converting</a>
+          <Link className="signupButton" href="/image-to-stl">Start converting</Link>
         </div>
         </div>
       </header>

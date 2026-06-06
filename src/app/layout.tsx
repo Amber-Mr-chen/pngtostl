@@ -30,11 +30,7 @@ const websiteJsonLd = {
   "@type": "WebSite",
   name: "PNGtoSTL",
   url: "https://pngtostl.net",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: "https://pngtostl.net/?q={search_term_string}",
-    "query-input": "required name=search_term_string",
-  },
+  description: "Browser-based image-to-STL tools for reliefs, logo badges, lithophanes, and heightmap surfaces.",
 };
 
 export default function RootLayout({

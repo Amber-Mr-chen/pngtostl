@@ -1188,9 +1188,17 @@ a {
 .workflowChoice.heroToolLink { min-height: auto; padding: 12px; }
 .workflowChoice.heroToolLink:hover { transform: translateY(-1px); }
 @media (max-width: 620px) {
-  .uploadMockDropzone { min-height: 190px; padding: 18px; }
-  .heroUploadPanel { padding: 14px; }
-  .workflowChoice.heroToolLink { padding: 11px; }
+  .uploadMockDropzone { min-height: 150px; padding: 14px; }
+  .heroUploadPanel { padding: 12px; gap: 10px; }
+  .workflowChoice.heroToolLink { padding: 10px; }
+  .homeHero { padding: 18px; gap: 18px; }
+  .homeHero h1 { font-size: 2.05rem; line-height: 1.02; }
+  .homeHeroCopy > p:not(.homeKicker) { margin-top: 14px; line-height: 1.5; }
+  .heroActions { margin-top: 18px; }
+  .uploadIcon { width: 44px; height: 44px; font-size: 1.45rem; }
+  .uploadMockDropzone strong { font-size: 1.08rem; }
+  .workflowPicker { gap: 7px; }
+  .toolPanelNote { display: none; }
 }
 
 
@@ -1233,6 +1241,16 @@ a {
 .infoGrid h2 { margin: 0 0 10px; }
 .sampleCard p,
 .infoGrid p { color: var(--muted); }
+.sampleEvidence {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #f8fbff;
+}
+.sampleEvidence p { margin: 0; }
 .sampleCard ul { margin: 10px 0; padding-left: 18px; color: var(--ink); }
 .sampleArt {
   min-height: 150px;
