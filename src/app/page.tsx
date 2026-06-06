@@ -18,7 +18,7 @@ const proofSamples = [
     label: "Logo badge",
     input: "transparent PNG",
     output: "95 mm raised plate",
-    metric: "17,940 triangles",
+    metric: "21,744 triangles",
     route: "/logo-to-stl",
     kind: "logo",
     sourceImage: "/samples/logo-badge-source.png",

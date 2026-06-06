@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { CSSProperties } from "react";
@@ -14,6 +15,8 @@ const samples = [
     after: "Raised STL preview",
     accent: "#1769ff",
     mode: "logo",
+    sourceImage: "/samples/logo-badge-source.png",
+    previewImage: "/samples/logo-badge-preview.png",
   },
   {
     id: "photo",
@@ -24,6 +27,8 @@ const samples = [
     after: "Backlit depth map",
     accent: "#f59e0b",
     mode: "litho",
+    sourceImage: "/samples/lithophane-panel-source.png",
+    previewImage: "/samples/lithophane-panel-preview.png",
   },
   {
     id: "heightmap",
@@ -34,6 +39,8 @@ const samples = [
     after: "Terrain relief",
     accent: "#14b8a6",
     mode: "terrain",
+    sourceImage: "/samples/heightmap-surface-source.png",
+    previewImage: "/samples/heightmap-surface-preview.png",
   },
 ];
 
@@ -48,38 +55,20 @@ const stageCopy = [
 
 function DemoArt({ sample, side }: { sample: Sample; side: "before" | "after" }) {
   const isAfter = side === "after";
-  const gridStyle = isAfter
-    ? {
-        backgroundImage:
-          "linear-gradient(45deg, #d8dee8 25%, transparent 25%), linear-gradient(-45deg, #d8dee8 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #d8dee8 75%), linear-gradient(-45deg, transparent 75%, #d8dee8 75%)",
-        backgroundSize: "28px 28px",
-        backgroundPosition: "0 0, 0 14px, 14px -14px, -14px 0",
-      }
-    : {};
+  const imageSrc = isAfter ? sample.previewImage : sample.sourceImage;
+  const label = isAfter ? sample.after : sample.before;
 
   return (
-    <div className={`demoArt ${isAfter ? "isAfter" : "isBefore"}`} style={gridStyle}>
-      {sample.mode === "logo" && (
-        <div className={`logoSample ${isAfter ? "stl" : "flat"}`}>
-          <span />
-          <b />
-          <i />
-        </div>
-      )}
-      {sample.mode === "litho" && (
-        <div className={`lithoSample ${isAfter ? "stl" : "flat"}`}>
-          <span />
-          <b />
-          <i />
-        </div>
-      )}
-      {sample.mode === "terrain" && (
-        <div className={`terrainSample ${isAfter ? "stl" : "flat"}`}>
-          <span />
-          <b />
-          <i />
-        </div>
-      )}
+    <div className={`demoArt realDemoArt ${isAfter ? "isAfter" : "isBefore"}`}>
+      <Image
+        className="demoArtImage"
+        src={imageSrc}
+        alt=""
+        width={isAfter ? 720 : 360}
+        height={isAfter ? 492 : 360}
+        loading="lazy"
+      />
+      <span className="demoArtLabel">{label}</span>
     </div>
   );
 }
