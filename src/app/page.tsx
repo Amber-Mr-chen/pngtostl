@@ -21,8 +21,8 @@ const proofSamples = [
     metric: "22,300 triangles",
     route: "/logo-to-stl",
     kind: "logo",
-    sourceImage: "/samples/logo-badge-premium-v2-source.png",
-    previewImage: "/samples/logo-badge-premium-v2-preview.png",
+    sourceImage: "/samples/logo-badge-premium-v4-source.png",
+    previewImage: "/samples/logo-badge-premium-v4-preview.png",
   },
   {
     label: "Photo lithophane",
@@ -31,8 +31,8 @@ const proofSamples = [
     metric: "65,532 triangles",
     route: "/lithophane-generator",
     kind: "litho",
-    sourceImage: "/samples/lithophane-panel-premium-v2-source.png",
-    previewImage: "/samples/lithophane-panel-premium-v2-preview.png",
+    sourceImage: "/samples/lithophane-panel-premium-v4-source.png",
+    previewImage: "/samples/lithophane-panel-premium-v4-preview.png",
   },
   {
     label: "Heightmap surface",
@@ -41,8 +41,8 @@ const proofSamples = [
     metric: "65,532 triangles",
     route: "/heightmap-to-stl",
     kind: "heightmap",
-    sourceImage: "/samples/heightmap-surface-premium-v3-source.png",
-    previewImage: "/samples/heightmap-surface-premium-v3-preview.png",
+    sourceImage: "/samples/heightmap-surface-premium-v4-source.png",
+    previewImage: "/samples/heightmap-surface-premium-v4-preview.png",
   },
 ];
 

@@ -12,8 +12,8 @@ const samples = [
     description: "Use high-contrast transparent artwork when you want a crisp raised sign, badge, maker mark, or product logo.",
     metrics: "22,300 triangles · 1.1 MB STL",
     size: "95 mm badge",
-    sourceImage: "/samples/logo-badge-premium-v2-source.png",
-    previewImage: "/samples/logo-badge-premium-v2-preview.png",
+    sourceImage: "/samples/logo-badge-premium-v4-source.png",
+    previewImage: "/samples/logo-badge-premium-v4-preview.png",
   },
   {
     id: "photo",
@@ -25,8 +25,8 @@ const samples = [
     description: "Use a portrait or balanced photo when the print should reveal detail under light instead of behaving like a normal relief.",
     metrics: "65,532 triangles · 3.1 MB STL",
     size: "0.8–3.2 mm thickness",
-    sourceImage: "/samples/lithophane-panel-premium-v2-source.png",
-    previewImage: "/samples/lithophane-panel-premium-v2-preview.png",
+    sourceImage: "/samples/lithophane-panel-premium-v4-source.png",
+    previewImage: "/samples/lithophane-panel-premium-v4-preview.png",
   },
   {
     id: "heightmap",
@@ -38,8 +38,8 @@ const samples = [
     description: "Use a black-to-white depth map when brightness should become physical surface height for terrain, texture, or relief plates.",
     metrics: "65,532 triangles · 3.1 MB STL",
     size: "120 mm surface",
-    sourceImage: "/samples/heightmap-surface-premium-v3-source.png",
-    previewImage: "/samples/heightmap-surface-premium-v3-preview.png",
+    sourceImage: "/samples/heightmap-surface-premium-v4-source.png",
+    previewImage: "/samples/heightmap-surface-premium-v4-preview.png",
   },
 ];
 
