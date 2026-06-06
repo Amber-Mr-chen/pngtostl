@@ -61,6 +61,23 @@ async function main() {
       });
       await send('Page.navigate', { url: `${BASE}/?responsive-qa=${viewport.name}` });
       await wait(1200);
+      await evalExpr(`(async () => {
+        const cards = Array.from(document.querySelectorAll('.naturalWorkflowCard'));
+        for (const card of cards) {
+          card.scrollIntoView({ block: 'center' });
+          await new Promise((resolve) => setTimeout(resolve, 350));
+          await Promise.all(Array.from(card.querySelectorAll('img')).map((img) => {
+            if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+            return new Promise((resolve) => {
+              img.addEventListener('load', resolve, { once: true });
+              img.addEventListener('error', resolve, { once: true });
+              setTimeout(resolve, 1200);
+            });
+          }));
+        }
+        window.scrollTo(0, 0);
+        await new Promise((resolve) => setTimeout(resolve, 150));
+      })()`);
       const state = await evalExpr(`(() => {
         const h1 = document.querySelector('h1')?.getBoundingClientRect();
         const hero = document.querySelector('.homeHero')?.getBoundingClientRect();
