@@ -225,12 +225,56 @@ def render_preview(slug: str, title: str, mode: str, metrics: str):
         d.ellipse((982, 602, 1072, 708), fill=(94,49,23,180))
         d.polygon([(922,728),(992,626),(1068,728)], fill=(142,71,24,150))
     elif mode == "heightmap":
-        d.rounded_rectangle((812, 562, 1138, 742), radius=24, fill=(255,255,255,230), outline=(148,163,184,180), width=2)
+        # Add an explicit isometric terrain surface overlay so the sample reads as
+        # a physical STL surface at homepage thumbnail size, not a blank white plane.
+        terrain = Image.new("RGBA", im.size, (0, 0, 0, 0))
+        td = ImageDraw.Draw(terrain)
+        origin_x, origin_y = 240, 510
+        cell_x, cell_y = 36, 20
+        rows, cols = 11, 15
+        heights = []
+        for r in range(rows + 1):
+            row = []
+            for c in range(cols + 1):
+                ridge = 72 * math.exp(-((c - 5.0) ** 2 + (r - 4.0) ** 2) / 18)
+                ridge += 54 * math.exp(-((c - 10.5) ** 2 + (r - 7.0) ** 2) / 12)
+                wave = 18 * math.sin(c * 0.9) + 14 * math.cos((c + r) * 0.7)
+                row.append(ridge + wave)
+            heights.append(row)
+
+        def iso(c: int, r: int, h: float):
+            x = origin_x + (c - r) * cell_x
+            y = origin_y + (c + r) * cell_y - h
+            return (x, y)
+
+        for r in range(rows - 1, -1, -1):
+            for c in range(cols):
+                h00 = heights[r][c]
+                h10 = heights[r][c + 1]
+                h11 = heights[r + 1][c + 1]
+                h01 = heights[r + 1][c]
+                pts = [iso(c, r, h00), iso(c + 1, r, h10), iso(c + 1, r + 1, h11), iso(c, r + 1, h01)]
+                avg = (h00 + h10 + h11 + h01) / 4
+                t = max(0, min(1, avg / 120))
+                fill = (
+                    int(82 * (1 - t) + 166 * t),
+                    int(111 * (1 - t) + 210 * t),
+                    int(108 * (1 - t) + 176 * t),
+                    236,
+                )
+                td.polygon(pts, fill=fill, outline=(255, 255, 255, 72))
+        # front/side skirts make it feel like a printable solid, not a flat image.
+        left_wall = [iso(0, rows, heights[rows][0]), iso(cols, rows, heights[rows][cols]), (origin_x + (cols - rows) * cell_x, 690), (origin_x - rows * cell_x, 690)]
+        td.polygon(left_wall, fill=(63, 83, 96, 150))
+        terrain = terrain.filter(ImageFilter.UnsharpMask(radius=1.0, percent=120, threshold=3))
+        im.alpha_composite(terrain)
+        d = ImageDraw.Draw(im)
+        d.rounded_rectangle((812, 562, 1138, 742), radius=24, fill=(255,255,255,232), outline=(148,163,184,180), width=2)
         d.text((840, 586), "white = high", fill=(15,23,42,255), font=font(22, True))
         d.text((840, 622), "black = low", fill=(71,85,105,255), font=font(19))
         for i in range(8):
             y=672+i*7
-            d.line((842,y,1092,y+int(8*math.sin(i))), fill=(71,85,105,120), width=2)
+            d.line((842,y,1092,y+int(8*math.sin(i))), fill=(71,85,105,135), width=2)
     # title tag
     d.rounded_rectangle((38, 34, 500, 110), radius=22, fill=(255,255,255,238), outline=(226,232,240,220), width=2)
     d.text((62, 52), title, fill=(7,17,31,255), font=font(28, True))

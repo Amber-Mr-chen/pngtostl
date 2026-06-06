@@ -67,8 +67,15 @@ async function main() {
         const panel = document.querySelector('.heroToolPanel')?.getBoundingClientRect();
         const toolLinks = document.querySelectorAll('.heroToolLink').length;
         const showcase = document.querySelector('.showcaseBlock')?.getBoundingClientRect();
-        const slider = document.querySelector('.compareRange');
-        const tabs = document.querySelectorAll('.sampleTabs button').length;
+        const workflowCards = Array.from(document.querySelectorAll('.naturalWorkflowCard')).map((card) => {
+          const rect = card.getBoundingClientRect();
+          const images = Array.from(card.querySelectorAll('img')).map((img) => {
+            const r = img.getBoundingClientRect();
+            return { w: Math.round(r.width), h: Math.round(r.height), src: img.getAttribute('src') || '' };
+          });
+          const cta = card.querySelector('a[href]')?.getAttribute('href') || '';
+          return { w: Math.round(rect.width), h: Math.round(rect.height), images, cta };
+        });
         return {
           name: ${JSON.stringify(viewport.name)},
           width: innerWidth,
@@ -79,15 +86,22 @@ async function main() {
           panelTop: Math.round(panel?.top || 0),
           toolLinks,
           showcaseTop: Math.round(showcase?.top || 0),
-          hasSlider: Boolean(slider),
-          tabCount: tabs,
+          workflowCardCount: workflowCards.length,
+          workflowCards,
           text: document.body.innerText.slice(0, 300),
         };
       })()`);
       results.push(state);
       if (state.overflow) issues.push({ viewport: viewport.name, type: 'overflow' });
       if (state.toolLinks < 4) issues.push({ viewport: viewport.name, type: 'hero-tools-missing', toolLinks: state.toolLinks });
-      if (!state.hasSlider || state.tabCount < 3) issues.push({ viewport: viewport.name, type: 'showcase-missing', hasSlider: state.hasSlider, tabCount: state.tabCount });
+      if (state.workflowCardCount !== 3) issues.push({ viewport: viewport.name, type: 'showcase-workflow-count', workflowCardCount: state.workflowCardCount });
+      state.workflowCards.forEach((card, index) => {
+        if (card.images.length < 2) issues.push({ viewport: viewport.name, type: 'workflow-images-missing', index, images: card.images.length });
+        if (!card.cta) issues.push({ viewport: viewport.name, type: 'workflow-cta-missing', index });
+        card.images.forEach((image, imageIndex) => {
+          if (image.w < 40 || image.h < 40) issues.push({ viewport: viewport.name, type: 'workflow-image-too-small', index, imageIndex, image });
+        });
+      });
       if (viewport.name === 'mobile' && state.h1Height > 260) issues.push({ viewport: viewport.name, type: 'h1-too-tall', h1Height: state.h1Height });
     }
   } finally {
