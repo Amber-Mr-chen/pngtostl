@@ -59,13 +59,13 @@ export function SampleGalleryFilter({ samples }: { samples: SampleWorkflow[] }) 
           <article className="sampleCard proSampleCard" key={sample.title}>
             <div className={`sampleArt proSampleArt realSampleArt ${sample.route.replace('/', '')}`} aria-hidden="true">
               <div className="sampleImageFrame sourceFrame">
-                <span>Source</span>
+                <span>Input image</span>
                 <Image src={sample.sourceImage} alt="" width={180} height={180} loading="lazy" />
               </div>
               <span className="sampleTransformArrow">→</span>
               <div className="sampleImageFrame previewFrame">
-                <span>Generated STL preview</span>
-                <Image src={sample.previewImage} alt="" width={360} height={240} loading="lazy" />
+                <span>Generated STL</span>
+                <Image src={sample.previewImage} alt="" width={720} height={492} loading="lazy" />
               </div>
             </div>
             <div className="sampleCopy">
