@@ -468,3 +468,10 @@ Google Search Console sitemap evidence on 2026-06-07:
 - GSC summary: discovered pages 20, discovered videos 0.
 - Updated `ops/seo-geo-7-day-monitoring-ledger.md` and `ops/gsc-bing-indexing-submit-checklist.md` to mark GSC sitemap success and avoid duplicate resubmission.
 - Combined state: both Google Search Console and Bing Webmaster Tools now show sitemap success for `https://pngtostl.net/sitemap.xml`; individual priority guide URL Inspection remains optional/next-step.
+
+Public URL inspection prep on 2026-06-07:
+
+- Rechecked the three new SEO guide URLs from production: `/how-to-turn-logo-into-stl`, `/lithophane-image-guide`, and `/heightmap-to-stl-terrain-guide` all return 200, have `robots` meta `index, follow`, absolute self canonicals, one H1, and are present in sitemap + llms.txt.
+- Extracted guide-page relevant links: each guide links to matching converter/sample preset routes and core tools.
+- Public Google web search was blocked by bot detection; Bing web search showed Cloudflare challenge. Bing RSS endpoint returned unrelated results and did not show the three guide URLs yet. This is early/inconclusive and not authoritative; use GSC URL Inspection / Pages report for index status.
+- Updated `ops/seo-geo-7-day-monitoring-ledger.md` with this public check and next action: use GSC URL Inspection for the three new guide URLs and request indexing if indexing is allowed but URL is not indexed.

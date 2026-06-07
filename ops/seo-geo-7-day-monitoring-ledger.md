@@ -174,10 +174,14 @@ Action taken today:
 
 - Created `ops/gsc-bing-indexing-submit-checklist.md`.
 - Created this 7-day monitoring ledger.
+- Confirmed GSC sitemap success from owner screenshot: success, last read 2026-06-07, discovered pages 20.
+- Confirmed Bing sitemap success from owner screenshot: success, last crawled 2026-06-07, discovered URLs 20.
+- Ran public technical checks for the three new guide URLs: all return 200, have `index, follow`, self canonical, one H1, and are present in sitemap + llms.txt.
+- Public Google/Bing SERP visibility check was inconclusive/early: Google and Bing web search triggered bot/challenge pages; Bing RSS returned unrelated results and did not show the three new guide URLs yet. Treat GSC URL Inspection / Pages report as the authoritative next check.
 
 Next action:
 
-- Owner submits sitemap and requests indexing in GSC/Bing, or opens a logged-in browser for guided submission.
+- Use GSC URL Inspection for the three new guide URLs and request indexing if the UI says the URL is not currently indexed but indexing is allowed.
 
 ### Day 2 — 2026-06-08
 
