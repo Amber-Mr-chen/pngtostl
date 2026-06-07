@@ -151,13 +151,18 @@ Verified current external/account state:
   - SPF: `v=spf1 include:_spf.mx.cloudflare.net ~all`
   - DKIM: `cf2024-1._domainkey.pngtostl.net`
   - DMARC: `v=DMARC1; p=none; rua=mailto:support@pngtostl.net`
-- Google monitor OAuth token refreshed successfully, but current GSC account does not contain `pngtostl.net`; visible properties were `tattooideasai.net`, `tarotrealm.xyz`, and `aihumanizer.life`.
+- Google Search Console is now configured:
+  - Property: `sc-domain:pngtostl.net`
+  - Permission: `siteOwner`
+  - Sitemap submitted: `https://pngtostl.net/sitemap.xml`
+  - GSC read result: `warnings=0`, `errors=0`, `submitted web URLs=20`, `lastDownloaded=2026-06-07T03:41:57.235Z`
+  - `indexed=0` immediately after first submission; monitor over the next days.
 - Current Google Analytics Admin account visible to token only showed `TarotRealm`; no `pngtostl.net` GA property was visible.
-- Live production HTML has no provider script for `gtag/googletagmanager`, `plausible`, `umami`, `clarity`, `google-site-verification`, or `msvalidate.01`.
+- Live production HTML has no provider script for `gtag/googletagmanager`, `plausible`, `umami`, `clarity`, or `msvalidate.01`.
 
 Remaining owner/account actions:
 
-1. Decide outbound mail provider before outbound DKIM: Google Workspace / Namecheap Private Email / Resend / Cloudflare Email Sending.
-2. Add `pngtostl.net` to Google Search Console, verify, and submit `https://pngtostl.net/sitemap.xml`.
-3. Add/import `pngtostl.net` in Bing Webmaster Tools and submit sitemap.
-4. Create/provide analytics Measurement ID if GA4/GTM/Plausible/Umami should be installed.
+1. Add/import `pngtostl.net` in Bing Webmaster Tools and submit sitemap.
+2. Create/provide analytics Measurement ID if GA4/GTM/Plausible/Umami should be installed.
+3. Decide outbound mail provider before outbound DKIM only if sending as `support@pngtostl.net` is needed.
+4. Monitor GSC Pages/Search results for indexed pages, impressions, and query data over the next days.

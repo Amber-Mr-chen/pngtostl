@@ -54,25 +54,25 @@ Remaining / follow-up:
 
 ### Google Search Console
 
-Google monitor token was refreshed successfully and queried GSC API.
-Current account-visible properties:
+Verified 2026-06-07 11:42 CST via GSC API:
 
 ```text
-https://tattooideasai.net/
-sc-domain:tarotrealm.xyz
-sc-domain:aihumanizer.life
+Property: sc-domain:pngtostl.net
+Permission: siteOwner
+Sitemap: https://pngtostl.net/sitemap.xml
+lastSubmitted: 2026-06-07T03:41:55.666Z
+lastDownloaded: 2026-06-07T03:41:57.235Z
+warnings: 0
+errors: 0
+submitted web URLs: 20
+indexed: 0 immediately after first submission
 ```
 
-`pngtostl.net` is **not present** in current GSC account, so sitemap submission cannot be completed from this agent yet.
+`indexed: 0` is expected immediately after first submission; monitor Pages/Search results over the next days.
 
-Owner action required:
+Follow-up:
 
-1. Open Google Search Console.
-2. Add property, preferably Domain property: `pngtostl.net`.
-3. If using URL-prefix instead, add `https://pngtostl.net/`.
-4. Verify ownership.
-5. Submit sitemap: `https://pngtostl.net/sitemap.xml`.
-6. Inspect URLs:
+1. Inspect URLs after Google has had time to crawl:
    - `/`
    - `/image-to-stl`
    - `/png-to-stl`
@@ -81,6 +81,8 @@ Owner action required:
    - `/lithophane-generator`
    - `/heightmap-to-stl`
    - `/samples`
+2. Check Pages report for `Discovered - currently not indexed` or `Crawled - currently not indexed`.
+3. Track early impressions/clicks once data appears.
 
 ### Bing Webmaster
 
