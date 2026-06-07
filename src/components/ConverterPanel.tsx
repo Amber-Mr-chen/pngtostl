@@ -1,4 +1,4 @@
-import type { ToolConfig } from "@/lib/tools";
+import type { SampleWorkflow, ToolConfig } from "@/lib/tools";
 
 const defaultModeBySlug: Record<string, NonNullable<ToolConfig["converter"]>["mode"]> = {
   "png-to-stl": "icon",
@@ -147,6 +147,38 @@ const toolPresets: Record<string, Partial<NonNullable<ToolConfig["converter"]>>>
   },
 };
 
+function presetFromSample(sample?: SampleWorkflow | null): Partial<NonNullable<ToolConfig["converter"]>> {
+  if (!sample) return {};
+  const settings = sample.settings.join(" | ").toLowerCase();
+  const width = settings.match(/width:\s*([0-9.]+)\s*mm/);
+  const relief = settings.match(/(?:relief height|max height|max thickness):\s*([0-9.]+)\s*mm/);
+  const detail = settings.match(/detail:\s*([0-9.]+)/);
+  const smoothing = settings.match(/smoothing:\s*(low|medium|high|[0-9.]+%?)/);
+  const mode = sample.category === "lithophane" ? "lithophane" : sample.category === "heightmap" ? "heightmap" : sample.category === "logo" ? "logo" : "relief";
+  const preset: Partial<NonNullable<ToolConfig["converter"]>> = {
+    mode,
+    helper: `Loaded from sample: ${sample.title}. Upload your own image, then fine-tune if needed.`,
+    preview: `Sample preset loaded: ${sample.title}. Use the settings as a starting point, then generate your own STL.`,
+  };
+  if (width) preset.widthMm = Number(width[1]);
+  if (relief) preset.depth = Number(relief[1]);
+  if (detail) preset.detail = Number(detail[1]);
+  if (smoothing) {
+    const raw = smoothing[1];
+    preset.smoothing = raw === "low" ? 10 : raw === "medium" ? 35 : raw === "high" ? 60 : Number(raw.replace("%", ""));
+  }
+  if (sample.category === "lithophane") {
+    const thickness = sample.recommendedPreset.match(/([0-9.]+)-([0-9.]+)\s*mm thickness/);
+    preset.invert = true;
+    if (thickness) {
+      preset.minThicknessMm = Number(thickness[1]);
+      preset.maxThicknessMm = Number(thickness[2]);
+      preset.depth = Number(thickness[2]);
+    }
+  }
+  return preset;
+}
+
 function fallbackConverter(tool: ToolConfig): NonNullable<ToolConfig["converter"]> | null {
   const mode = defaultModeBySlug[tool.slug];
   if (!mode) return null;
@@ -186,9 +218,10 @@ function RangeField({ name, label, value, min, max, step, help }: { name: string
   );
 }
 
-export function ConverterPanel({ tool }: { tool: ToolConfig }) {
+export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loadedSample?: SampleWorkflow | null }) {
   const fallback = fallbackConverter(tool);
-  const converter = fallback ? { ...fallback, ...toolPresets[tool.slug], ...tool.converter } : null;
+  const samplePreset = presetFromSample(loadedSample);
+  const converter = fallback ? { ...fallback, ...toolPresets[tool.slug], ...tool.converter, ...samplePreset } : null;
   const canConvert = Boolean(converter);
   const mode = converter?.mode ?? "icon";
   const accept = converter?.accept ?? "image/png";
@@ -213,6 +246,13 @@ export function ConverterPanel({ tool }: { tool: ToolConfig }) {
         action="javascript:void(0)"
       >
         <section className="converterControls" aria-label="Upload and STL settings">
+          {loadedSample ? (
+            <div className="loadedSamplePreset" data-loaded-sample-preset="true">
+              <span>Sample preset loaded</span>
+              <strong>{loadedSample.title}</strong>
+              <small>{loadedSample.recommendedPreset}</small>
+            </div>
+          ) : null}
           <div className="uploadDropzone">
             <div>
               <strong>{tool.uploadLabel}</strong>

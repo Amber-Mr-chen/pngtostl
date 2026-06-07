@@ -3,7 +3,7 @@ import { ConverterPanel } from "@/components/ConverterPanel";
 import { ImageAnalyzer } from "@/components/ImageAnalyzer";
 import { ToolProofBlock } from "@/components/ToolProofBlock";
 import { UtilityAdvisor } from "@/components/UtilityAdvisor";
-import { sampleWorkflows, type ToolConfig } from "@/lib/tools";
+import { sampleWorkflows, type SampleWorkflow, type ToolConfig } from "@/lib/tools";
 
 const primaryNav = [
   { href: "/image-to-stl", label: "Image to STL" },
@@ -139,7 +139,7 @@ function SiteFooter() {
   );
 }
 
-export function ToolPage({ tool }: { tool: ToolConfig }) {
+export function ToolPage({ tool, loadedSample }: { tool: ToolConfig; loadedSample?: SampleWorkflow | null }) {
   const advisorOnly = tool.slug === "3d-print-photo";
   const guidance = guidanceFor(tool);
   const relatedProofs = relatedProofsFor(tool);
@@ -202,7 +202,7 @@ export function ToolPage({ tool }: { tool: ToolConfig }) {
               <UtilityAdvisor kind={advisorKindFromSlug(tool.slug)} tool={tool} />
             </div>
           ) : (
-            <ConverterPanel tool={tool} />
+            <ConverterPanel tool={tool} loadedSample={loadedSample} />
           )}
         </section>
 

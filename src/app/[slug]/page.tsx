@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { SampleGalleryFilter } from "@/components/SampleGalleryFilter";
 import { ToolPage } from "@/components/ToolPage";
 import { HelperUtilityPage } from "@/components/HelperUtilityPage";
-import { getTool, helperPages, sampleWorkflows, staticPages, tools } from "@/lib/tools";
+import { getSampleWorkflow, getTool, helperPages, sampleWorkflows, sampleWorkflowSlug, staticPages, tools } from "@/lib/tools";
 
 function pageJsonLd(title: string, description: string, path: string) {
   return {
@@ -35,7 +35,7 @@ function samplesJsonLd() {
         item: {
           "@type": "CreativeWork",
           name: sample.title,
-          url: `${base}/samples#${sample.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
+          url: `${base}/samples#${sampleWorkflowSlug(sample.title)}`,
           description: `${sample.input} to ${sample.output}`,
           genre: sample.categoryLabel,
           encoding: {
@@ -81,6 +81,7 @@ function InfoHeader() {
 }
 
 type SlugParams = Promise<{ slug: string }>;
+type PageSearchParams = Promise<{ sample?: string | string[] }>;
 
 export function generateStaticParams() {
   return [
@@ -144,13 +145,16 @@ export async function generateMetadata({ params }: { params: SlugParams }): Prom
   return {};
 }
 
-export default async function DynamicPage({ params }: { params: SlugParams }) {
+export default async function DynamicPage({ params, searchParams }: { params: SlugParams; searchParams?: PageSearchParams }) {
   const { slug } = await params;
   const tool = getTool(slug);
   if (tool) {
+    const search = searchParams ? await searchParams : {};
+    const sampleParam = Array.isArray(search.sample) ? search.sample[0] : search.sample;
+    const loadedSample = getSampleWorkflow(sampleParam, `/${tool.slug}`);
     return (
       <>
-        <ToolPage tool={tool} />
+        <ToolPage tool={tool} loadedSample={loadedSample} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd(tool.title, tool.description, tool.slug ? `/${tool.slug}` : "/")) }}

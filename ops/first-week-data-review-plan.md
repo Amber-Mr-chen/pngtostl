@@ -81,6 +81,12 @@ Completed before waiting for real traffic data:
   - CTA links include onsite UTM parameters (`utm_source=samples`, `utm_medium=onsite_cta`, `utm_campaign=sample_to_tool`) so sample-to-tool handoff can be separated from generic internal clicks.
   - Added `sample_try_workflow_click` to distinguish the secondary workflow text link from the primary card CTA.
   - Production verification on 2026-06-07: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`; `https://pngtostl.net/samples` browser DOM showed 10 cards, 10 preset callouts, 10 primary workflow CTAs, 10 secondary workflow links, all workflow links with UTM parameters, and primary CTA navigation to `/logo-to-stl?...utm_content=logo-badge-relief` emitted `sample_open_workflow_click`.
+- Sample CTAs now carry the chosen example into the converter page as a loaded preset:
+  - Deploy version: `eceb57d6-5542-4c2e-a5b1-25146beb48a0`.
+  - Sample workflow links include `sample=<stable-sample-slug>` in addition to onsite UTM parameters.
+  - Tool pages validate the sample slug against the current route before applying settings, so mismatched or invalid sample parameters do not show a preset.
+  - Converter pages show a `Sample preset loaded` callout and override starting width/height/detail/smoothing from the selected sample while still allowing user fine-tuning after upload.
+  - Production verification on 2026-06-07: `https://pngtostl.net/logo-to-stl?sample=logo-badge-relief...` showed `Sample preset loaded`, width `95 mm`, relief height `2.4 mm`, and preview copy for Logo badge relief; invalid `sample=terrain-tile` on `/heightmap-to-stl` did not show a preset; valid `sample=terrain-heightmap-tile` showed width `110 mm` and max height `5.5 mm`.
 
 Next no-data-stage candidates, if more work is needed before search data arrives:
 

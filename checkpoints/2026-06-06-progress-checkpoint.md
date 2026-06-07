@@ -398,3 +398,13 @@ Samples-to-converter CTA optimization on 2026-06-07:
 - Added `sample_try_workflow_click` analytics event for the secondary workflow text link; primary workflow CTA continues emitting `sample_open_workflow_click` with `source: samples_card_primary_cta`.
 - Updated `ops/first-week-data-review-plan.md` so sample-to-tool handoff can be diagnosed separately from sample downloads and proof-block clicks.
 - Verification: `npm run lint` exit 0; `npm run build` exit 0 and generated 26 static pages; `npm run cf:build` exit 0; `npm run cf:deploy` exit 0; production browser DOM on `https://pngtostl.net/samples` showed 10 cards, 10 preset callouts, 10 primary workflow CTAs, 10 secondary workflow links, and all workflow links with UTM parameters; clicking the first primary CTA emitted `sample_open_workflow_click` and navigated to `/logo-to-stl?utm_source=samples&utm_medium=onsite_cta&utm_campaign=sample_to_tool&utm_content=logo-badge-relief`.
+
+Sample preset handoff optimization on 2026-06-07:
+
+- Added stable `sample=<slug>` parameters to all `/samples` workflow CTAs while preserving onsite UTM parameters.
+- Added shared `sampleWorkflowSlug`, `SampleWorkflow`, and `getSampleWorkflow` helpers so schema anchors, CTA URLs, and tool-page lookup use the same slug logic.
+- Tool pages now read `searchParams.sample`, validate the selected sample belongs to the current route, and pass the matched sample into the converter panel.
+- Converter panel now displays `Sample preset loaded`, updates helper/preview copy, and derives starting width, relief/max-height/depth, detail, smoothing, and lithophane thickness defaults from the selected sample.
+- Invalid or mismatched sample slugs intentionally fall back to normal route defaults.
+- Deployed to Cloudflare Worker version `eceb57d6-5542-4c2e-a5b1-25146beb48a0`.
+- Verification: `npm run lint` exit 0; `npm run build` exit 0; `npm run cf:build` exit 0; `npm run cf:deploy` exit 0; production `/samples` has 10 workflow CTAs with `sample=`; `/logo-to-stl?sample=logo-badge-relief...` shows `Sample preset loaded`, width `95 mm`, relief height `2.4 mm`, and sample preview copy; invalid `/heightmap-to-stl?sample=terrain-tile...` does not show a preset; valid `/heightmap-to-stl?sample=terrain-heightmap-tile...` shows width `110 mm` and max height `5.5 mm`.

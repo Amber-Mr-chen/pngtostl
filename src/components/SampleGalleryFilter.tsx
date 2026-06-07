@@ -4,18 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
-import type { sampleWorkflows } from "@/lib/tools";
-
-type SampleWorkflow = (typeof sampleWorkflows)[number];
+import { sampleWorkflowSlug, type SampleWorkflow } from "@/lib/tools";
 
 type FilterKey = "all" | SampleWorkflow["category"];
 
-function sampleAnchor(title: string) {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-}
-
 function workflowHref(sample: SampleWorkflow) {
-  return `${sample.route}?utm_source=samples&utm_medium=onsite_cta&utm_campaign=sample_to_tool&utm_content=${sampleAnchor(sample.title)}`;
+  const slug = sampleWorkflowSlug(sample.title);
+  return `${sample.route}?sample=${slug}&utm_source=samples&utm_medium=onsite_cta&utm_campaign=sample_to_tool&utm_content=${slug}`;
 }
 
 const filters: Array<{ key: FilterKey; label: string }> = [
@@ -64,7 +59,7 @@ export function SampleGalleryFilter({ samples }: { samples: SampleWorkflow[] }) 
 
       <div className="sampleGallery" aria-live="polite">
         {visibleSamples.map((sample) => (
-          <article className="sampleCard proSampleCard" id={sampleAnchor(sample.title)} key={sample.title}>
+          <article className="sampleCard proSampleCard" id={sampleWorkflowSlug(sample.title)} key={sample.title}>
             <div className={`sampleArt proSampleArt realSampleArt ${sample.route.replace('/', '')}`} aria-hidden="true">
               <div className="sampleImageFrame sourceFrame">
                 <span>Input image</span>

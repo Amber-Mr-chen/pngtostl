@@ -643,6 +643,20 @@ export const sampleWorkflows = [
   },
 ];
 
+export type SampleWorkflow = (typeof sampleWorkflows)[number];
+
+export function sampleWorkflowSlug(title: string) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export function getSampleWorkflow(slug: string | undefined, route?: string) {
+  if (!slug) return null;
+  const sample = sampleWorkflows.find((workflow) => sampleWorkflowSlug(workflow.title) === slug);
+  if (!sample) return null;
+  if (route && sample.route !== route) return null;
+  return sample;
+}
+
 export function getTool(slug: string) {
   return tools.find((tool) => tool.slug === slug);
 }

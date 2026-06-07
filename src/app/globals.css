@@ -1758,6 +1758,30 @@ body {
   box-shadow: var(--shadow-ring);
 }
 .uploadDropzone { border: 1px dashed rgba(36,87,255,0.32); }
+.loadedSamplePreset {
+  display: grid;
+  gap: 5px;
+  border: 1px solid rgba(36,87,255,0.18);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(36,87,255,0.08), rgba(255,255,255,0.95));
+  padding: 13px 14px;
+  box-shadow: 0 10px 24px rgba(36,87,255,0.08);
+}
+.loadedSamplePreset span {
+  color: #2457ff;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.loadedSamplePreset strong {
+  color: #172033;
+  font-size: 1rem;
+}
+.loadedSamplePreset small {
+  color: var(--muted);
+  line-height: 1.45;
+}
 .previewStage {
   min-height: 500px;
   border-radius: 14px;
