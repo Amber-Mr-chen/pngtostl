@@ -25,24 +25,32 @@ Support email shown on site: `support@pngtostl.net`
 
 ### Domain email
 
-Public DNS currently uses Namecheap forwarding, not Cloudflare Email Routing:
+Verified 2026-06-07 11:14 CST: `support@pngtostl.net` receives mail via Cloudflare Email Routing and forwards to `wanglilong616@gmail.com`.
+
+Public DNS now uses Cloudflare Email Routing:
 
 ```text
-MX -> eforward*.registrar-servers.com
-SPF -> v=spf1 include:spf.efwd.registrar-servers.com ~all
+MX -> route1.mx.cloudflare.net / route2.mx.cloudflare.net / route3.mx.cloudflare.net
+SPF -> v=spf1 include:_spf.mx.cloudflare.net ~all
+DKIM -> cf2024-1._domainkey.pngtostl.net
+DMARC -> v=DMARC1; p=none; rua=mailto:support@pngtostl.net
 ```
 
-Cloudflare Email Routing exists in Cloudflare but is disabled/misconfigured because MX still points to Namecheap. Do not switch MX without owner confirming that support forwarding should move to Cloudflare.
+Cloudflare Email Routing:
 
-Missing / follow-up:
+```text
+Enabled: true
+Status: ready
+Rule: support@pngtostl.net -> wanglilong616@gmail.com
+```
 
-- [ ] Confirm `support@pngtostl.net` receives mail at the intended inbox.
-- [ ] Add DMARC TXT, recommended starter:
-  - Name: `_dmarc`
-  - Type: `TXT`
-  - Value: `v=DMARC1; p=none; rua=mailto:support@pngtostl.net`
+Remaining / follow-up:
+
+- [x] Confirm `support@pngtostl.net` receives mail at the intended inbox.
+- [x] Add DMARC starter TXT.
+- [x] Add Cloudflare Email Routing DKIM.
 - [ ] Decide outbound sending: Google Workspace / Namecheap Private Email / Resend / Cloudflare Email Sending.
-- [ ] Add DKIM only after choosing outbound sending provider.
+- [ ] Add outbound-provider DKIM only after choosing outbound sending provider, if different from Cloudflare routing.
 
 ### Google Search Console
 

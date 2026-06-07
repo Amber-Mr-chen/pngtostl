@@ -141,24 +141,23 @@ Completed and deployed / verified:
 
 Verified current external/account state:
 
-- Public DNS is authoritative on Cloudflare nameservers, but mail is still routed through Namecheap forwarding:
-  - MX: `eforward*.registrar-servers.com`
-  - SPF: `v=spf1 include:spf.efwd.registrar-servers.com ~all`
-- Cloudflare Email Routing config exists but is disabled/misconfigured because MX does not point to Cloudflare routing; do not switch MX without owner confirmation because that would change the actual mail receiving route.
-- DMARC is still missing: `_dmarc.pngtostl.net` has no TXT record.
-- DKIM is not present for common selectors; add only after choosing outbound sending provider.
+- Domain email receiving is now fixed and verified:
+  - `support@pngtostl.net` receives mail via Cloudflare Email Routing.
+  - Forwarding target: `wanglilong616@gmail.com`.
+  - Cloudflare Email Routing: `Enabled: true`, `Status: ready`.
+  - Rule: `support@pngtostl.net -> wanglilong616@gmail.com`.
+- Public DNS now uses Cloudflare Email Routing:
+  - MX: `route1.mx.cloudflare.net`, `route2.mx.cloudflare.net`, `route3.mx.cloudflare.net`
+  - SPF: `v=spf1 include:_spf.mx.cloudflare.net ~all`
+  - DKIM: `cf2024-1._domainkey.pngtostl.net`
+  - DMARC: `v=DMARC1; p=none; rua=mailto:support@pngtostl.net`
 - Google monitor OAuth token refreshed successfully, but current GSC account does not contain `pngtostl.net`; visible properties were `tattooideasai.net`, `tarotrealm.xyz`, and `aihumanizer.life`.
 - Current Google Analytics Admin account visible to token only showed `TarotRealm`; no `pngtostl.net` GA property was visible.
 - Live production HTML has no provider script for `gtag/googletagmanager`, `plausible`, `umami`, `clarity`, `google-site-verification`, or `msvalidate.01`.
 
 Remaining owner/account actions:
 
-1. Confirm `support@pngtostl.net` receives mail at the intended inbox.
-2. Add DMARC TXT in Cloudflare DNS:
-   - Type: `TXT`
-   - Name: `_dmarc`
-   - Value: `v=DMARC1; p=none; rua=mailto:support@pngtostl.net`
-3. Decide outbound mail provider before DKIM: Google Workspace / Namecheap Private Email / Resend / Cloudflare Email Sending.
-4. Add `pngtostl.net` to Google Search Console, verify, and submit `https://pngtostl.net/sitemap.xml`.
-5. Add/import `pngtostl.net` in Bing Webmaster Tools and submit sitemap.
-6. Create/provide analytics Measurement ID if GA4/GTM/Plausible/Umami should be installed.
+1. Decide outbound mail provider before outbound DKIM: Google Workspace / Namecheap Private Email / Resend / Cloudflare Email Sending.
+2. Add `pngtostl.net` to Google Search Console, verify, and submit `https://pngtostl.net/sitemap.xml`.
+3. Add/import `pngtostl.net` in Bing Webmaster Tools and submit sitemap.
+4. Create/provide analytics Measurement ID if GA4/GTM/Plausible/Umami should be installed.
