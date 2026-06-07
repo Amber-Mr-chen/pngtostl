@@ -2652,6 +2652,40 @@ box-shadow: inset 0 0 0 1px rgba(7,17,31,0.08), 0 16px 22px rgba(7,17,31,0.1);
   font-weight: 620;
 }
 .proSampleCard h2 { margin-top: 0; letter-spacing: -0.035em; }
+.samplePresetCallout {
+  display: grid;
+  gap: 6px;
+  margin: 14px 0 12px;
+  border: 1px solid rgba(36,87,255,0.16);
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f8fbff, #ffffff);
+  padding: 13px 14px;
+  box-shadow: var(--shadow-ring);
+}
+.samplePresetCallout span {
+  color: #2457ff;
+  font-size: 0.74rem;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.samplePresetCallout strong {
+  color: #07111f;
+  font-size: 0.96rem;
+  line-height: 1.35;
+}
+.samplePresetCallout small {
+  color: #667085;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.sampleActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
 .proSampleCard .btnSecondary {
   background: #07111f;
   color: #fff;
@@ -2660,6 +2694,20 @@ box-shadow: inset 0 0 0 1px rgba(7,17,31,0.08), 0 16px 22px rgba(7,17,31,0.1);
 }
 .proSampleCard .btnSecondary:hover {
   background: #172033;
+}
+.sampleTextLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  color: #2457ff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.sampleTextLink:hover {
+  color: #183db8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .sampleDownload {
   display: inline-flex;
@@ -2694,6 +2742,7 @@ box-shadow: inset 0 0 0 1px rgba(7,17,31,0.08), 0 16px 22px rgba(7,17,31,0.1);
   .proSampleCard { grid-template-columns: 1fr; }
   .sampleCopy { padding: 4px; }
   .proSampleCard .btnSecondary,
+  .proSampleCard .sampleTextLink,
   .proSampleCard .sampleDownload { width: 100%; justify-content: center; margin-left: 0; margin-top: 8px; }
 }
 @media (max-width: 640px) {

@@ -9,6 +9,7 @@ Related operational docs:
 - `ops/manual-required-submission-playbook.md`
 - `ops/second-batch-preflight-notes.md`
 - `ops/github-awesome-3d-printing-pr-prep.md`
+- `ops/launch-follow-up-plan.md`
 
 ## Status labels
 

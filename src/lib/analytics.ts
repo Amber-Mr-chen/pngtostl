@@ -2,6 +2,7 @@ export type AnalyticsEventName =
   | "homepage_view_examples_click"
   | "samples_filter_click"
   | "sample_open_workflow_click"
+  | "sample_try_workflow_click"
   | "sample_download_click"
   | "sample_proof_view"
   | "sample_proof_open_workflow"

@@ -387,3 +387,14 @@ GitHub awesome-3d-printing PR opened manually by owner on 2026-06-07:
 - Verified with `gh pr view`: number `92`, state `OPEN`, mergeable `MERGEABLE`, author `Amber-Mr-chen`, base `main`, head `add-pngtostl-online-tool`, title `Add PNGtoSTL to Online Tools`, created at `2026-06-07T10:12:21Z`.
 - Updated `ops/coldstart-submission-log.md` status for GitHub awesome-3d-printing from `manual_required` to `pending_review`.
 - Follow-up rule: monitor for maintainer review/merge; do not comment or push extra commits unless the maintainer requests changes.
+
+Samples-to-converter CTA optimization on 2026-06-07:
+
+- Added `ops/launch-follow-up-plan.md` with channel-specific follow-up cadence, status rules, stop conditions, and verification commands for GitHub PR #92, Hackaday Submit A Tip, and Launching Next.
+- Added 10 recommended starting-point callouts to `/samples`, one per real example workflow.
+- Deployed to Cloudflare Worker version `b189476f-d7c6-4c28-a009-627f44d9201d`.
+- Added workflow-specific primary CTA labels such as `Try logo badge settings`, `Try universal relief settings`, `Try lithophane panel settings`, and `Try terrain tile settings`.
+- Added onsite UTM parameters to sample-to-tool workflow links: `utm_source=samples`, `utm_medium=onsite_cta`, `utm_campaign=sample_to_tool`, and a sample-specific `utm_content` anchor slug.
+- Added `sample_try_workflow_click` analytics event for the secondary workflow text link; primary workflow CTA continues emitting `sample_open_workflow_click` with `source: samples_card_primary_cta`.
+- Updated `ops/first-week-data-review-plan.md` so sample-to-tool handoff can be diagnosed separately from sample downloads and proof-block clicks.
+- Verification: `npm run lint` exit 0; `npm run build` exit 0 and generated 26 static pages; `npm run cf:build` exit 0; `npm run cf:deploy` exit 0; production browser DOM on `https://pngtostl.net/samples` showed 10 cards, 10 preset callouts, 10 primary workflow CTAs, 10 secondary workflow links, and all workflow links with UTM parameters; clicking the first primary CTA emitted `sample_open_workflow_click` and navigated to `/logo-to-stl?utm_source=samples&utm_medium=onsite_cta&utm_campaign=sample_to_tool&utm_content=logo-badge-relief`.

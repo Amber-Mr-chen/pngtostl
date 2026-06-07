@@ -14,6 +14,10 @@ function sampleAnchor(title: string) {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
+function workflowHref(sample: SampleWorkflow) {
+  return `${sample.route}?utm_source=samples&utm_medium=onsite_cta&utm_campaign=sample_to_tool&utm_content=${sampleAnchor(sample.title)}`;
+}
+
 const filters: Array<{ key: FilterKey; label: string }> = [
   { key: "all", label: "All examples" },
   { key: "relief", label: "Relief" },
@@ -86,6 +90,11 @@ export function SampleGalleryFilter({ samples }: { samples: SampleWorkflow[] }) 
                 <p><strong>Generated result:</strong> {sample.resultPreview}</p>
                 <p><strong>Expected metrics:</strong> {sample.metrics}</p>
               </div>
+              <div className="samplePresetCallout">
+                <span>Recommended starting point</span>
+                <strong>{sample.recommendedPreset}</strong>
+                <small>Use this as a guide after you upload your own image. The converter still lets you fine-tune size, depth, thickness, and detail.</small>
+              </div>
               <ul>
                 {sample.settings.map((setting) => <li key={setting}>{setting}</li>)}
               </ul>
@@ -93,15 +102,28 @@ export function SampleGalleryFilter({ samples }: { samples: SampleWorkflow[] }) 
               <p><strong>Avoid:</strong> {sample.avoid}</p>
               <div className="sampleActions">
                 <Link
-                  className="btnSecondary"
-                  href={sample.route}
+                  className="btnSecondary sampleWorkflowCta"
+                  href={workflowHref(sample)}
                   onClick={() => trackEvent("sample_open_workflow_click", {
                     sample: sample.title,
                     category: sample.category,
                     route: sample.route,
+                    source: "samples_card_primary_cta",
                   })}
                 >
-                  Open workflow
+                  {sample.workflowCta}
+                </Link>
+                <Link
+                  className="sampleTextLink"
+                  href={workflowHref(sample)}
+                  onClick={() => trackEvent("sample_try_workflow_click", {
+                    sample: sample.title,
+                    category: sample.category,
+                    route: sample.route,
+                    preset: sample.recommendedPreset,
+                  })}
+                >
+                  Open converter with this workflow →
                 </Link>
                 <a
                   className="sampleDownload"

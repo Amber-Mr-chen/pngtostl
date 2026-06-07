@@ -26,6 +26,7 @@ Sample gallery events:
 
 - `samples_filter_click`
 - `sample_open_workflow_click`
+- `sample_try_workflow_click`
 - `sample_download_click`
 
 Tool-page proof events:
@@ -74,6 +75,12 @@ Completed before waiting for real traffic data:
   - Static info pages now output OG/Twitter metadata in addition to canonical title/description.
   - Production verified: `/robots.txt`, `/sitemap.xml`, and `/llms.txt` return 200; sitemap contains `/samples`; `/samples` has canonical, OG, Twitter card, CollectionPage JSON-LD, 10 ItemList entries, STL encoding, and sample anchors; `/png-to-stl` has canonical, robots `index, follow`, WebSite, SoftwareApplication, and FAQPage JSON-LD.
   - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`, and homepage responsive QA.
+- `/samples` cards now connect proof examples back to the matching converter workflow:
+  - Deploy version: `b189476f-d7c6-4c28-a009-627f44d9201d`.
+  - Added 10 recommended starting-point callouts and 10 workflow-specific CTA labels.
+  - CTA links include onsite UTM parameters (`utm_source=samples`, `utm_medium=onsite_cta`, `utm_campaign=sample_to_tool`) so sample-to-tool handoff can be separated from generic internal clicks.
+  - Added `sample_try_workflow_click` to distinguish the secondary workflow text link from the primary card CTA.
+  - Production verification on 2026-06-07: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`; `https://pngtostl.net/samples` browser DOM showed 10 cards, 10 preset callouts, 10 primary workflow CTAs, 10 secondary workflow links, all workflow links with UTM parameters, and primary CTA navigation to `/logo-to-stl?...utm_content=logo-badge-relief` emitted `sample_open_workflow_click`.
 
 Next no-data-stage candidates, if more work is needed before search data arrives:
 
