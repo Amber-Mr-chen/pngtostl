@@ -5,6 +5,7 @@ Use this file to record every directory, community, newsletter, profile, or back
 ## Status labels
 
 - `planned`: candidate selected, not attempted yet.
+- `ready_to_submit`: preflight found a public/free route with no immediate login, CAPTCHA, payment, or reciprocal-link blocker; still requires owner approval before actual submission.
 - `submitted`: form/post submitted and confirmation observed.
 - `listed`: public listing is visible.
 - `pending_review`: submitted but awaiting moderation/review.
@@ -49,48 +50,48 @@ No candidate below has been submitted yet. Status means recommended next handlin
 
 - Channel: Dev Hunt
   - Type: directory
-  - Candidate URL: `https://devhunt.org/submit`
+  - Candidate URL: `https://devhunt.org/submit` (legacy URL now returns 404); current visible entry is the header link `Submit your Dev Tool` on `https://devhunt.org/`.
   - Target URL: `https://pngtostl.net/?utm_source=devhunt&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit_form`
   - Suggested content: Use directory title option 2 and the short directory description from `ops/coldstart-assets-utm-plan.md`.
-  - Status: planned
-  - Evidence: HTTP 200; title contained Dev Hunt submit/profile page; script saw `submit` signal.
-  - Notes: Good early dev-tool directory candidate. Verify category fit and login state in browser before submitting.
+  - Status: manual_required
+  - Evidence: Browser preflight on 2026-06-07: `/submit` rendered a 404 page; clicking the visible `Submit your Dev Tool` nav entry opened a login page requiring GitHub or Google. Page says Dev Hunt uses GitHub/Google provider to filter bots and fakes.
+  - Notes: Requires owner account/login before field-level preflight. Do not create/login an account or proceed automatically.
 
 - Channel: Launching Next
   - Type: directory
   - Candidate URL: `https://www.launchingnext.com/submit/`
   - Target URL: `https://pngtostl.net/?utm_source=launchingnext&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit_form`
   - Suggested content: Use directory title option 1 and long directory description.
-  - Status: planned
-  - Evidence: HTTP 200; page title `Submit Your Project | Launching Next`; script saw `submit`, `launch`, and `free` signals.
-  - Notes: Good free startup/tool listing candidate. Check whether approval queue or email confirmation is required.
+  - Status: ready_to_submit
+  - Evidence: Browser preflight on 2026-06-07: page loaded as `Submit Your Project`; public form visible. Fields include startup name, website URL, 5-8 word tagline, full description up to 2,500 chars, 5-10 comma-separated tags, startup type radios, funding radios, owner name, owner email, newsletter opt-in checkbox, and quick check `What is 2+3?`. Page states submitting is free, with optional $99 upgrade on the next page for 1-business-day consideration.
+  - Notes: Ready only after owner approves actual submission. During execution, answer the quick check truthfully, uncheck newsletter unless owner wants it, and do not accept the $99 upgrade without approval.
 
 - Channel: MicroLaunch
   - Type: directory
   - Candidate URL: `https://microlaunch.net/`
   - Target URL: `https://pngtostl.net/samples?utm_source=microlaunch&utm_medium=listing&utm_campaign=sample_gallery&utm_content=launch_listing`
   - Suggested content: Lead with real downloadable STL examples and honest 2D-to-relief limits.
-  - Status: planned
-  - Evidence: HTTP 200; page title `World-class Tech Products on Microlaunch`; script saw `launch`, `add your`, and `free` signals.
-  - Notes: Good candidate if a free product launch route is visible in browser. Owner/account approval required before launch.
+  - Status: manual_required
+  - Evidence: Browser preflight on 2026-06-07: page title `Just a moment...`; Cloudflare security verification displayed with `Widget containing a Cloudflare security challenge` and Ray ID footer. No submission form inspected because the verification gate must not be bypassed.
+  - Notes: Requires owner/visible-browser verification before checking whether a free launch route exists. Do not retry aggressively or bypass Cloudflare.
 
 - Channel: Insidr AI
   - Type: directory
-  - Candidate URL: `https://www.insidr.ai/submit-tool`
+  - Candidate URL: `https://www.insidr.ai/submit-tool` (redirects to `https://www.insidr.ai/submit-tools/`).
   - Target URL: `https://pngtostl.net/?utm_source=insidr_ai&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit_tool`
   - Suggested content: Use short pitch; emphasize maker/3D-printing use case to avoid generic AI-tool framing.
-  - Status: planned
-  - Evidence: HTTP 200; redirected to `/submit-tools/`; page title `Submit AI Tools - Insidr.ai`; script saw `submit` and `free` signals.
-  - Notes: Medium relevance because it is AI-tool oriented, not 3D-printing-specific. Submit only if category fit is clear.
+  - Status: ready_to_submit
+  - Evidence: Browser preflight on 2026-06-07: public `Submit AI Tools` form visible; fields include `Message`, `Link`, and required `Tag`. No immediate login, CAPTCHA, payment, or reciprocal-link blocker observed. Page also contains a separate email subscription iframe, not required for tool submission.
+  - Notes: Ready only after owner approves actual submission. Relevance remains medium because this is an AI-tool directory; keep copy focused on maker/3D-printing use cases and avoid overclaiming AI capability.
 
 - Channel: Hackaday Submit A Tip
   - Type: newsletter
   - Candidate URL: `https://hackaday.com/submit-a-tip/`
   - Target URL: `https://pngtostl.net/samples?utm_source=hackaday&utm_medium=newsletter&utm_campaign=sample_gallery&utm_content=submit_a_tip`
   - Suggested content: Pitch as a maker utility with real STL examples; ask for feedback rather than coverage.
-  - Status: planned
-  - Evidence: HTTP 200; title `Submit A Tip | Hackaday`; script saw `submit`, `login`, `contact`, and `tip` signals.
-  - Notes: High audience relevance, but editorial/newsletter route. Do not submit unless screenshots and owner approval are ready.
+  - Status: ready_to_submit
+  - Evidence: Browser preflight on 2026-06-07 timed out twice, so a lightweight HTTP preflight was used. HTTP returned 200 with title `Submit A Tip | Hackaday`; parsed Jetpack contact form fields include `Your Name or Alias`, `Email`, `Subject`, `Link to more info`, and `Comment`. No payment or CAPTCHA signal found in the parsed form.
+  - Notes: Ready only after owner approves actual editorial tip. Prefer visible browser if possible; if browser still times out, use the parsed form evidence only as preflight and do not force submission. Frame as a tip/feedback request, not an expectation of coverage.
 
 #### Manual-required / account-gated candidates
 

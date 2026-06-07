@@ -287,3 +287,17 @@ First-batch launch media pack on 2026-06-07 16:08 CST:
 - Visual QA: homepage and samples screenshots are suitable for directory submission; corrected the proof screenshot selector to `.toolProofBlock`, and the final proof screenshot shows `REAL OUTPUT PROOF`, two real example cards, STL metrics, and Download STL buttons.
 - Validation passed: 14 launch-media files present, 13 PNGs non-empty, expected dimensions match for the key screenshots/icons/wordmark, README references every asset and maps assets to Launching Next, Dev Hunt, Insidr AI, MicroLaunch, and Hackaday.
 - No public upload, directory submission, account action, CAPTCHA handling, payment, reciprocal listing, PR, or external post was executed.
+
+First-batch visible preflight on 2026-06-07:
+
+- Updated `ops/coldstart-submission-log.md` with a new `ready_to_submit` status label for owner-approved submissions whose public route has no immediate login/CAPTCHA/payment/reciprocal blocker.
+- Preflighted the 5 first-batch candidates without submitting, uploading, logging in, solving CAPTCHA, paying, or changing the site.
+- Result distribution:
+  - `ready_to_submit`: Launching Next, Insidr AI, Hackaday Submit A Tip.
+  - `manual_required`: Dev Hunt, MicroLaunch.
+- Launching Next: public form visible; fields include startup name, URL, 5-8 word tagline, full description, tags, startup/funding radios, owner name/email, newsletter opt-in, and quick check `What is 2+3?`; page says submission is free but offers an optional $99 upgrade on the next page.
+- Insidr AI: public `Submit AI Tools` form visible after redirect to `/submit-tools/`; fields include `Message`, `Link`, and required `Tag`; no immediate login/CAPTCHA/payment/reciprocal blocker observed.
+- Hackaday: browser timed out twice, but HTTP returned 200 for `Submit A Tip | Hackaday`; parsed Jetpack contact form fields include name/alias, email, subject, link to more info, and comment; no payment/CAPTCHA signal found in parsed form.
+- Dev Hunt: legacy `/submit` route now renders 404; visible `Submit your Dev Tool` entry opens GitHub/Google login, so owner account is required before field-level preflight.
+- MicroLaunch: browser showed Cloudflare security verification; form was not inspected because security verification must not be bypassed.
+- Validation passed: first-batch queue has 5 entries, with 3 `ready_to_submit`, 2 `manual_required`, and no false `submitted`/`listed`/`pending_review` claims.
