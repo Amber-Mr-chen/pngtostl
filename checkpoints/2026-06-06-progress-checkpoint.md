@@ -157,12 +157,19 @@ Verified current external/account state:
   - Sitemap submitted: `https://pngtostl.net/sitemap.xml`
   - GSC read result: `warnings=0`, `errors=0`, `submitted web URLs=20`, `lastDownloaded=2026-06-07T03:41:57.235Z`
   - `indexed=0` immediately after first submission; monitor over the next days.
+- Bing Webmaster is now configured from GSC/import/manual setup:
+  - Site: `pngtostl.net/`
+  - Sitemap submitted: `https://pngtostl.net/sitemap.xml`
+  - Known sitemaps: `1`
+  - Sitemaps with errors: `0`
+  - Sitemaps with warnings: `0`
+  - Total discovered URLs: `20`
+  - Sitemap status: `成功 / Success`
 - Current Google Analytics Admin account visible to token only showed `TarotRealm`; no `pngtostl.net` GA property was visible.
-- Live production HTML has no provider script for `gtag/googletagmanager`, `plausible`, `umami`, `clarity`, or `msvalidate.01`.
+- Live production HTML has no provider script for `gtag/googletagmanager`, `plausible`, `umami`, or `clarity`.
 
 Remaining owner/account actions:
 
-1. Add/import `pngtostl.net` in Bing Webmaster Tools and submit sitemap.
-2. Create/provide analytics Measurement ID if GA4/GTM/Plausible/Umami should be installed.
-3. Decide outbound mail provider before outbound DKIM only if sending as `support@pngtostl.net` is needed.
-4. Monitor GSC Pages/Search results for indexed pages, impressions, and query data over the next days.
+1. Create/provide analytics Measurement ID if GA4/GTM/Plausible/Umami should be installed.
+2. Decide outbound mail provider before outbound DKIM only if sending as `support@pngtostl.net` is needed.
+3. Monitor GSC/Bing Pages/Search results for indexed pages, impressions, and query data over the next days.

@@ -86,18 +86,24 @@ Follow-up:
 
 ### Bing Webmaster
 
-No live Bing verification meta tag is present in production HTML:
+Verified from owner-provided Bing Webmaster screenshot on 2026-06-07 12:39 CST:
 
 ```text
-msvalidate.01: missing
+Site: pngtostl.net/
+Sitemap: https://pngtostl.net/sitemap.xml
+Known sitemaps: 1
+Sitemaps with errors: 0
+Sitemaps with warnings: 0
+Total discovered URLs: 20
+Sitemap status: 成功 / Success
+Discovered URLs: 20
 ```
 
-Owner action required:
+Follow-up:
 
-1. Open Bing Webmaster Tools.
-2. Import from GSC after `pngtostl.net` is added there, or add the site manually.
-3. Submit sitemap: `https://pngtostl.net/sitemap.xml`.
-4. Verify crawl diagnostics.
+1. Check Bing Search Performance and AI Performance after data processing completes; Bing indicates reports may take up to 48 hours.
+2. Use URL Inspection on core URLs if indexing stays empty after crawl data appears.
+3. Keep sitemap monitored for errors/warnings.
 
 ### Analytics
 
