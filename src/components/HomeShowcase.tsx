@@ -65,7 +65,7 @@ export function ShowcaseDemo() {
                   alt={`${sample.title} input: ${sample.sourceLabel}`}
                   width={320}
                   height={320}
-                  loading="eager"
+                  loading="lazy"
                 />
               </div>
               <div className="naturalArrow" aria-hidden="true">→</div>
@@ -76,7 +76,7 @@ export function ShowcaseDemo() {
                   alt={`${sample.title} output: ${sample.previewLabel}`}
                   width={720}
                   height={492}
-                  loading="eager"
+                  loading="lazy"
                 />
               </div>
             </div>

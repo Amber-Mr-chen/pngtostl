@@ -7,7 +7,23 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-07 22:19 CST:
+Latest update — 2026-06-07 22:36 CST:
+
+- Follow-up for AITDK still showing `1 images missing alt text` after all `<img>` elements had alt text.
+- Root cause hypothesis verified: Next.js auto-generated `<link rel="preload" as="image">` tags for eager showcase images in `<head>`; some browser SEO extensions can count those image preload resources as images without alt text.
+- Changed non-critical homepage showcase images from `loading="eager"` to `loading="lazy"` so Next.js no longer emits image preload links in the page head.
+- Verification passed:
+  - `npm run lint`
+  - `npm run build`
+  - `npm run cf:build`
+  - `npm run cf:deploy`
+  - Production `head_image_preload_count`: 0.
+  - Production `raw_img_count`: 12.
+  - Production `missing_or_empty_alt_count`: 0.
+  - Production meta description remains 148 characters.
+- Cloudflare Worker version: `091f03fc-a41b-4ae8-be09-f05304c1e07e`.
+
+Previous update — 2026-06-07 22:19 CST:
 
 - Optimized the homepage based on the AITDK checks provided by the owner.
 - Fixed true SEO/accessibility issue: homepage sample/proof images now have descriptive alt text instead of empty `alt` values.
