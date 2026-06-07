@@ -7,7 +7,21 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-07 21:57 CST:
+Latest update — 2026-06-07 22:05 CST:
+
+- Installed Plausible Community Edition tracking in the site `<head>` using the owner-provided script URL.
+- The Telegram-pasted snippet had missing `||` / assignment characters, so the inline bootstrap was normalized to the standard Plausible queue/init pattern before deployment.
+- Verification passed:
+  - `npm run lint`
+  - `npm run build`
+  - `npm run cf:build`
+  - `npm run cf:deploy`
+  - Production HTML contains `https://plausible.shipsolo.io/js/pa-hH9PJovRN2vjpuGZf0nY3.js`.
+  - Production browser DOM confirms the Plausible external script is in `<head>`, `async=true`, and `window.plausible` is available.
+  - Direct script URL returns HTTP 200 `application/javascript`.
+- Cloudflare Worker version: `8276097f-da03-43f7-950a-0acb78dda4a7`.
+
+Previous update — 2026-06-07 21:57 CST:
 
 - Installed Ahrefs Web Analytics in the site `<head>` using the owner-provided script key.
 - Verification passed:

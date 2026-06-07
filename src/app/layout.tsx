@@ -63,6 +63,20 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <script src="https://analytics.ahrefs.com/analytics.js" data-key="pe/qASRBRNEqjq6mKdRPEw" async />
+        <script async src="https://plausible.shipsolo.io/js/pa-hH9PJovRN2vjpuGZf0nY3.js" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.plausible = window.plausible || function(){
+                (plausible.q = plausible.q || []).push(arguments)
+              };
+              plausible.init = plausible.init || function(i){
+                plausible.o = i || {}
+              };
+              plausible.init();
+            `,
+          }}
+        />
       </head>
       <body>
         <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} strategy="afterInteractive" />
