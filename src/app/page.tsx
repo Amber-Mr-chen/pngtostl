@@ -157,10 +157,24 @@ export default function HomePage() {
         </div>
         {proofSamples.map((sample) => (
           <Link key={sample.label} className="proofCard" href={sample.route}>
-            <div className={`proofVisual realProofVisual ${sample.kind}`} aria-hidden="true">
-              <Image className="proofSourceImage" src={sample.sourceImage} alt="" width={96} height={96} loading="lazy" />
-              <span className="proofArrow">→</span>
-              <Image className="proofPreviewImage" src={sample.previewImage} alt="" width={220} height={160} loading="lazy" />
+            <div className={`proofVisual realProofVisual ${sample.kind}`}>
+              <Image
+                className="proofSourceImage"
+                src={sample.sourceImage}
+                alt={`${sample.label} ${sample.input} source image`}
+                width={96}
+                height={96}
+                loading="lazy"
+              />
+              <span className="proofArrow" aria-hidden="true">→</span>
+              <Image
+                className="proofPreviewImage"
+                src={sample.previewImage}
+                alt={`${sample.label} generated ${sample.output} STL preview`}
+                width={220}
+                height={160}
+                loading="lazy"
+              />
             </div>
             <div>
               <strong>{sample.label}</strong>

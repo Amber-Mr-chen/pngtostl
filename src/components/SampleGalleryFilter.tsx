@@ -60,15 +60,27 @@ export function SampleGalleryFilter({ samples }: { samples: SampleWorkflow[] }) 
       <div className="sampleGallery" aria-live="polite">
         {visibleSamples.map((sample) => (
           <article className="sampleCard proSampleCard" id={sampleWorkflowSlug(sample.title)} key={sample.title}>
-            <div className={`sampleArt proSampleArt realSampleArt ${sample.route.replace('/', '')}`} aria-hidden="true">
+            <div className={`sampleArt proSampleArt realSampleArt ${sample.route.replace('/', '')}`}>
               <div className="sampleImageFrame sourceFrame">
                 <span>Input image</span>
-                <Image src={sample.sourceImage} alt="" width={180} height={180} loading="lazy" />
+                <Image
+                  src={sample.sourceImage}
+                  alt={`${sample.title} input image: ${sample.sourcePreview}`}
+                  width={180}
+                  height={180}
+                  loading="lazy"
+                />
               </div>
-              <span className="sampleTransformArrow">→</span>
+              <span className="sampleTransformArrow" aria-hidden="true">→</span>
               <div className="sampleImageFrame previewFrame">
                 <span>Generated STL</span>
-                <Image src={sample.previewImage} alt="" width={720} height={492} loading="lazy" />
+                <Image
+                  src={sample.previewImage}
+                  alt={`${sample.title} generated STL preview: ${sample.resultPreview}`}
+                  width={720}
+                  height={492}
+                  loading="lazy"
+                />
               </div>
             </div>
             <div className="sampleCopy">

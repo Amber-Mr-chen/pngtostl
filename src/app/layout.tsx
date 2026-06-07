@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s | PNGtoSTL",
   },
   description:
-    "Upload PNG, JPG, WebP, GIF, or BMP and choose a printable STL workflow: relief, logo, lithophane, or heightmap.",
+    "Upload PNG, JPG, WebP, GIF, or BMP to create printable STL files for relief signs, logo badges, lithophanes, and heightmap surfaces in your browser.",
   alternates: {
     canonical: "/",
   },
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     url: "https://pngtostl.net",
     siteName: "PNGtoSTL",
     title: "Image to STL Converter | PNGtoSTL",
-    description: "Upload common image formats and choose a printable STL workflow for reliefs, logos, lithophanes, and heightmaps.",
+    description: "Upload PNG, JPG, WebP, GIF, or BMP to create printable STL files for relief signs, logo badges, lithophanes, and heightmap surfaces in your browser.",
     images: [
       {
         url: "/og-icon.png",

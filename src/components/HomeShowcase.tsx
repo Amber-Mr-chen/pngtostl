@@ -57,15 +57,27 @@ export function ShowcaseDemo() {
       <div className="naturalWorkflowGrid">
         {samples.map((sample) => (
           <article key={sample.id} className={`naturalWorkflowCard ${sample.id}`}>
-            <div className="naturalWorkflowVisual" aria-hidden="true">
+            <div className="naturalWorkflowVisual">
               <div className="naturalImagePane inputPane">
                 <span>{sample.sourceLabel}</span>
-                <Image src={sample.sourceImage} alt="" width={320} height={320} loading="eager" />
+                <Image
+                  src={sample.sourceImage}
+                  alt={`${sample.title} input: ${sample.sourceLabel}`}
+                  width={320}
+                  height={320}
+                  loading="eager"
+                />
               </div>
-              <div className="naturalArrow">→</div>
+              <div className="naturalArrow" aria-hidden="true">→</div>
               <div className="naturalImagePane previewPane">
                 <span>{sample.previewLabel}</span>
-                <Image src={sample.previewImage} alt="" width={720} height={492} loading="eager" />
+                <Image
+                  src={sample.previewImage}
+                  alt={`${sample.title} output: ${sample.previewLabel}`}
+                  width={720}
+                  height={492}
+                  loading="eager"
+                />
               </div>
             </div>
 

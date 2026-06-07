@@ -7,7 +7,25 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-07 22:05 CST:
+Latest update — 2026-06-07 22:19 CST:
+
+- Optimized the homepage based on the AITDK checks provided by the owner.
+- Fixed true SEO/accessibility issue: homepage sample/proof images now have descriptive alt text instead of empty `alt` values.
+- Improved homepage meta description from 111 characters to 148 characters, fitting AITDK's 140–160 character recommendation while keeping the wording truthful.
+- Left non-blocking/cosmetic items unchanged where already passing: title length, canonical, H1, SSR-rendered main content, analytics scripts.
+- Verification passed:
+  - `npm run lint`
+  - `npm run build`
+  - `npm run cf:build`
+  - `npm run cf:deploy`
+  - Production browser DOM: 12 images, 0 missing alt text.
+  - Production meta description length: 148.
+  - Production title length: 33.
+  - Production H1 count: 1.
+  - Production canonical: `https://pngtostl.net/`.
+- Cloudflare Worker version: `519a641a-6266-4337-b2c3-81ecf42e750b`.
+
+Previous update — 2026-06-07 22:05 CST:
 
 - Installed Plausible Community Edition tracking in the site `<head>` using the owner-provided script URL.
 - The Telegram-pasted snippet had missing `||` / assignment characters, so the inline bootstrap was normalized to the standard Plausible queue/init pattern before deployment.
