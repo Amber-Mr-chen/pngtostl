@@ -235,6 +235,7 @@ export default function HomePage() {
         <div>
           <strong>PNGtoSTL</strong>
           <p>Image-to-STL tools for makers who need reliefs, logo badges, lithophanes, and heightmaps without opening CAD first.</p>
+          <p><Link href="mailto:support@pngtostl.net">support@pngtostl.net</Link></p>
         </div>
         <nav aria-label="Footer">
           <Link href="/image-to-stl">Image to STL</Link>

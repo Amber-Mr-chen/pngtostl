@@ -124,12 +124,41 @@ frontend-site-automation / references/tool-site-operational-maturity-after-works
 
 Added support/feedback/domain-email readiness as a mandatory operational maturity check, so future tool sites should not miss floating feedback/support and DNS email basics.
 
-## Next recommended step
+## 2026-06-07 10:42 CST follow-up: email/search/analytics/mobile readiness
 
-1. Commit/push the current site code.
-2. Configure domain email maturity:
-   - Add DMARC TXT.
-   - Confirm forwarding destination for `support@pngtostl.net`.
-   - Decide whether outbound sending should use Google Workspace / Namecheap Private Email / Resend.
-3. Run GSC/Bing/analytics readiness check.
-4. Do mobile screenshots for `/`, `/image-to-stl`, `/samples`, `/faq` after feedback launcher.
+Completed and deployed / verified:
+
+- Mobile Feedback P1 fixed: on screens ≤680px the floating feedback entry is now a compact 40px circular `?` button instead of the wider text pill.
+- Production 390px mobile QA after the patch:
+  - `/image-to-stl`: Feedback no longer overlaps the output-mode selector.
+  - `/samples`: no overlap with filter buttons.
+  - `/faq`: no overlap with visible critical controls.
+  - `/`: no horizontal overflow; only a small overlap with the lower-right corner of a partially visible example card, not with primary upload/CTA.
+- Footer support visibility improved:
+  - Homepage footer now shows `support@pngtostl.net`.
+  - Tool-page footer now shows `support@pngtostl.net`.
+- Updated `ops/gsc-bing-submission-checklist.md` with current GSC/Bing/Analytics/email status.
+
+Verified current external/account state:
+
+- Public DNS is authoritative on Cloudflare nameservers, but mail is still routed through Namecheap forwarding:
+  - MX: `eforward*.registrar-servers.com`
+  - SPF: `v=spf1 include:spf.efwd.registrar-servers.com ~all`
+- Cloudflare Email Routing config exists but is disabled/misconfigured because MX does not point to Cloudflare routing; do not switch MX without owner confirmation because that would change the actual mail receiving route.
+- DMARC is still missing: `_dmarc.pngtostl.net` has no TXT record.
+- DKIM is not present for common selectors; add only after choosing outbound sending provider.
+- Google monitor OAuth token refreshed successfully, but current GSC account does not contain `pngtostl.net`; visible properties were `tattooideasai.net`, `tarotrealm.xyz`, and `aihumanizer.life`.
+- Current Google Analytics Admin account visible to token only showed `TarotRealm`; no `pngtostl.net` GA property was visible.
+- Live production HTML has no provider script for `gtag/googletagmanager`, `plausible`, `umami`, `clarity`, `google-site-verification`, or `msvalidate.01`.
+
+Remaining owner/account actions:
+
+1. Confirm `support@pngtostl.net` receives mail at the intended inbox.
+2. Add DMARC TXT in Cloudflare DNS:
+   - Type: `TXT`
+   - Name: `_dmarc`
+   - Value: `v=DMARC1; p=none; rua=mailto:support@pngtostl.net`
+3. Decide outbound mail provider before DKIM: Google Workspace / Namecheap Private Email / Resend / Cloudflare Email Sending.
+4. Add `pngtostl.net` to Google Search Console, verify, and submit `https://pngtostl.net/sitemap.xml`.
+5. Add/import `pngtostl.net` in Bing Webmaster Tools and submit sitemap.
+6. Create/provide analytics Measurement ID if GA4/GTM/Plausible/Umami should be installed.

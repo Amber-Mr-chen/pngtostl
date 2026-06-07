@@ -43,6 +43,7 @@ function SiteFooter() {
       <div>
         <strong>PNGtoSTL</strong>
         <p>Browser-first image to STL workflows for reliefs, logos, lithophanes, and heightmaps.</p>
+        <p><Link href="mailto:support@pngtostl.net">support@pngtostl.net</Link></p>
       </div>
       <nav aria-label="Footer">
         <Link href="/image-to-stl">Image to STL</Link>
