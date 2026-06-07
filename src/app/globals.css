@@ -2813,3 +2813,281 @@ html body .infoGrid h2,
 html body article.shell h2 {
   font-size: clamp(1rem, 1.3vw, 1.22rem) !important;
 }
+
+/* Owner polish pass: tighter hero, stronger sticky header, safer anchors. */
+html {
+  scroll-padding-top: 92px;
+}
+
+html body .homeNav,
+html body .toolHeader {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 140 !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.055) !important;
+  backdrop-filter: blur(12px);
+}
+
+html body .homePage {
+  padding-top: 0 !important;
+}
+
+html body .homeNav,
+html body .toolHeader nav {
+  min-height: 60px !important;
+  margin-bottom: 18px !important;
+}
+
+html body .homeHero {
+  padding: 26px 30px !important;
+  gap: 24px !important;
+  border-radius: 22px !important;
+  box-shadow: 0 18px 46px rgba(16, 24, 40, 0.07) !important;
+}
+
+html body .homeHero h1 {
+  font-size: clamp(2.15rem, 3.45vw, 3.0rem) !important;
+  line-height: 1.04 !important;
+  max-width: 660px !important;
+}
+
+html body .homeHeroCopy > p:not(.homeKicker) {
+  margin-top: 16px !important;
+  font-size: 1.02rem !important;
+  line-height: 1.56 !important;
+  max-width: 610px !important;
+}
+
+html body .heroActions {
+  margin-top: 20px !important;
+}
+
+html body .heroUploadPanel {
+  gap: 12px !important;
+  padding: 14px !important;
+}
+
+html body .uploadMockDropzone {
+  padding: 18px !important;
+  min-height: 190px !important;
+}
+
+html body .workflowChoice.heroToolLink {
+  padding: 10px 11px !important;
+  border-radius: 12px !important;
+}
+
+html body .workflowChoice.heroToolLink small {
+  font-size: 0.76rem !important;
+}
+
+html body .proofStrip,
+html body .showcaseBlock,
+html body .quickTools,
+html body .toolDirectory,
+html body .utilityBand {
+  scroll-margin-top: 96px !important;
+}
+
+html body .proofStrip {
+  margin-top: 18px !important;
+  padding: 24px !important;
+}
+
+html body .showcaseBlock {
+  margin-top: 24px !important;
+  padding: 28px !important;
+}
+
+html body .proofIntro h2,
+html body .showcaseHeader h2,
+html body .sectionIntro h2,
+html body .directoryHeading h2,
+html body .utilityBand h2 {
+  font-size: clamp(1.35rem, 2.25vw, 1.95rem) !important;
+  line-height: 1.16 !important;
+}
+
+html body .proofExamplesLink {
+  background: #fff !important;
+  color: var(--accent-strong) !important;
+  border: 1px solid rgba(23, 105, 255, 0.26) !important;
+  box-shadow: none !important;
+}
+
+html body .naturalWorkflowCard .previewPane img {
+  object-fit: contain !important;
+  filter: contrast(1.04) saturate(1.02);
+}
+
+html body .naturalWorkflowCard.heightmap .previewPane {
+  background: linear-gradient(135deg, #0f172a, #1e293b) !important;
+}
+
+html body .toolHero h1,
+html body .toolPage .toolHero h1 {
+  font-size: clamp(2.05rem, 3.55vw, 3.25rem) !important;
+  line-height: 1.04 !important;
+}
+
+html body .infoHero h1,
+html body .infoPage .infoHero h1,
+html body .faqPage h1,
+html body .helperPage h1 {
+  font-size: clamp(1.65rem, 3.15vw, 2.55rem) !important;
+  line-height: 1.1 !important;
+}
+
+@media (max-width: 860px) {
+  html { scroll-padding-top: 76px; }
+
+  html body .homeNav,
+  html body .toolHeader nav {
+    min-height: 54px !important;
+    margin-bottom: 12px !important;
+  }
+
+  html body .homeNav {
+    align-items: center !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    padding: 8px 0 !important;
+  }
+
+  html body .homeNavRight {
+    width: auto !important;
+    margin-left: auto !important;
+    overflow: visible !important;
+  }
+
+  html body .homeNavLinks,
+  html body .toolNavLinks {
+    display: none !important;
+  }
+
+  html body .accountActions {
+    width: auto !important;
+    overflow: visible !important;
+  }
+
+  html body .signupButton {
+    min-height: 38px !important;
+    padding: 0.5rem 0.72rem !important;
+    font-size: 0.82rem !important;
+  }
+
+  html body .homeHero {
+    padding: 20px !important;
+    gap: 18px !important;
+  }
+
+  html body .homeHero h1 {
+    font-size: clamp(2rem, 8vw, 2.55rem) !important;
+  }
+
+  html body .proofStrip,
+  html body .showcaseBlock {
+    padding: 20px !important;
+    margin-top: 18px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  html body .homePage,
+  html body .container {
+    width: min(100% - 20px, 1160px) !important;
+  }
+
+  html body .brandMark {
+    font-size: 0.98rem !important;
+  }
+
+  html body .homeHero h1,
+  html body .toolHero h1 {
+    font-size: clamp(1.85rem, 9vw, 2.25rem) !important;
+  }
+
+  html body .homeHeroCopy > p:not(.homeKicker) {
+    font-size: 0.96rem !important;
+  }
+}
+
+/* Owner polish final: compact sticky headers after info-page QA. */
+html body .toolHeader,
+html body .infoHeader {
+  padding: 0 !important;
+}
+
+html body .toolHeader nav,
+html body .infoHeader nav {
+  min-height: 58px !important;
+  margin-bottom: 0 !important;
+  padding: 0 !important;
+  align-items: center !important;
+}
+
+html body .infoHeader {
+  margin-bottom: 18px !important;
+}
+
+html body .toolPage .toolHeader {
+  margin-bottom: 14px !important;
+}
+
+html body .toolNavLinks {
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  overflow: hidden !important;
+}
+
+html body .toolNavLinks .pill {
+  white-space: nowrap !important;
+  padding: 0.45rem 0.7rem !important;
+  font-size: 0.86rem !important;
+}
+
+html body .toolHeader .brandMark,
+html body .infoHeader .brandMark,
+html body .homeNav .brandMark {
+  flex-shrink: 0 !important;
+}
+
+@media (max-width: 860px) {
+  html body .toolHeader,
+  html body .infoHeader {
+    padding: 0 !important;
+  }
+
+  html body .toolHeader nav,
+  html body .infoHeader nav {
+    min-height: 54px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    margin-bottom: 0 !important;
+  }
+
+  html body .toolHeader .toolNavLinks,
+  html body .infoHeader .toolNavLinks {
+    display: none !important;
+  }
+}
+
+/* Owner polish final: compact information-page section titles. */
+html body .infoPage .sampleGalleryShell h2,
+html body .infoPage .sectionTitle,
+html body .infoPage h2,
+html body .faqPage h2,
+html body .helperPage h2 {
+  font-size: clamp(1.25rem, 2.05vw, 1.8rem) !important;
+  line-height: 1.18 !important;
+  letter-spacing: -0.025em !important;
+}
+
+html body .infoPage .proSampleCard h2,
+html body .infoPage .sampleCard h2 {
+  font-size: clamp(1rem, 1.35vw, 1.2rem) !important;
+  line-height: 1.22 !important;
+  letter-spacing: -0.015em !important;
+}

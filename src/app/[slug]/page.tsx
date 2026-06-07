@@ -335,8 +335,8 @@ function FaqPage() {
       </section>
       <section className="shell" style={{ padding: 22, marginTop: 22 }}>
         <div style={{ display: "grid", gap: 12 }}>
-          {questions.slice(0, 14).map((item) => (
-            <details key={`${item.source}-${item.q}`} style={{ border: "1px solid var(--line)", borderRadius: 12, padding: 14, background: "#fff" }}>
+          {questions.slice(0, 14).map((item, index) => (
+            <details key={`${item.source}-${item.q}`} open={index < 6} style={{ border: "1px solid var(--line)", borderRadius: 12, padding: 14, background: "#fff" }}>
               <summary style={{ fontWeight: 750 }}>{item.q}</summary>
               <p className="smallMuted">{item.a}</p>
               <p className="smallMuted">Related: {item.source}</p>

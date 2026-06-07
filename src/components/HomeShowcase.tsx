@@ -60,12 +60,12 @@ export function ShowcaseDemo() {
             <div className="naturalWorkflowVisual" aria-hidden="true">
               <div className="naturalImagePane inputPane">
                 <span>{sample.sourceLabel}</span>
-                <Image src={sample.sourceImage} alt="" width={320} height={320} loading="lazy" />
+                <Image src={sample.sourceImage} alt="" width={320} height={320} loading="eager" />
               </div>
               <div className="naturalArrow">→</div>
               <div className="naturalImagePane previewPane">
                 <span>{sample.previewLabel}</span>
-                <Image src={sample.previewImage} alt="" width={720} height={492} loading="lazy" />
+                <Image src={sample.previewImage} alt="" width={720} height={492} loading="eager" />
               </div>
             </div>
 
