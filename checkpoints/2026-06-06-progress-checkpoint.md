@@ -317,3 +317,17 @@ Owner-approved first submission batch on 2026-06-07:
   - Evidence: form accepted field values and `form.checkValidity()` returned true; clicked the real submit button twice, but there was no visible success, error, redirect, or alert, and fields remained populated.
   - Decision: did not force a backend request. Needs visible-browser/manual retry or direct contact if owner wants to pursue.
 - Validation passed: `ops/coldstart-submission-log.md` has one `pending_review` record for Launching Next and one `manual_required` record for Insidr AI; no false `submitted`/`listed` claim; no payment, login, CAPTCHA handling, reciprocal link, external post, or other channel action was executed.
+
+Owner-approved Hackaday editorial tip on 2026-06-07:
+
+- Scope: Hackaday Submit A Tip only, because it was the remaining `ready_to_submit` first-batch candidate.
+- Result: `pending_review`.
+- Browser behavior: `browser_navigate` still timed out, matching preflight.
+- Submission method: standard HTTP POST to the public Jetpack contact form on `https://hackaday.com/submit-a-tip/`, using the page's real hidden fields from the same GET response. No CAPTCHA/security bypass was used; no login, payment, reciprocal link, or file upload appeared.
+- Evidence:
+  - POST returned HTTP 200.
+  - Final URL included `contact-form-id=2542&contact-form-sent=1116626&contact-form-hash=380eee749dc8097bb2079b2bd11d9b24e9ff6474`.
+  - Response text included `Thank you for your response.`
+  - Response snippet saved at `ops/hackaday-submit-response-snippet.txt`.
+- Submitted framing: subject `Browser-based image-to-STL workflow with real downloadable 3D printing examples`; body asked for maker feedback on real examples/settings and did not claim or expect coverage.
+- Validation target after this batch: first-batch queue should have Launching Next and Hackaday as `pending_review`, Dev Hunt/MicroLaunch/Insidr AI as `manual_required`, and no `submitted`/`listed` claims.
