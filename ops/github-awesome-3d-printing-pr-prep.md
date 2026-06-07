@@ -11,10 +11,24 @@ https://github.com/ad-si/awesome-3d-printing
 Current status:
 
 ```text
-manual_required / PR candidate
+manual_required / branch_pushed / PR creation blocked by GitHub token permission
 ```
 
-This document prepares an owner-reviewable PR plan only. No fork, branch, commit, pull request, GitHub login, or upstream modification has been executed.
+This document prepared an owner-reviewable PR plan. After owner approval on 2026-06-07, the fork branch was created and pushed, but the PR itself was not opened because the available GitHub token lacks `createPullRequest` permission and the browser compare page was signed out.
+
+Execution result after owner approval:
+
+```text
+Fork: https://github.com/Amber-Mr-chen/awesome-3d-printing
+Branch: add-pngtostl-online-tool
+Commit: f062beb Add PNGtoSTL to Online Tools
+Compare URL: https://github.com/ad-si/awesome-3d-printing/compare/main...Amber-Mr-chen:awesome-3d-printing:add-pngtostl-online-tool?expand=1
+Compare state: Able to merge
+PR status: not opened; manual_required
+Blocker: gh pr create failed with GraphQL Resource not accessible by personal access token (createPullRequest); browser compare page showed signed-out GitHub session.
+```
+
+No upstream PR, upstream write, payment, CAPTCHA bypass, or reciprocal action has been executed.
 
 ## Repository Signals
 

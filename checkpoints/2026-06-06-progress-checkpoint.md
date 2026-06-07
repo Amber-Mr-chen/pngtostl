@@ -369,3 +369,14 @@ GitHub awesome-3d-printing PR prep on 2026-06-07:
 - Suggested insertion: after `Polyvia3D` and before `QRCode2STL`; reference definition after `[Polyvia3D]` and before `[PROLED3D]`.
 - Updated `ops/coldstart-submission-log.md` and `ops/second-batch-preflight-notes.md` to link the PR prep package.
 - Remaining requirement before action: owner approval plus re-run duplicate/upstream drift check immediately before any PR.
+
+GitHub awesome-3d-printing owner-approved branch push on 2026-06-07:
+
+- Re-ran upstream README duplicate search: `PNGtoSTL`, `png to stl`, `png-to-stl`, `image to stl`, `image-to-stl`, `lithophane`, `heightmap`, and `relief` all remained 0.
+- Re-ran issue/PR search for `PNGtoSTL OR "image to STL" OR lithophane OR heightmap`; both returned empty.
+- Cloned upstream to `/tmp/awesome-3d-printing-pr`, created fork remote `amberfork`, and pushed branch `add-pngtostl-online-tool` to `https://github.com/Amber-Mr-chen/awesome-3d-printing`.
+- Branch commit: `f062beb Add PNGtoSTL to Online Tools`; diff changes only `readme.md` with 2 insertions.
+- Compare URL: `https://github.com/ad-si/awesome-3d-printing/compare/main...Amber-Mr-chen:awesome-3d-printing:add-pngtostl-online-tool?expand=1`.
+- Compare page showed `Able to merge`, 1 commit, 1 file changed.
+- PR creation did not complete: `gh pr create` failed with `GraphQL: Resource not accessible by personal access token (createPullRequest)`; browser compare page showed signed-out GitHub session.
+- Current status: branch is pushed and ready, but PR remains `manual_required` until owner opens the compare URL in a logged-in GitHub browser or provides a token with PR creation permission.
