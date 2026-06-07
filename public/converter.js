@@ -214,13 +214,13 @@
           downloadLink.dataset.objectUrl = url;
           downloadLink.download = filename;
           downloadLink.style.display = 'block';
-          downloadLink.onclick = () => track('converter_download_click', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount });
+          downloadLink.onclick = () => track('pngtostl_download_clicked', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount });
         }
         if (previewCanvas && window.PNGTOSTLPreview && typeof window.PNGTOSTLPreview.mount === 'function') {
           window.PNGTOSTLPreview.mount(previewCanvas, blob);
         }
         setText(status, 'STL ready');
-        track('converter_generate_success', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
+        track('pngtostl_generate_success', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
         setMetrics([
           { label: 'Triangles', value: triangleCount },
           { label: 'File size', value: Math.round(blob.size / 1024) + ' KB' },
@@ -234,9 +234,13 @@
           (occupiedRatio ? '\nRaised/detail coverage: ' + Math.round(Number(occupiedRatio) * 100) + '%' : '') +
           '\nOpen it from the front/top view. STL is single-material geometry, not a color image.'
         );
-      } catch (_) {
+      } catch (error) {
         setText(status, 'Needs fix');
         setText(message, 'Conversion failed. Please try another image or lower the detail level.');
+        track('pngtostl_generate_error', {
+          reason: error && error.name === 'AbortError' ? 'timeout' : 'network_or_runtime_error',
+          message: error && error.message ? error.message : 'Conversion failed'
+        });
       } finally {
         const hasFile = fileInput && fileInput.files && fileInput.files[0];
         setButtonState(hasFile ? 'Generate STL' : 'Upload an image first', !hasFile);

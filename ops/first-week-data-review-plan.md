@@ -6,6 +6,10 @@ Use real behavior to decide whether to iterate, expand content, or add monetizat
 
 ## Events already emitted by frontend
 
+Verified in production on 2026-06-07 13:25 CST after deploy version `0ee4c66c-316e-4f4a-a69c-4859a97e555e`.
+
+Events:
+
 - `pngtostl_upload_selected`
 - `pngtostl_generate_clicked`
 - `pngtostl_generate_success`

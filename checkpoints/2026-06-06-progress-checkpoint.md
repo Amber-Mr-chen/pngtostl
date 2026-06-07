@@ -167,15 +167,21 @@ Verified current external/account state:
   - Sitemap status: `成功 / Success`
 - Google Analytics 4 is now installed and production-verified:
   - Measurement ID: `G-ZPV5EZHN4G`
-  - Production deploy version: `cdb72d96-f0cd-41a6-bf1b-88f901f4e703`
+  - Initial GA deploy version: `cdb72d96-f0cd-41a6-bf1b-88f901f4e703`
+  - Funnel event deploy version: `0ee4c66c-316e-4f4a-a69c-4859a97e555e`
   - GA script loaded in production: `true`
   - `window.gtag` present: `true`
   - `dataLayer` contains config for `G-ZPV5EZHN4G` with `anonymize_ip=true` and `send_page_view=true`
-  - Custom event smoke: `feedback_panel_open` reached `window.pngtostlEvents` and `dataLayer/gtag`.
+  - Feedback smoke: `feedback_panel_open` reached `window.pngtostlEvents` and `dataLayer/gtag`.
+  - Full converter funnel verified in production on `/image-to-stl` with canvas-generated PNG:
+    - `pngtostl_upload_selected`
+    - `pngtostl_generate_clicked`
+    - `pngtostl_generate_success`
+    - `pngtostl_download_clicked`
+  - Error path verified with invalid PNG: `pngtostl_generate_error` reached `window.pngtostlEvents` and `dataLayer`.
 - Privacy page now discloses GA4 analytics events and Cloudflare Email Routing support forwarding.
 
 Remaining owner/account actions:
 
-1. Confirm GA4 Realtime shows the production visit/event in the Google Analytics UI.
-2. Decide outbound mail provider before outbound DKIM only if sending as `support@pngtostl.net` is needed.
-3. Monitor GSC/Bing/GA4 for indexed pages, impressions, query data, landing pages, and conversion events over the next days.
+1. Decide outbound mail provider before outbound DKIM only if sending as `support@pngtostl.net` is needed.
+2. Monitor GSC/Bing/GA4 for indexed pages, impressions, query data, landing pages, and conversion events over the next days.
