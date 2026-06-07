@@ -10,6 +10,10 @@ type SampleWorkflow = (typeof sampleWorkflows)[number];
 
 type FilterKey = "all" | SampleWorkflow["category"];
 
+function sampleAnchor(title: string) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
 const filters: Array<{ key: FilterKey; label: string }> = [
   { key: "all", label: "All examples" },
   { key: "relief", label: "Relief" },
@@ -56,7 +60,7 @@ export function SampleGalleryFilter({ samples }: { samples: SampleWorkflow[] }) 
 
       <div className="sampleGallery" aria-live="polite">
         {visibleSamples.map((sample) => (
-          <article className="sampleCard proSampleCard" key={sample.title}>
+          <article className="sampleCard proSampleCard" id={sampleAnchor(sample.title)} key={sample.title}>
             <div className={`sampleArt proSampleArt realSampleArt ${sample.route.replace('/', '')}`} aria-hidden="true">
               <div className="sampleImageFrame sourceFrame">
                 <span>Input image</span>

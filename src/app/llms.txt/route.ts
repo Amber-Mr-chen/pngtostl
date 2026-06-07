@@ -1,4 +1,4 @@
-import { tools, helperPages } from "@/lib/tools";
+import { tools, helperPages, sampleWorkflows } from "@/lib/tools";
 
 export const dynamic = "force-static";
 
@@ -21,6 +21,10 @@ export function GET() {
     .map((page) => `- [${page.title}](${base}/${page.slug}): ${page.description}`)
     .join("\n");
 
+  const examples = sampleWorkflows
+    .map((sample) => `- [${sample.title}](${base}/samples): ${sample.input} -> ${sample.output}. Example STL: ${base}${sample.stlPath}`)
+    .join("\n");
+
   const body = `# PNGtoSTL
 
 > Browser-first image to STL toolkit for turning common image files into printable STL workflows.
@@ -38,11 +42,18 @@ ${formatEntries}
 ${helpers}
 - [FAQ](${base}/faq): Answers about PNG to STL, image to STL, lithophanes, and realistic 2D-to-3D limits.
 
+## Real Example Workflows
+
+- [Image to STL Examples](${base}/samples): Source images, generated STL previews, recommended settings, and downloadable STL files for real image-to-STL workflows.
+${examples}
+
 ## Key Facts
 
 - The universal Image to STL workflow accepts common browser-readable image formats including PNG, JPG, WebP, GIF, and BMP.
 - Output is printable STL geometry for reliefs, logos, lithophanes, and heightmaps, not full 3D object reconstruction from a single photo.
 - Format-specific pages are retained as SEO entry points and preset defaults, while the homepage promotes task/output workflows.
+- The examples gallery contains downloadable sample STL files for logo badges, stamps, sign plates, photo reliefs, lithophanes, and heightmap tiles.
+- Tool pages surface route-matched real output proof from the examples gallery so users can compare source images with STL previews before uploading.
 - STL files do not preserve image colors or textures; they represent geometry.
 
 ## Contact
@@ -51,7 +62,7 @@ ${helpers}
 - Support email: support@pngtostl.net
 - Feedback: use the floating feedback button on the website or email support@pngtostl.net
 
-Last updated: 2026-06-06
+Last updated: 2026-06-07
 `;
 
   return new Response(body, {

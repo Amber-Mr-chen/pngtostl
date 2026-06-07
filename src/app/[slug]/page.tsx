@@ -19,7 +19,37 @@ function pageJsonLd(title: string, description: string, path: string) {
   };
 }
 
-
+function samplesJsonLd() {
+  const base = "https://pngtostl.net";
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Image to STL Examples",
+    url: `${base}/samples`,
+    description: "Real image-to-STL examples with source images, generated STL previews, recommended settings, and downloadable STL files.",
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: sampleWorkflows.map((sample, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "CreativeWork",
+          name: sample.title,
+          url: `${base}/samples#${sample.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
+          description: `${sample.input} to ${sample.output}`,
+          genre: sample.categoryLabel,
+          encoding: {
+            "@type": "MediaObject",
+            contentUrl: `${base}${sample.stlPath}`,
+            encodingFormat: "model/stl",
+            name: `${sample.title} STL sample`,
+          },
+          image: [`${base}${sample.sourceImage}`, `${base}${sample.previewImage}`],
+        },
+      })),
+    },
+  };
+}
 
 const primaryInfoNav = [
   { href: "/image-to-stl", label: "Image to STL" },
@@ -83,10 +113,23 @@ export async function generateMetadata({ params }: { params: SlugParams }): Prom
 
   const staticPage = staticPages.find((page) => page.slug === slug);
   if (staticPage) {
+    const canonical = `/${staticPage.slug}`;
     return {
       title: staticPage.title,
       description: staticPage.description,
-      alternates: { canonical: `/${staticPage.slug}` },
+      alternates: { canonical },
+      openGraph: {
+        type: "website",
+        url: `https://pngtostl.net${canonical}`,
+        siteName: "PNGtoSTL",
+        title: staticPage.title,
+        description: staticPage.description,
+      },
+      twitter: {
+        card: "summary",
+        title: staticPage.title,
+        description: staticPage.description,
+      },
     };
   }
 
@@ -142,7 +185,14 @@ export default async function DynamicPage({ params }: { params: SlugParams }) {
 }
 
 function StaticInfoPage({ slug }: { slug: string }) {
-  if (slug === "samples") return <SamplesPage />;
+  if (slug === "samples") {
+    return (
+      <>
+        <SamplesPage />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(samplesJsonLd()) }} />
+      </>
+    );
+  }
   if (slug === "privacy") return <PrivacyPage />;
   if (slug === "terms") return <TermsPage />;
   if (slug === "developers") return <DevelopersPage />;

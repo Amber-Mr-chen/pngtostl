@@ -205,6 +205,14 @@ Verified current external/account state:
   - Refactored the proof UI into `src/components/ToolProofBlock.tsx` client component so IntersectionObserver and click handlers can emit events while preserving the server-rendered `ToolPage` structure.
   - Production verified on `/png-to-stl`: all three events reached both `window.pngtostlEvents` and GA4 `dataLayer`; payloads include tool, path, sample, sample route/category, STL path, position, and sample count where applicable.
   - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`, and `node scripts/home_responsive_qa.js`.
+- Crawler hints and structured data refreshed after the sample/proof upgrades on 2026-06-07:
+  - Deploy version: `a2ece38e-8838-4e84-8571-3351039fa490`.
+  - Updated `src/app/llms.txt/route.ts` so `/llms.txt` includes Real Example Workflows, all 10 downloadable sample STL workflows, route-matched proof facts, and `Last updated: 2026-06-07`.
+  - Updated `/samples` schema in `src/app/[slug]/page.tsx` with `CollectionPage` + `ItemList` JSON-LD, 10 `CreativeWork` entries, source/preview images, and `model/stl` encodings.
+  - Added stable sample fragment anchors in `src/components/SampleGalleryFilter.tsx` so schema item URLs match rendered DOM anchors.
+  - Static info pages now output OG/Twitter metadata with canonical URL, title, and description.
+  - Production verified: `/robots.txt`, `/sitemap.xml`, `/llms.txt` return 200; sitemap contains `/samples`; `/llms.txt` contains Real Example Workflows, Workshop sign plate, Terrain heightmap tile, and updated date; `/samples` has canonical, OG, Twitter card, CollectionPage JSON-LD, 10 ItemList entries, STL encoding, and matching anchors; `/png-to-stl` has canonical, robots `index, follow`, WebSite, SoftwareApplication, and FAQPage JSON-LD.
+  - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`, and `node scripts/home_responsive_qa.js`.
 
 Remaining owner/account actions:
 

@@ -66,6 +66,14 @@ Completed before waiting for real traffic data:
   - Refactored the proof block into a client component so visibility and click events are captured without changing the server-rendered page content.
   - Production verified on `/png-to-stl`: `sample_proof_view`, `sample_proof_open_workflow`, and `sample_proof_download` reached both `window.pngtostlEvents` and GA4 `dataLayer` with tool, sample, route/category, STL path, and position/sample-count payloads.
   - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`, and homepage responsive QA.
+- Crawler hints and structured data were refreshed after the sample/proof upgrades:
+  - Deploy version: `a2ece38e-8838-4e84-8571-3351039fa490`.
+  - `/llms.txt` now includes a Real Example Workflows section, the 10 downloadable example STL workflows, updated key facts about route-matched proof blocks, and `Last updated: 2026-06-07`.
+  - `/samples` now emits `CollectionPage` + `ItemList` JSON-LD with 10 `CreativeWork` items, source/preview images, and `model/stl` encodings for downloadable STL files.
+  - Sample cards now have stable fragment anchors that match the schema URLs.
+  - Static info pages now output OG/Twitter metadata in addition to canonical title/description.
+  - Production verified: `/robots.txt`, `/sitemap.xml`, and `/llms.txt` return 200; sitemap contains `/samples`; `/samples` has canonical, OG, Twitter card, CollectionPage JSON-LD, 10 ItemList entries, STL encoding, and sample anchors; `/png-to-stl` has canonical, robots `index, follow`, WebSite, SoftwareApplication, and FAQPage JSON-LD.
+  - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`, and homepage responsive QA.
 
 Next no-data-stage candidates, if more work is needed before search data arrives:
 
