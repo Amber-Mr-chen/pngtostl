@@ -7,6 +7,7 @@ Related operational docs:
 - `ops/first-batch-submission-field-pack.md`
 - `ops/launch-media/README.md`
 - `ops/manual-required-submission-playbook.md`
+- `ops/second-batch-preflight-notes.md`
 
 ## Status labels
 
@@ -171,9 +172,9 @@ Some candidates below have since been attempted after owner approval. Treat each
   - Candidate URL: `https://www.sideprojectors.com/project/new`
   - Target URL: `https://pngtostl.net/?utm_source=sideprojectors&utm_medium=listing&utm_campaign=launch_v1&utm_content=project_new`
   - Suggested content: Use startup/tool listing copy only if free listing is confirmed.
-  - Status: needs_approval
-  - Evidence: HTTP 200; script saw `paid`, `sponsor`, `contact`, and `free` signals.
-  - Notes: Mixed free/paid signals. Needs owner approval if payment, sponsorship, or sale-listing angle appears.
+  - Status: manual_required
+  - Evidence: Second-batch browser preflight on 2026-06-07: page loaded, `+ SUBMIT A PROJECT` routed to `Login to SideProjectors`; login options included Google, GitHub, GitLab, ProductHunt, LinkedIn, and email/password. No product form was available without login. HTTP preflight saw mixed `paid`/`sponsor`/`free` signals but no form.
+  - Notes: Owner/account action required before field-level check. After login, stop if project submission is paid, sponsored-only, sale/marketplace-oriented, or requires reciprocal link/site modification.
 
 #### Browser-check candidates blocked to scripts
 
@@ -183,8 +184,8 @@ Some candidates below have since been attempted after owner approval. Treat each
   - Target URL: `https://pngtostl.net/?utm_source=alternativeto&utm_medium=listing&utm_campaign=launch_v1&utm_content=software_new`
   - Suggested content: Position against image-to-STL / lithophane generator alternatives if browser route works.
   - Status: manual_required
-  - Evidence: Script received HTTP 403.
-  - Notes: Verify in visible browser before marking unreachable. Do not bypass anti-bot/security checks.
+  - Evidence: Second-batch HTTP preflight on 2026-06-07 returned HTTP 403 with title `Just a moment...` and Cloudflare signal. Earlier script also received HTTP 403.
+  - Notes: Requires owner/visible-browser security verification before any form check. Do not bypass anti-bot/security checks; stop if login, paid listing, reciprocal link, or misleading category appears.
 
 - Channel: SaaSHub
   - Type: directory
@@ -192,8 +193,8 @@ Some candidates below have since been attempted after owner approval. Treat each
   - Target URL: `https://pngtostl.net/?utm_source=saashub&utm_medium=listing&utm_campaign=launch_v1&utm_content=add_product`
   - Suggested content: Use short pitch if browser route offers a free add-product flow.
   - Status: manual_required
-  - Evidence: Script received HTTP 403.
-  - Notes: Browser check required; skip if paid, CAPTCHA-blocked, or reciprocal requirements appear.
+  - Evidence: Second-batch HTTP preflight on 2026-06-07 returned HTTP 403 with title `Attention Required! | Cloudflare`; signals included `captcha`, `cloudflare`, and `submit`. Earlier script also received HTTP 403.
+  - Notes: Requires owner/visible-browser security verification before any form check. Skip if paid, CAPTCHA-blocked, login-only, or reciprocal requirements appear.
 
 - Channel: There Is An AI For That
   - Type: directory
@@ -201,8 +202,8 @@ Some candidates below have since been attempted after owner approval. Treat each
   - Target URL: `https://pngtostl.net/?utm_source=tiaft&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit_tool`
   - Suggested content: Use only if category fit is not misleading; emphasize image-to-STL utility.
   - Status: manual_required
-  - Evidence: Script received HTTP 403.
-  - Notes: Browser check required; likely high-noise AI directory, not first priority.
+  - Evidence: Second-batch HTTP preflight on 2026-06-07 returned HTTP 403 with title `Just a moment...`; signals included `cloudflare` and `submit`. Earlier script also received HTTP 403.
+  - Notes: Requires owner/visible-browser security verification before any form check. Likely high-noise AI directory; proceed only if a truthful design/maker/tool category exists and no paid/login/CAPTCHA requirement remains.
 
 #### Community / resource-list candidates for later
 
@@ -228,10 +229,10 @@ Some candidates below have since been attempted after owner approval. Treat each
   - Type: resource_list
   - Candidate URL: `https://github.com/ad-si/awesome-3d-printing`
   - Target URL: `https://pngtostl.net/samples?utm_source=github_awesome_3d_printing&utm_medium=referral&utm_campaign=sample_gallery&utm_content=resource_list_pr`
-  - Suggested content: Only consider a PR if contribution rules allow online tools and PNGtoSTL fits an existing category.
+  - Suggested content: Candidate entry under `Online Tools`: `[PNGtoSTL](https://pngtostl.net/samples?utm_source=github_awesome_3d_printing&utm_medium=referral&utm_campaign=sample_gallery&utm_content=resource_list_pr) - Browser-based image-to-STL workspace for reliefs, lithophanes, logo badges, and heightmap surfaces, with real downloadable STL examples.`
   - Status: manual_required
-  - Evidence: HTTP 200; title indicates curated 3D printing resources; script saw `submit`, `sign in`, `captcha`, `pricing`, `sponsor`, `contact`, and `tip` signals from GitHub page chrome.
-  - Notes: Requires repository rule review and GitHub PR. Do not add if list is inactive or category fit is weak.
+  - Evidence: Second-batch preflight on 2026-06-07: browser page loaded and repo is active; latest visible commit was `Add Gridfinity Layout Tool to Online Tools (#89)` from 5 days ago. Raw README has an `Online Tools` section. Raw `contributing.md` says PRs are welcome if the resource is useful, not duplicate, one suggestion per PR, title-cased, and formatted as `[Resource Name](link) - Description text.`
+  - Notes: Stronger than a generic directory because relevance is high and contribution rules exist, but requires GitHub PR/account action and duplicate/category review. Do not open PR without owner approval; first search README/issues/PRs for existing `PNGtoSTL`, `image to STL`, `lithophane`, or similar tools.
 
 - Channel: 3D Printing Stack Exchange
   - Type: community

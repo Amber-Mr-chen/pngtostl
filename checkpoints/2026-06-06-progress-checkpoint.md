@@ -343,3 +343,16 @@ Manual-required path split on 2026-06-07:
   3. MicroLaunch only after owner can complete Cloudflare and confirm the launch route is free.
 - Updated `ops/coldstart-submission-log.md` to link the playbook and remove the stale "no candidate submitted yet" wording.
 - No account/login, Cloudflare/CAPTCHA action, payment, reciprocal link, upload, public post, or new submission was executed in this documentation pass.
+
+Second-batch candidate preflight on 2026-06-07:
+
+- Scope: preflight only; no submission, login, PR, CAPTCHA/Cloudflare handling, payment, reciprocal link, upload, or public post.
+- Added `ops/second-batch-preflight-notes.md` and linked it from `ops/coldstart-submission-log.md`.
+- Checked candidates: SideProjectors, AlternativeTo, SaaSHub, There Is An AI For That, GitHub awesome-3d-printing.
+- Results:
+  - SideProjectors: `manual_required`; browser route loads but `+ SUBMIT A PROJECT` leads to login with Google/GitHub/GitLab/ProductHunt/LinkedIn/email options.
+  - AlternativeTo: `manual_required`; HTTP 403 with `Just a moment...` / Cloudflare.
+  - SaaSHub: `manual_required`; HTTP 403 with `Attention Required! | Cloudflare`, `captcha`/`cloudflare` signals.
+  - There Is An AI For That: `manual_required`; HTTP 403 with `Just a moment...` / Cloudflare; lower relevance.
+  - GitHub awesome-3d-printing: `manual_required / PR candidate`; repo is active, has `Online Tools`, and `contributing.md` accepts useful non-duplicate PRs using `[Resource Name](link) - Description text.` format.
+- Best next opportunity: GitHub awesome-3d-printing PR prep, but only after duplicate/category review and owner approval before any account/fork/PR action.
