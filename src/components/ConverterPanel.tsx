@@ -1,4 +1,4 @@
-import type { SampleWorkflow, ToolConfig } from "@/lib/tools";
+import { sampleWorkflowSlug, type SampleWorkflow, type ToolConfig } from "@/lib/tools";
 
 const defaultModeBySlug: Record<string, NonNullable<ToolConfig["converter"]>["mode"]> = {
   "png-to-stl": "icon",
@@ -239,6 +239,10 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
         data-converter-form="true"
         data-tool={tool.slug}
         data-mode={mode}
+        data-sample-preset={loadedSample ? "true" : undefined}
+        data-sample-slug={loadedSample ? sampleWorkflowSlug(loadedSample.title) : undefined}
+        data-sample-title={loadedSample?.title}
+        data-sample-category={loadedSample?.category}
         data-filename={converter?.filename ?? "pngtostl-output.stl"}
         data-min-thickness-mm={converter?.minThicknessMm ?? 0.8}
         data-max-thickness-mm={converter?.maxThicknessMm ?? 3.2}

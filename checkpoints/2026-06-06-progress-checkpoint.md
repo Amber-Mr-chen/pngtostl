@@ -408,3 +408,12 @@ Sample preset handoff optimization on 2026-06-07:
 - Invalid or mismatched sample slugs intentionally fall back to normal route defaults.
 - Deployed to Cloudflare Worker version `eceb57d6-5542-4c2e-a5b1-25146beb48a0`.
 - Verification: `npm run lint` exit 0; `npm run build` exit 0; `npm run cf:build` exit 0; `npm run cf:deploy` exit 0; production `/samples` has 10 workflow CTAs with `sample=`; `/logo-to-stl?sample=logo-badge-relief...` shows `Sample preset loaded`, width `95 mm`, relief height `2.4 mm`, and sample preview copy; invalid `/heightmap-to-stl?sample=terrain-tile...` does not show a preset; valid `/heightmap-to-stl?sample=terrain-heightmap-tile...` shows width `110 mm` and max height `5.5 mm`.
+
+Sample preset lifecycle analytics on 2026-06-07:
+
+- Added `sample_preset_loaded`, `sample_preset_upload_selected`, `sample_preset_generate_clicked`, `sample_preset_generate_success`, `sample_preset_generate_error`, and `sample_preset_download_clicked` to the analytics event union.
+- Added `data-sample-preset`, `data-sample-slug`, `data-sample-title`, and `data-sample-category` to converter forms only when a route-scoped sample preset is active.
+- Updated `/converter.js` so preset-assisted uploads, generate clicks, successful conversions, errors, and generated downloads emit paired `sample_preset_*` events alongside the existing `pngtostl_*` events.
+- Preset analytics payloads include safe context only (`sample_slug`, `sample_title`, `sample_category`, tool/mode/path, file type/size, output metrics) and do not include raw filenames.
+- Deployed to Cloudflare Worker version `1dc691ff-fbc6-48ec-a886-a9be3dc51c3c`.
+- Verification: `npm run lint` exit 0; static event validation exit 0; `npm run build` exit 0; `npm run cf:build` exit 0; `npm run cf:deploy` exit 0; production preset route emitted `sample_preset_loaded`; synthetic PNG upload/generate on `/logo-to-stl?sample=logo-badge-relief...` emitted upload/generate/success preset events; clicking the generated STL link emitted `sample_preset_download_clicked`; normal `/logo-to-stl` emitted no `sample_preset_*` events.

@@ -87,6 +87,11 @@ Completed before waiting for real traffic data:
   - Tool pages validate the sample slug against the current route before applying settings, so mismatched or invalid sample parameters do not show a preset.
   - Converter pages show a `Sample preset loaded` callout and override starting width/height/detail/smoothing from the selected sample while still allowing user fine-tuning after upload.
   - Production verification on 2026-06-07: `https://pngtostl.net/logo-to-stl?sample=logo-badge-relief...` showed `Sample preset loaded`, width `95 mm`, relief height `2.4 mm`, and preview copy for Logo badge relief; invalid `sample=terrain-tile` on `/heightmap-to-stl` did not show a preset; valid `sample=terrain-heightmap-tile` showed width `110 mm` and max height `5.5 mm`.
+- Sample preset lifecycle events now measure whether preset-assisted users reach upload, generate, success/error, and download:
+  - Deploy version: `1dc691ff-fbc6-48ec-a886-a9be3dc51c3c`.
+  - Added events: `sample_preset_loaded`, `sample_preset_upload_selected`, `sample_preset_generate_clicked`, `sample_preset_generate_success`, `sample_preset_generate_error`, and `sample_preset_download_clicked`.
+  - Preset event payloads include `sample_slug`, `sample_title`, `sample_category`, `tool`, `mode`, and safe file/output metrics; analytics events do not include raw filenames.
+  - Production verification on 2026-06-07: preset route emitted `sample_preset_loaded`; synthetic PNG upload emitted `pngtostl_upload_selected` + `sample_preset_upload_selected`; generate emitted `pngtostl_generate_clicked` + `sample_preset_generate_clicked`; successful conversion emitted `pngtostl_generate_success` + `sample_preset_generate_success`; clicking generated download emitted `pngtostl_download_clicked` + `sample_preset_download_clicked`; normal `/logo-to-stl` emitted no `sample_preset_*` events.
 
 Next no-data-stage candidates, if more work is needed before search data arrives:
 
@@ -122,6 +127,15 @@ Sample gallery activation:
 - Gallery filter engagement = `samples_filter_click` / `/samples` page views.
 - Gallery workflow click rate = `sample_open_workflow_click` / `/samples` page views.
 - Gallery STL download rate = `sample_download_click` / `/samples` page views.
+
+Sample preset-assisted activation:
+
+- Preset landing rate = `sample_preset_loaded` / `sample_open_workflow_click`.
+- Preset upload rate = `sample_preset_upload_selected` / `sample_preset_loaded`.
+- Preset generate rate = `sample_preset_generate_clicked` / `sample_preset_upload_selected`.
+- Preset success rate = `sample_preset_generate_success` / `sample_preset_generate_clicked`.
+- Preset download rate = `sample_preset_download_clicked` / `sample_preset_generate_success`.
+- Preset error reasons = top `sample_preset_generate_error.reason` by sample/tool.
 
 Quality:
 
