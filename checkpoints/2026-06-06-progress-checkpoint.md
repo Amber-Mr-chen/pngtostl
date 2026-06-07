@@ -7,7 +7,18 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-07 22:36 CST:
+Latest update — 2026-06-07 22:43 CST:
+
+- Owner rechecked AITDK after removing homepage image preload links; AITDK still shows `Image Alt Text Check: 1 images missing alt text`.
+- Current verified production facts remain:
+  - `head_image_preload_count`: 0.
+  - `raw_img_count`: 12.
+  - `missing_or_empty_alt_count`: 0.
+  - Meta title, meta description, canonical, and H1 are green in AITDK.
+- Deferred until tomorrow per owner request.
+- Next debugging step: open AITDK `Images` panel and capture the exact image URL/row it claims is missing alt; likely remaining cause is extension-side cached/derived resource or a non-`<img>` asset being counted.
+
+Previous update — 2026-06-07 22:36 CST:
 
 - Follow-up for AITDK still showing `1 images missing alt text` after all `<img>` elements had alt text.
 - Root cause hypothesis verified: Next.js auto-generated `<link rel="preload" as="image">` tags for eager showcase images in `<head>`; some browser SEO extensions can count those image preload resources as images without alt text.
