@@ -7,6 +7,28 @@ Branch: `main`
 
 ## Current status
 
+Latest update — 2026-06-07 21:40 CST:
+
+- Owner approved the simplified site icon direction (`Minimal STL Cube`).
+- Exported and deployed the icon set:
+  - `/favicon.ico`
+  - `/favicon-16x16.png`
+  - `/favicon-32x32.png`
+  - `/apple-touch-icon.png`
+  - `/icon-192.png`
+  - `/icon-512.png`
+  - `/og-icon.png`
+  - `/site.webmanifest`
+- Updated `src/app/layout.tsx` metadata with icon, Apple touch icon, manifest, and OpenGraph image references.
+- Verification passed:
+  - `npm run lint`
+  - `npm run build`
+  - `npm run cf:build`
+  - `npm run cf:deploy`
+  - Production HTTP checks for all icon assets returned 200.
+  - Production home page head contains favicon, Apple touch icon, manifest, and OG image refs.
+- Cloudflare Worker version: `a90144db-b15d-45fe-b66e-997515cf635e`.
+
 Completed and deployed:
 
 1. Premium v4 real sample assets
