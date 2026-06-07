@@ -256,3 +256,10 @@ Cold-start real candidate pool update on 2026-06-07 15:36 CST:
 - Paid/high-visibility candidates marked `needs_approval`: Futurepedia, Future Tools, SideProjectors.
 - Validation passed: 20 channel entries, 20 UTM target URLs, no `[to research]` placeholders, and no false `submitted`/`listed`/`pending_review` claims.
 - No public post, directory submission, account action, CAPTCHA handling, payment, reciprocal listing, or PR was executed.
+
+First-batch submission field pack on 2026-06-07 15:55 CST:
+
+- Added `ops/first-batch-submission-field-pack.md` for the 5 planned first-batch candidates: Dev Hunt, Launching Next, MicroLaunch, Insidr AI, and Hackaday Submit A Tip.
+- The field pack includes shared product fields, contact/pricing/category/tag values, per-site title/tagline/short description/long description, per-site UTM URL, risk note, pre-submit checklist, execution order, post-submit logging template, and stop conditions.
+- Validation passed: all 5 first-batch candidates and their UTM URLs are present; execution boundary, no-overclaim guardrail, stop conditions, and post-submit logging rule are present.
+- No submission, public post, account action, CAPTCHA handling, payment, reciprocal listing, or PR was executed.
