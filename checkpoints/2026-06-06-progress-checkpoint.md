@@ -165,11 +165,17 @@ Verified current external/account state:
   - Sitemaps with warnings: `0`
   - Total discovered URLs: `20`
   - Sitemap status: `成功 / Success`
-- Current Google Analytics Admin account visible to token only showed `TarotRealm`; no `pngtostl.net` GA property was visible.
-- Live production HTML has no provider script for `gtag/googletagmanager`, `plausible`, `umami`, or `clarity`.
+- Google Analytics 4 is now installed and production-verified:
+  - Measurement ID: `G-ZPV5EZHN4G`
+  - Production deploy version: `cdb72d96-f0cd-41a6-bf1b-88f901f4e703`
+  - GA script loaded in production: `true`
+  - `window.gtag` present: `true`
+  - `dataLayer` contains config for `G-ZPV5EZHN4G` with `anonymize_ip=true` and `send_page_view=true`
+  - Custom event smoke: `feedback_panel_open` reached `window.pngtostlEvents` and `dataLayer/gtag`.
+- Privacy page now discloses GA4 analytics events and Cloudflare Email Routing support forwarding.
 
 Remaining owner/account actions:
 
-1. Create/provide analytics Measurement ID if GA4/GTM/Plausible/Umami should be installed.
+1. Confirm GA4 Realtime shows the production visit/event in the Google Analytics UI.
 2. Decide outbound mail provider before outbound DKIM only if sending as `support@pngtostl.net` is needed.
-3. Monitor GSC/Bing Pages/Search results for indexed pages, impressions, and query data over the next days.
+3. Monitor GSC/Bing/GA4 for indexed pages, impressions, query data, landing pages, and conversion events over the next days.

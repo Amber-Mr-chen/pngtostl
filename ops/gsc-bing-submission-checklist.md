@@ -107,37 +107,31 @@ Follow-up:
 
 ### Analytics
 
-Production HTML currently has no third-party analytics provider script:
+Verified 2026-06-07 12:52 CST:
 
 ```text
-gtag/googletagmanager: missing
-plausible: missing
-umami: missing
-clarity: missing
+Provider: Google Analytics 4
+Measurement ID: G-ZPV5EZHN4G
+Production deploy version: cdb72d96-f0cd-41a6-bf1b-88f901f4e703
+GA script loaded: true
+window.gtag: function present
+dataLayer config: G-ZPV5EZHN4G with anonymize_ip=true and send_page_view=true
+Custom event smoke: feedback_panel_open reached window.pngtostlEvents and dataLayer/gtag
 ```
 
-The site does have lightweight first-party event hooks in code:
+The site now has GA4 plus first-party event hooks:
 
 - `window.pngtostlEvents`
-- `window.dataLayer` when present
-- `gtag` forwarding when present
+- `window.dataLayer`
+- `gtag` forwarding
 
-But no GA4/GTM/Plausible/Umami provider is installed yet.
+Tracked product events include sample clicks, feedback clicks, converter success/download events, and existing converter browser events when triggered.
 
-Google Analytics Admin API query only showed account:
+Follow-up:
 
-```text
-TarotRealm
-```
-
-No `pngtostl.net` GA property was visible to the current token.
-
-Owner action required:
-
-1. Create/select analytics provider.
-2. If GA4: create property for `pngtostl.net` and provide Measurement ID `G-...`.
-3. Add provider script to `src/app/layout.tsx` or via a lightweight env-based component.
-4. Realtime test one normal browser visit and one conversion event.
+1. Confirm GA4 Realtime shows a visit from production.
+2. Confirm `feedback_panel_open` or another custom event appears in GA4 Realtime / DebugView if available.
+3. Monitor landing pages and conversion events after traffic starts.
 
 ## Post-submit monitoring
 
