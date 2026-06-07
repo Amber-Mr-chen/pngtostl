@@ -331,3 +331,15 @@ Owner-approved Hackaday editorial tip on 2026-06-07:
   - Response snippet saved at `ops/hackaday-submit-response-snippet.txt`.
 - Submitted framing: subject `Browser-based image-to-STL workflow with real downloadable 3D printing examples`; body asked for maker feedback on real examples/settings and did not claim or expect coverage.
 - Validation target after this batch: first-batch queue should have Launching Next and Hackaday as `pending_review`, Dev Hunt/MicroLaunch/Insidr AI as `manual_required`, and no `submitted`/`listed` claims.
+
+Manual-required path split on 2026-06-07:
+
+- Added `ops/manual-required-submission-playbook.md` for the remaining first-batch manual paths.
+- Covered: Dev Hunt, MicroLaunch, and Insidr AI.
+- For each channel, documented current blocker, owner-visible-browser steps, UTM URL, copy fields, asset choices, stop conditions, and exact log status rules.
+- Recommended next order:
+  1. Dev Hunt if owner is comfortable with GitHub/Google login and post-login route is free.
+  2. Insidr AI visible-browser retry or direct contact, because the public form gives no feedback in automation.
+  3. MicroLaunch only after owner can complete Cloudflare and confirm the launch route is free.
+- Updated `ops/coldstart-submission-log.md` to link the playbook and remove the stale "no candidate submitted yet" wording.
+- No account/login, Cloudflare/CAPTCHA action, payment, reciprocal link, upload, public post, or new submission was executed in this documentation pass.

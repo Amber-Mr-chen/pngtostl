@@ -2,6 +2,12 @@
 
 Use this file to record every directory, community, newsletter, profile, or backlink attempt. Do not mark anything as submitted unless there is visible confirmation or a saved listing URL.
 
+Related operational docs:
+
+- `ops/first-batch-submission-field-pack.md`
+- `ops/launch-media/README.md`
+- `ops/manual-required-submission-playbook.md`
+
 ## Status labels
 
 - `planned`: candidate selected, not attempted yet.
@@ -44,7 +50,7 @@ Use this file to record every directory, community, newsletter, profile, or back
 
 ### First real candidate pool — reviewed 2026-06-07 15:36 CST
 
-No candidate below has been submitted yet. Status means recommended next handling, not execution result.
+Some candidates below have since been attempted after owner approval. Treat each entry's `Status` and `Evidence` as authoritative, and use `ops/manual-required-submission-playbook.md` for the remaining owner/browser paths.
 
 #### Best first batch after owner approval
 
