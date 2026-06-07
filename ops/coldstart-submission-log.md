@@ -8,6 +8,7 @@ Related operational docs:
 - `ops/launch-media/README.md`
 - `ops/manual-required-submission-playbook.md`
 - `ops/second-batch-preflight-notes.md`
+- `ops/github-awesome-3d-printing-pr-prep.md`
 
 ## Status labels
 
@@ -232,7 +233,7 @@ Some candidates below have since been attempted after owner approval. Treat each
   - Suggested content: Candidate entry under `Online Tools`: `[PNGtoSTL](https://pngtostl.net/samples?utm_source=github_awesome_3d_printing&utm_medium=referral&utm_campaign=sample_gallery&utm_content=resource_list_pr) - Browser-based image-to-STL workspace for reliefs, lithophanes, logo badges, and heightmap surfaces, with real downloadable STL examples.`
   - Status: manual_required
   - Evidence: Second-batch preflight on 2026-06-07: browser page loaded and repo is active; latest visible commit was `Add Gridfinity Layout Tool to Online Tools (#89)` from 5 days ago. Raw README has an `Online Tools` section. Raw `contributing.md` says PRs are welcome if the resource is useful, not duplicate, one suggestion per PR, title-cased, and formatted as `[Resource Name](link) - Description text.`
-  - Notes: Stronger than a generic directory because relevance is high and contribution rules exist, but requires GitHub PR/account action and duplicate/category review. Do not open PR without owner approval; first search README/issues/PRs for existing `PNGtoSTL`, `image to STL`, `lithophane`, or similar tools.
+  - Notes: Stronger than a generic directory because relevance is high and contribution rules exist, but requires GitHub PR/account action and duplicate/category review. PR prep package saved at `ops/github-awesome-3d-printing-pr-prep.md`. Do not open PR without owner approval; first re-search README/issues/PRs for existing `PNGtoSTL`, `image to STL`, `lithophane`, or similar tools.
 
 - Channel: 3D Printing Stack Exchange
   - Type: community

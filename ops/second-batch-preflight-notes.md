@@ -118,6 +118,7 @@ Candidate entry:
 
 Before any PR:
 
+- See owner-review package: `ops/github-awesome-3d-printing-pr-prep.md`.
 - Search README, issues, and open PRs for duplicates: `PNGtoSTL`, `image to STL`, `png to stl`, `lithophane`, `heightmap`.
 - Confirm the `Online Tools` section is the right category.
 - Confirm contribution style and alphabetical/order conventions in the section.

@@ -356,3 +356,16 @@ Second-batch candidate preflight on 2026-06-07:
   - There Is An AI For That: `manual_required`; HTTP 403 with `Just a moment...` / Cloudflare; lower relevance.
   - GitHub awesome-3d-printing: `manual_required / PR candidate`; repo is active, has `Online Tools`, and `contributing.md` accepts useful non-duplicate PRs using `[Resource Name](link) - Description text.` format.
 - Best next opportunity: GitHub awesome-3d-printing PR prep, but only after duplicate/category review and owner approval before any account/fork/PR action.
+
+GitHub awesome-3d-printing PR prep on 2026-06-07:
+
+- Scope: prep only; no fork, branch, commit, PR, login, upstream write, or account action.
+- Added owner-review package: `ops/github-awesome-3d-printing-pr-prep.md`.
+- Loaded upstream `readme.md` and `contributing.md`; `gh repo view` showed default branch `main`, 1 open issue, 1 open PR, and recent push `2026-06-02T10:10:07Z`.
+- Duplicate search results in README: `PNGtoSTL`, `png to stl`, `png-to-stl`, `image to stl`, `image-to-stl`, `lithophane`, `heightmap`, and `relief` all returned 0 matches.
+- Issue/PR search via `gh` for `PNGtoSTL OR "image to STL" OR lithophane OR heightmap` returned no rows.
+- Existing nearby `Online Tools` entries include `Gridfinity Layout Tool`, `Polyvia3D`, and `QRCode2STL`; PNGtoSTL fills a distinct image-to-STL/relief/lithophane gap.
+- Prepared proposed entry, reference link, patch, branch name, commit title, PR title, PR body, pre-PR checklist, and stop conditions.
+- Suggested insertion: after `Polyvia3D` and before `QRCode2STL`; reference definition after `[Polyvia3D]` and before `[PROLED3D]`.
+- Updated `ops/coldstart-submission-log.md` and `ops/second-batch-preflight-notes.md` to link the PR prep package.
+- Remaining requirement before action: owner approval plus re-run duplicate/upstream drift check immediately before any PR.
