@@ -130,12 +130,19 @@ Technical baseline:
 
 GSC:
 
-- Sitemap submitted: [owner to fill]
+- Sitemap submitted: yes — Google Search Console screenshot confirmed on 2026-06-07.
+- Property: `pngtostl.net`.
+- Sitemap URL: `https://pngtostl.net/sitemap.xml`.
+- Status: success.
+- Submitted: 2026-06-07.
+- Last read: 2026-06-07.
+- Discovered pages: 20.
+- Discovered videos: 0.
 - URL Inspection requested:
-  - Logo guide: [owner to fill]
-  - Lithophane guide: [owner to fill]
-  - Heightmap guide: [owner to fill]
-- Pages status: [owner to fill]
+  - Logo guide: [owner/agent to fill if individually requested]
+  - Lithophane guide: [owner/agent to fill if individually requested]
+  - Heightmap guide: [owner/agent to fill if individually requested]
+- Pages status: sitemap accepted; individual indexing status still requires URL Inspection or Pages report follow-up.
 - Search results: likely too early.
 
 Bing:

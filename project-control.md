@@ -53,7 +53,7 @@
 
 阶段：SEO launch recheck + QA acceptance stabilization
 Skill：seo-launch-workflow + student-site-qa-acceptance + frontend-site-automation
-状态：DONE_WITH_GSC_BLOCKED
+状态：DONE_WITH_GSC_BING_CONFIRMED
 
 已完成：
 
@@ -70,11 +70,11 @@ Skill：seo-launch-workflow + student-site-qa-acceptance + frontend-site-automat
 
 阻塞/待 owner 配合：
 
-- GSC/Bing sitemap 提交需要 Google/Bing 登录态或 owner 手动提交。
+- GSC/Bing sitemap 提交已由 owner 截图确认成功；下一步只需按需做 priority URL Inspection。
 - 是否进入 Step 12 运营冷启动，需要 owner 确认。
 
 ## 下一步建议
 
 1. 提交当前干净源码版本到 git。
-2. Owner 完成或配合 GSC/Bing sitemap 提交。
+2. 按需对 3 个新 SEO guide 执行 GSC/Bing URL Inspection。
 3. 进入 Step 12：ops/growth launch，做低风险目录提交/冷启动监控。

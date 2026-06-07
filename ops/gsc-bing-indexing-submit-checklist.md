@@ -68,22 +68,19 @@ Supporting discovery URLs:
 
 ## Google Search Console manual steps
 
-Use the owner Google account that has access to the `pngtostl.net` property.
+Current GSC status from owner screenshot on 2026-06-07:
 
-### 1. Submit or refresh sitemap
+- Property: `pngtostl.net`
+- Sitemap URL: `https://pngtostl.net/sitemap.xml`
+- Submitted: 2026-06-07
+- Last read: 2026-06-07
+- Status: success
+- Discovered pages: 20
+- Discovered videos: 0
 
-1. Open Google Search Console.
-2. Select the `pngtostl.net` property. Prefer the Domain property if both Domain and URL-prefix properties exist.
-3. Go to **Sitemaps**.
-4. Submit the full sitemap URL:
+Because GSC already shows `success`, do not submit a duplicate sitemap unless the row disappears or status changes. Continue with URL Inspection only for priority pages.
 
-```text
-https://pngtostl.net/sitemap.xml
-```
-
-5. Expected result: status eventually becomes `Success` or equivalent. If GSC says invalid URL, make sure you are in the `pngtostl.net` property and submit the full URL, not only `sitemap.xml`.
-
-### 2. URL Inspection sequence
+### URL Inspection sequence
 
 For each URL below:
 

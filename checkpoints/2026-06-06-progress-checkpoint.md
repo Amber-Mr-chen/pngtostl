@@ -459,3 +459,12 @@ Bing sitemap submission evidence on 2026-06-07:
 - Bing summary: known sitemaps 1, errors 0, warnings 0, discovered URLs 20.
 - Updated `ops/seo-geo-7-day-monitoring-ledger.md` and `ops/gsc-bing-indexing-submit-checklist.md` to mark Bing sitemap success and avoid duplicate resubmission.
 - GSC sitemap status remains unconfirmed in project records until owner provides a GSC Sitemaps screenshot or status text.
+
+Google Search Console sitemap evidence on 2026-06-07:
+
+- Owner provided a Google Search Console screenshot for property `pngtostl.net` → Sitemaps.
+- Sitemap URL `https://pngtostl.net/sitemap.xml` is present with status `success`.
+- Submitted: 2026-06-07; last read: 2026-06-07.
+- GSC summary: discovered pages 20, discovered videos 0.
+- Updated `ops/seo-geo-7-day-monitoring-ledger.md` and `ops/gsc-bing-indexing-submit-checklist.md` to mark GSC sitemap success and avoid duplicate resubmission.
+- Combined state: both Google Search Console and Bing Webmaster Tools now show sitemap success for `https://pngtostl.net/sitemap.xml`; individual priority guide URL Inspection remains optional/next-step.
