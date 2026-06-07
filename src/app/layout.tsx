@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FeedbackLauncher } from "@/components/FeedbackLauncher";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -42,6 +43,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {children}
+        <FeedbackLauncher />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
       </body>
     </html>

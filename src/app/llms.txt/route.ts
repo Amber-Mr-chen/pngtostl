@@ -48,6 +48,8 @@ ${helpers}
 ## Contact
 
 - Website: ${base}
+- Support email: support@pngtostl.net
+- Feedback: use the floating feedback button on the website or email support@pngtostl.net
 
 Last updated: 2026-06-06
 `;

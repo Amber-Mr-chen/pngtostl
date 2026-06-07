@@ -3091,3 +3091,140 @@ html body .infoPage .sampleCard h2 {
   line-height: 1.22 !important;
   letter-spacing: -0.015em !important;
 }
+
+/* ShipSolo launch audit: floating feedback/support entry. */
+.feedbackLauncher {
+  position: fixed;
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(18px, env(safe-area-inset-bottom));
+  z-index: 180;
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.feedbackLauncher > * {
+  pointer-events: auto;
+}
+
+.feedbackButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  border: 1px solid rgba(16, 24, 40, 0.12);
+  border-radius: 999px;
+  padding: 0 15px 0 10px;
+  background: #101828;
+  color: #fff;
+  box-shadow: 0 16px 36px rgba(16, 24, 40, 0.22);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 820;
+  cursor: pointer;
+}
+
+.feedbackButton span {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 900;
+}
+
+.feedbackPanel {
+  width: min(340px, calc(100vw - 32px));
+  border: 1px solid var(--line-strong);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 22px 60px rgba(16, 24, 40, 0.18);
+  padding: 16px;
+  backdrop-filter: blur(12px);
+}
+
+.feedbackPanelHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.feedbackKicker {
+  margin: 0 0 4px;
+  color: var(--accent-strong);
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.feedbackPanel h2 {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.feedbackClose {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--muted);
+  font: inherit;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.feedbackCopy {
+  margin: 10px 0 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.feedbackActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.feedbackActions .btnPrimary,
+.feedbackActions .btnSecondary {
+  min-height: 40px;
+  border-radius: 10px;
+  padding: 0.65rem 0.82rem;
+  font-size: 0.86rem;
+}
+
+.feedbackFootnote {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+@media (max-width: 680px) {
+  .feedbackLauncher {
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .feedbackButton {
+    min-height: 42px;
+    padding: 0 12px 0 8px;
+    font-size: 0.84rem;
+  }
+
+  .feedbackButton span {
+    width: 26px;
+    height: 26px;
+  }
+}
+

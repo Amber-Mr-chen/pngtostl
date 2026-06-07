@@ -4,7 +4,11 @@ export type AnalyticsEventName =
   | "sample_open_workflow_click"
   | "sample_download_click"
   | "converter_generate_success"
-  | "converter_download_click";
+  | "converter_download_click"
+  | "feedback_panel_open"
+  | "feedback_panel_close"
+  | "feedback_email_click"
+  | "feedback_contact_click";
 
 type AnalyticsPayload = Record<string, string | number | boolean | null | undefined>;
 
