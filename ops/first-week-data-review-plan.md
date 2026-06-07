@@ -4,17 +4,35 @@
 
 Use real behavior to decide whether to iterate, expand content, or add monetization. Do not add pricing/API/login before usage shows demand.
 
+Companion review template:
+
+- `ops/weekly-data-review-template.md`
+
 ## Events already emitted by frontend
 
 Verified in production on 2026-06-07 13:25 CST after deploy version `0ee4c66c-316e-4f4a-a69c-4859a97e555e`.
 
 Events:
 
+Core converter funnel:
+
 - `pngtostl_upload_selected`
 - `pngtostl_generate_clicked`
 - `pngtostl_generate_success`
 - `pngtostl_generate_error`
 - `pngtostl_download_clicked`
+
+Sample gallery events:
+
+- `samples_filter_click`
+- `sample_open_workflow_click`
+- `sample_download_click`
+
+Tool-page proof events:
+
+- `sample_proof_view`
+- `sample_proof_open_workflow`
+- `sample_proof_download`
 
 Each event should include:
 
@@ -64,10 +82,25 @@ Acquisition:
 
 Activation:
 
-- Upload selected rate = upload_selected / page_view.
-- Generate clicked rate = generate_clicked / upload_selected.
-- Generate success rate = generate_success / generate_clicked.
-- Download rate = download_clicked / generate_success.
+- Upload selected rate = `pngtostl_upload_selected` / page views on converter pages.
+- Generate clicked rate = `pngtostl_generate_clicked` / `pngtostl_upload_selected`.
+- Generate success rate = `pngtostl_generate_success` / `pngtostl_generate_clicked`.
+- Download rate = `pngtostl_download_clicked` / `pngtostl_generate_success`.
+
+Proof-assisted activation:
+
+- Proof visibility rate = `sample_proof_view` / page views on pages with proof blocks.
+- Proof open workflow rate = `sample_proof_open_workflow` / `sample_proof_view`.
+- Proof sample download rate = `sample_proof_download` / `sample_proof_view`.
+- Proof-to-upload assisted signal = converter uploads on proof pages / `sample_proof_view`.
+- Best proof sample by intent = top `sample` by `sample_proof_open_workflow` plus `sample_proof_download`.
+- Weak proof sample = visible sample with near-zero open/download events after enough page views.
+
+Sample gallery activation:
+
+- Gallery filter engagement = `samples_filter_click` / `/samples` page views.
+- Gallery workflow click rate = `sample_open_workflow_click` / `/samples` page views.
+- Gallery STL download rate = `sample_download_click` / `/samples` page views.
 
 Quality:
 
@@ -78,11 +111,23 @@ Quality:
 
 Decision rules
 
+Core funnel:
+
 - If upload rate is low: improve hero, examples, and first-screen CTA.
 - If generate rate is low: simplify controls and defaults.
 - If success rate is low: inspect errors, file size limits, and unsupported formats.
 - If download rate is low: improve preview confidence and output explanation.
 - If a workflow dominates: make that workflow the next content/SEO priority.
+
+Proof and sample decisions:
+
+- If proof visibility is low on a page with traffic: move the proof block higher, tighten above-the-fold copy, or add a jump link near the converter.
+- If proof visibility is healthy but proof open/download is low: replace the first proof card with a more direct use case for that route.
+- If a proof sample gets high downloads but low converter uploads: turn that sample into a stronger downloadable-example CTA and add an adjacent "try your own image" CTA.
+- If proof open workflow clicks are high for a sample category: prioritize that category for the next SEO/supporting page only after SERP validation.
+- If `/samples` gallery downloads are high but tool-page proof downloads are low: cross-link more aggressively from gallery winners back to their converter pages.
+- If proof events are absent while page views exist: treat analytics as broken before making content decisions.
+- Do not reorder samples based on fewer than 100 proof views per route unless there is a clear bug or owner-reported confusion.
 
 ## Monetization checkpoint
 
