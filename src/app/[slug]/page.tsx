@@ -362,6 +362,11 @@ function ContactPage() {
 
 function FaqPage() {
   const questions = tools.flatMap((tool) => tool.faq.map((item) => ({ ...item, source: tool.title })));
+  const practicalGuides = helperPages.filter((page) => [
+    "how-to-turn-logo-into-stl",
+    "lithophane-image-guide",
+    "heightmap-to-stl-terrain-guide",
+  ].includes(page.slug));
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -386,6 +391,16 @@ function FaqPage() {
         <p style={{ color: "var(--muted)", fontSize: "1.2rem", maxWidth: 720 }}>
           Quick answers about formats, relief output, lithophanes, file handling, and 3D printing limits.
         </p>
+      </section>
+      <section className="shell" style={{ padding: 22, marginTop: 22 }}>
+        <h2 className="sectionTitle">Practical guides</h2>
+        <div className="relatedTools">
+          {practicalGuides.map((page) => (
+            <Link key={page.slug} className="pill" href={`/${page.slug}`}>
+              {page.title}
+            </Link>
+          ))}
+        </div>
       </section>
       <section className="shell" style={{ padding: 22, marginTop: 22 }}>
         <div style={{ display: "grid", gap: 12 }}>

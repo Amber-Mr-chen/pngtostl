@@ -3,7 +3,7 @@ import { ConverterPanel } from "@/components/ConverterPanel";
 import { ImageAnalyzer } from "@/components/ImageAnalyzer";
 import { ToolProofBlock } from "@/components/ToolProofBlock";
 import { UtilityAdvisor } from "@/components/UtilityAdvisor";
-import { sampleWorkflows, type SampleWorkflow, type ToolConfig } from "@/lib/tools";
+import { helperPages, sampleWorkflows, type SampleWorkflow, type ToolConfig } from "@/lib/tools";
 
 const primaryNav = [
   { href: "/image-to-stl", label: "Image to STL" },
@@ -19,7 +19,14 @@ function activeNavFor(currentPath: string, itemHref: string) {
     "/lithophane-generator": ["/lithophane-generator", "/photo-to-lithophane"],
     "/heightmap-to-stl": ["/heightmap-to-stl"],
     "/logo-to-stl": ["/logo-to-stl"],
-    "/faq": ["/faq", "/image-contrast-guide", "/print-settings-checker"],
+    "/faq": [
+      "/faq",
+      "/image-contrast-guide",
+      "/print-settings-checker",
+      "/how-to-turn-logo-into-stl",
+      "/lithophane-image-guide",
+      "/heightmap-to-stl-terrain-guide",
+    ],
   };
   return groupedRoutes[itemHref]?.includes(currentPath) ?? itemHref === currentPath;
 }
@@ -110,6 +117,26 @@ function relatedProofsFor(tool: ToolConfig) {
     .slice(0, 2);
 }
 
+const supportGuideMap: Record<string, string[]> = {
+  "image-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl", "lithophane-image-guide"],
+  "png-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl"],
+  "jpg-to-stl": ["image-contrast-guide", "lithophane-image-guide"],
+  "convert-image-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl", "lithophane-image-guide"],
+  "2d-image-to-3d-model": ["image-contrast-guide", "how-to-turn-logo-into-stl", "heightmap-to-stl-terrain-guide"],
+  "3d-print-photo": ["lithophane-image-guide", "image-contrast-guide", "print-settings-checker"],
+  "photo-to-lithophane": ["lithophane-image-guide", "image-contrast-guide"],
+  "logo-to-stl": ["how-to-turn-logo-into-stl", "image-contrast-guide", "print-settings-checker"],
+  "lithophane-generator": ["lithophane-image-guide", "image-contrast-guide", "print-settings-checker"],
+  "heightmap-to-stl": ["heightmap-to-stl-terrain-guide", "image-contrast-guide", "print-settings-checker"],
+};
+
+function supportGuidesFor(tool: ToolConfig) {
+  const slugs = supportGuideMap[tool.slug] ?? ["image-contrast-guide", "print-settings-checker"];
+  return slugs
+    .map((slug) => helperPages.find((page) => page.slug === slug))
+    .filter((page): page is (typeof helperPages)[number] => Boolean(page));
+}
+
 function advisorKindFromSlug(slug: string) {
   if (slug === "jpg-to-stl") return "jpg-gate";
   return "photo-path";
@@ -128,6 +155,9 @@ function SiteFooter() {
         <Link href="/logo-to-stl">Logo to STL</Link>
         <Link href="/lithophane-generator">Lithophane</Link>
         <Link href="/heightmap-to-stl">Heightmap</Link>
+        <Link href="/how-to-turn-logo-into-stl">Logo guide</Link>
+        <Link href="/lithophane-image-guide">Lithophane guide</Link>
+        <Link href="/heightmap-to-stl-terrain-guide">Heightmap guide</Link>
         <Link href="/samples">Examples</Link>
         <Link href="/faq">FAQ</Link>
         <Link href="/privacy">Privacy</Link>
@@ -143,6 +173,7 @@ export function ToolPage({ tool, loadedSample }: { tool: ToolConfig; loadedSampl
   const advisorOnly = tool.slug === "3d-print-photo";
   const guidance = guidanceFor(tool);
   const relatedProofs = relatedProofsFor(tool);
+  const supportGuides = supportGuidesFor(tool);
   const faqItems = [
     ...tool.faq,
     {
@@ -265,6 +296,16 @@ export function ToolPage({ tool, loadedSample }: { tool: ToolConfig; loadedSampl
               <Link className="pill" href="/logo-to-stl">Logo to STL</Link>
               <Link className="pill" href="/lithophane-generator">Lithophane</Link>
               <Link className="pill" href="/heightmap-to-stl">Heightmap</Link>
+            </div>
+          </div>
+          <div className="shell">
+            <h2 className="sectionTitle">Related guides</h2>
+            <div className="relatedTools">
+              {supportGuides.map((page) => (
+                <Link key={page.slug} className="pill" href={`/${page.slug}`}>
+                  {page.title}
+                </Link>
+              ))}
             </div>
           </div>
         </section>

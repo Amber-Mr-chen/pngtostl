@@ -53,3 +53,12 @@ A later manual SERP check can refine titles and copy, but these routes are safe 
 - Every route must have a local task/checklist and cannot be pure copy.
 - Primary CTA and sample cards must link to live converter pages with sample preset parameters.
 - Verify build, Cloudflare deploy, production browser snapshots, sitemap inclusion, and preset handoff.
+
+## Internal-link closure added
+
+Implemented on 2026-06-07 after the first support pages were live:
+
+- Matching converter/tool pages now expose route-specific `Related guides` links.
+- Homepage and tool-page footers include persistent links to the three highest-value guides.
+- `/faq` includes a `Practical guides` section that links to the logo, lithophane, and heightmap guides.
+- Production verification confirmed the links on `/logo-to-stl`, `/lithophane-generator`, `/heightmap-to-stl`, `/faq`, and `/`.

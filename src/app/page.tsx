@@ -242,6 +242,9 @@ export default function HomePage() {
           <Link href="/logo-to-stl">Logo to STL</Link>
           <Link href="/lithophane-generator">Lithophane</Link>
           <Link href="/heightmap-to-stl">Heightmap</Link>
+          <Link href="/how-to-turn-logo-into-stl">Logo guide</Link>
+          <Link href="/lithophane-image-guide">Lithophane guide</Link>
+          <Link href="/heightmap-to-stl-terrain-guide">Heightmap guide</Link>
           <Link href="/samples">Examples</Link>
           <Link href="/pricing">Pricing</Link>
           <Link href="/developers">API</Link>
