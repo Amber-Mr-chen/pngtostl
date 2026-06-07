@@ -168,7 +168,7 @@ External/channel:
 - GitHub PR #92: pending_review / open at last verification.
 - Hackaday: pending_review.
 - Launching Next: pending_review / queue.
-- Manual channels: Dev Hunt, SideProjectors, AlternativeTo, SaaSHub are manual_required.
+- Manual channels: Dev Hunt, SideProjectors, AlternativeTo, SaaSHub are manual_required; owner explicitly deferred manual channel submission on 2026-06-07 to prioritize site icon design first.
 
 Action taken today:
 
