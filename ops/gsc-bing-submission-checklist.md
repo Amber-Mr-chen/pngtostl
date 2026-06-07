@@ -1,6 +1,6 @@
 # GSC / Bing / Analytics Submission Checklist — pngtostl.net
 
-Updated: 2026-06-07 10:41 CST
+Updated: 2026-06-07 15:29 CST
 
 ## Scope
 
@@ -22,6 +22,45 @@ Support email shown on site: `support@pngtostl.net`
 - [x] Real STL conversion API smoke passes with a real sample image.
 - [x] Floating Feedback entry exists on core pages.
 - [x] Mobile 390px QA: no horizontal overflow; Feedback no longer overlaps `/image-to-stl` mode selector after small-screen compact button patch.
+
+Latest crawl-readiness recheck on 2026-06-07 15:29 CST:
+
+```text
+Normal UA and Googlebot UA:
+- /robots.txt: 200 text/plain
+- /sitemap.xml: 200 application/xml
+- /llms.txt: 200 text/plain
+
+Sitemap URLs: 20
+Full sitemap URL sampling as Googlebot: 20/20 passed
+- status: 200
+- final URL: canonical URL, no unexpected redirect
+- canonical: self-canonical
+- robots meta: index, follow
+- errors: 0
+
+Priority URLs sampled as Googlebot:
+- /
+- /image-to-stl
+- /png-to-stl
+- /jpg-to-stl
+- /logo-to-stl
+- /lithophane-generator
+- /heightmap-to-stl
+- /samples
+
+All priority URLs returned 200, self-canonical, index/follow, one H1, and parseable JSON-LD.
+```
+
+Redirect matrix as Googlebot:
+
+```text
+http://pngtostl.net/ -> 308 https://pngtostl.net/
+https://pngtostl.net/ -> 200
+http://www.pngtostl.net/ -> 308 https://pngtostl.net/
+https://www.pngtostl.net/ -> 308 https://pngtostl.net/
+/sitemap.xml on apex/www/http/https -> 200 application/xml
+```
 
 ### Domain email
 
@@ -70,6 +109,22 @@ indexed: 0 immediately after first submission
 
 `indexed: 0` is expected immediately after first submission; monitor Pages/Search results over the next days.
 
+Latest automation check on 2026-06-07 15:29 CST:
+
+```text
+Available locally: curl, jq
+Unavailable locally: gws, gcloud
+Unset env/API keys: GOOGLE_APPLICATION_CREDENTIALS, GSC_TOKEN, GOOGLE_SEARCH_CONSOLE_TOKEN
+Result: no safe automated GSC resubmission or URL Inspection API call was executed from this environment.
+```
+
+Owner/UI follow-up remains required for fresh GSC confirmation after the latest crawler-hints deploy:
+
+1. Open Google Search Console for `sc-domain:pngtostl.net`.
+2. Sitemaps: confirm `https://pngtostl.net/sitemap.xml` still shows success, 20 discovered URLs, 0 errors, 0 warnings.
+3. URL Inspection: inspect and request indexing if allowed for `/`, `/image-to-stl`, `/png-to-stl`, `/samples`.
+4. Pages/Search results: monitor indexed pages, impressions, and query data after crawl processing.
+
 Follow-up:
 
 1. Inspect URLs after Google has had time to crawl:
@@ -104,6 +159,20 @@ Follow-up:
 1. Check Bing Search Performance and AI Performance after data processing completes; Bing indicates reports may take up to 48 hours.
 2. Use URL Inspection on core URLs if indexing stays empty after crawl data appears.
 3. Keep sitemap monitored for errors/warnings.
+
+Latest automation check on 2026-06-07 15:29 CST:
+
+```text
+Unset env/API keys: BING_WEBMASTER_API_KEY, BING_API_KEY, INDEXNOW_KEY
+Result: no Bing Webmaster API resubmission or IndexNow ping was executed from this environment.
+```
+
+Owner/UI follow-up remains required for fresh Bing confirmation after the latest crawler-hints deploy:
+
+1. Open Bing Webmaster Tools for `pngtostl.net/`.
+2. Sitemaps: confirm `https://pngtostl.net/sitemap.xml` still shows Success, 20 discovered URLs, 0 errors, 0 warnings.
+3. URL Inspection: inspect `/`, `/image-to-stl`, `/png-to-stl`, `/samples` if indexing remains empty.
+4. Search Performance / AI Performance: review after Bing finishes processing.
 
 ### Analytics
 

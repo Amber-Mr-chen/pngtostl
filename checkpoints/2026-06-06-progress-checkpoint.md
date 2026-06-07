@@ -218,3 +218,17 @@ Remaining owner/account actions:
 
 1. Decide outbound mail provider before outbound DKIM only if sending as `support@pngtostl.net` is needed.
 2. Monitor GSC/Bing/GA4 for indexed pages, impressions, query data, landing pages, and conversion events over the next days.
+
+Search-engine discovery confirmation on 2026-06-07 15:29 CST:
+
+- Public crawl-readiness recheck passed after the latest crawler-hints deploy:
+  - `/robots.txt`, `/sitemap.xml`, and `/llms.txt` return 200 for both normal UA and Googlebot UA.
+  - Sitemap contains 20 URLs.
+  - Full sitemap URL sampling as Googlebot passed 20/20: each URL returned 200, final URL matched the canonical URL, canonical was self-referential, and robots meta was `index, follow`.
+  - Priority URL sampling passed for `/`, `/image-to-stl`, `/png-to-stl`, `/jpg-to-stl`, `/logo-to-stl`, `/lithophane-generator`, `/heightmap-to-stl`, and `/samples`; each returned 200, one H1, self-canonical, `index, follow`, and JSON-LD.
+  - Redirect matrix as Googlebot: apex HTTP, www HTTP, and www HTTPS redirect to canonical HTTPS apex; sitemap URL variants return `200 application/xml`.
+- Automated GSC/Bing resubmission was not executed because this environment does not have safe submission credentials/tools available:
+  - available: `curl`, `jq`
+  - unavailable: `gws`, `gcloud`
+  - unset: `GOOGLE_APPLICATION_CREDENTIALS`, `GSC_TOKEN`, `GOOGLE_SEARCH_CONSOLE_TOKEN`, `BING_WEBMASTER_API_KEY`, `BING_API_KEY`, `INDEXNOW_KEY`
+- Updated `ops/gsc-bing-submission-checklist.md` with the public verification evidence and exact owner/UI follow-up steps for GSC and Bing.
