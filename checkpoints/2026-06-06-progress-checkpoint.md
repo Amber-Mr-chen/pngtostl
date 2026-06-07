@@ -450,3 +450,12 @@ GSC/Bing indexing submission prep on 2026-06-07:
 - Ledger references `ops/gsc-bing-indexing-submit-checklist.md`, `ops/first-week-data-review-plan.md`, `ops/weekly-data-review-template.md`, `ops/launch-follow-up-plan.md`, `ops/manual-channel-submission-pack.md`, and `ops/seo-support-page-plan.md`.
 - Day 1 is prefilled with production technical baseline: robots/sitemap/llms verified, three new guide URLs indexable and discoverable, GitHub PR #92/Hackaday/Launching Next pending_review, and Dev Hunt/SideProjectors/AlternativeTo/SaaSHub manual_required.
 - Updated `ops/launch-follow-up-plan.md` to link the new 7-day ledger.
+
+Bing sitemap submission evidence on 2026-06-07:
+
+- Owner provided a Bing Webmaster Tools screenshot for `pngtostl.net/` → Sitemaps.
+- Sitemap URL `https://pngtostl.net/sitemap.xml` is present with status `success`.
+- Last submitted: 2026-06-07; last crawled: 2026-06-07.
+- Bing summary: known sitemaps 1, errors 0, warnings 0, discovered URLs 20.
+- Updated `ops/seo-geo-7-day-monitoring-ledger.md` and `ops/gsc-bing-indexing-submit-checklist.md` to mark Bing sitemap success and avoid duplicate resubmission.
+- GSC sitemap status remains unconfirmed in project records until owner provides a GSC Sitemaps screenshot or status text.

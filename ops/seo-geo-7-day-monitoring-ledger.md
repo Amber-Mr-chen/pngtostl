@@ -140,8 +140,16 @@ GSC:
 
 Bing:
 
-- Sitemap submitted: [owner to fill]
-- New URLs submitted/inspected: [owner to fill]
+- Sitemap submitted: yes — Bing Webmaster Tools screenshot confirmed on 2026-06-07.
+- Sitemap URL: `https://pngtostl.net/sitemap.xml`.
+- Status: success.
+- Known sitemaps: 1.
+- Sitemaps with errors: 0.
+- Sitemaps with warnings: 0.
+- Discovered URLs: 20.
+- Last submitted: 2026-06-07.
+- Last crawled: 2026-06-07.
+- New URLs submitted/inspected: [owner/agent to fill if individually inspected]
 
 GA4 / product events:
 

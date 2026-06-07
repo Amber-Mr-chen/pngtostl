@@ -117,27 +117,27 @@ Do not rewrite titles or H1 immediately if pages are not indexed within one day.
 
 ## Bing Webmaster Tools manual steps
 
-Bing matters for Bing search and can influence ChatGPT Search ecosystem discovery.
+Current Bing status from owner screenshot on 2026-06-07:
 
-1. Open Bing Webmaster Tools.
-2. Select the `pngtostl.net` property. Confirm the selected site before submitting anything.
-3. Go to **Sitemaps**.
-4. Submit:
+- Site: `pngtostl.net/`
+- Sitemap URL: `https://pngtostl.net/sitemap.xml`
+- Last submitted: 2026-06-07
+- Last crawled: 2026-06-07
+- Status: success
+- Known sitemaps: 1
+- Sitemaps with errors: 0
+- Sitemaps with warnings: 0
+- Discovered URLs: 20
 
-```text
-https://pngtostl.net/sitemap.xml
-```
+Because Bing already shows `success`, do not submit a duplicate sitemap unless the status later changes or the sitemap URL disappears.
 
-5. Go to **URL Inspection** or equivalent.
-6. Inspect/submit:
+For future checks, use Bing Webmaster Tools → `pngtostl.net/` → Sitemaps and verify the same row remains successful. If individual guide checks are needed, use URL Inspection for:
 
 ```text
 https://pngtostl.net/how-to-turn-logo-into-stl
 https://pngtostl.net/lithophane-image-guide
 https://pngtostl.net/heightmap-to-stl-terrain-guide
 ```
-
-7. After submission, check Site Explorer / IndexNow / crawl status if available.
 
 ## Verification commands used
 
