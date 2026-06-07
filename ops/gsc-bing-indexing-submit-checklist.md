@@ -1,0 +1,169 @@
+# GSC and Bing indexing submission checklist — pngtostl.net
+
+Date: 2026-06-07
+
+## Live technical status
+
+Validated from production `https://pngtostl.net` with a normal browser User-Agent.
+
+- `https://pngtostl.net/robots.txt`: 200, `Content-Type: text/plain`, global `User-agent: *` allows `/`, sitemap declared.
+- `https://pngtostl.net/sitemap.xml`: 200, `Content-Type: application/xml`, 23 canonical URLs listed.
+- `https://pngtostl.net/llms.txt`: 200, factual site summary and core/support URLs included.
+- Cloudflare Managed Content Signals block several AI training/extended crawlers such as `GPTBot`, `Google-Extended`, and `ClaudeBot`; this is not a Google Search indexing block because the global `User-agent: *` group allows `/` and declares search content signal as allowed.
+
+## New support URLs to submit / inspect
+
+Submit or inspect these in priority order:
+
+1. `https://pngtostl.net/how-to-turn-logo-into-stl`
+2. `https://pngtostl.net/lithophane-image-guide`
+3. `https://pngtostl.net/heightmap-to-stl-terrain-guide`
+
+Supporting discovery URLs:
+
+- `https://pngtostl.net/`
+- `https://pngtostl.net/faq`
+- `https://pngtostl.net/logo-to-stl`
+- `https://pngtostl.net/lithophane-generator`
+- `https://pngtostl.net/heightmap-to-stl`
+- `https://pngtostl.net/sitemap.xml`
+
+## Page-level validation summary
+
+### `how-to-turn-logo-into-stl`
+
+- HTTP: 200
+- Title length: 57
+- Title: `How to Turn a Logo into an STL for 3D Printing | PNGtoSTL`
+- Meta description length: 141
+- Canonical: `https://pngtostl.net/how-to-turn-logo-into-stl`
+- Robots meta: `index, follow`
+- H1 count: 1
+- In sitemap: yes
+- In llms.txt: yes
+
+### `lithophane-image-guide`
+
+- HTTP: 200
+- Title length: 46
+- Title: `Best Image for Lithophane 3D Prints | PNGtoSTL`
+- Meta description length: 136
+- Canonical: `https://pngtostl.net/lithophane-image-guide`
+- Robots meta: `index, follow`
+- H1 count: 1
+- In sitemap: yes
+- In llms.txt: yes
+
+### `heightmap-to-stl-terrain-guide`
+
+- HTTP: 200
+- Title length: 41
+- Title: `Heightmap to STL Terrain Guide | PNGtoSTL`
+- Meta description length: 130
+- Canonical: `https://pngtostl.net/heightmap-to-stl-terrain-guide`
+- Robots meta: `index, follow`
+- H1 count: 1
+- In sitemap: yes
+- In llms.txt: yes
+
+## Google Search Console manual steps
+
+Use the owner Google account that has access to the `pngtostl.net` property.
+
+### 1. Submit or refresh sitemap
+
+1. Open Google Search Console.
+2. Select the `pngtostl.net` property. Prefer the Domain property if both Domain and URL-prefix properties exist.
+3. Go to **Sitemaps**.
+4. Submit the full sitemap URL:
+
+```text
+https://pngtostl.net/sitemap.xml
+```
+
+5. Expected result: status eventually becomes `Success` or equivalent. If GSC says invalid URL, make sure you are in the `pngtostl.net` property and submit the full URL, not only `sitemap.xml`.
+
+### 2. URL Inspection sequence
+
+For each URL below:
+
+1. Paste the full URL into the top URL Inspection bar.
+2. Wait for live inspection result.
+3. Confirm:
+   - URL is available to Google
+   - Page fetch succeeds
+   - Indexing allowed: yes
+   - User-declared canonical equals inspected URL
+   - Google-selected canonical is either pending/unknown or the same URL
+4. Click **Request indexing** if available.
+
+Inspect in this order:
+
+```text
+https://pngtostl.net/how-to-turn-logo-into-stl
+https://pngtostl.net/lithophane-image-guide
+https://pngtostl.net/heightmap-to-stl-terrain-guide
+```
+
+### 3. After 24–72 hours
+
+Check **Pages** and **Search results** for:
+
+- Whether the three URLs are indexed.
+- Whether any show `Discovered - currently not indexed` or `Crawled - currently not indexed`.
+- Whether impressions start appearing for guide/task queries.
+
+Do not rewrite titles or H1 immediately if pages are not indexed within one day. New pages can take days/weeks.
+
+## Bing Webmaster Tools manual steps
+
+Bing matters for Bing search and can influence ChatGPT Search ecosystem discovery.
+
+1. Open Bing Webmaster Tools.
+2. Select the `pngtostl.net` property. Confirm the selected site before submitting anything.
+3. Go to **Sitemaps**.
+4. Submit:
+
+```text
+https://pngtostl.net/sitemap.xml
+```
+
+5. Go to **URL Inspection** or equivalent.
+6. Inspect/submit:
+
+```text
+https://pngtostl.net/how-to-turn-logo-into-stl
+https://pngtostl.net/lithophane-image-guide
+https://pngtostl.net/heightmap-to-stl-terrain-guide
+```
+
+7. After submission, check Site Explorer / IndexNow / crawl status if available.
+
+## Verification commands used
+
+```bash
+curl -fsSLI -A 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/125 Safari/537.36' https://pngtostl.net/robots.txt
+curl -fsSLI -A 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/125 Safari/537.36' https://pngtostl.net/sitemap.xml
+curl -fsSLI -A 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/125 Safari/537.36' https://pngtostl.net/llms.txt
+```
+
+Script result:
+
+```text
+ROBOTS_HAS_GLOBAL_ALLOW True
+ROBOTS_HAS_SITEMAP True
+SITEMAP_URL_COUNT 23
+indexability_validation_ok
+```
+
+## Stop conditions
+
+Pause and report before changing the site if GSC/Bing shows:
+
+- `Blocked by robots.txt` for Googlebot/Bingbot.
+- `Alternate page with proper canonical` pointing away from these URLs.
+- `Duplicate without user-selected canonical`.
+- Live inspection fetch failure or 403 for Googlebot/Bingbot.
+- Manual action or security issue.
+
+If the only status is `Discovered - currently not indexed`, wait and improve external discovery/internal links before rewriting page content.

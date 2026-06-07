@@ -12,6 +12,7 @@ Related files:
 - `ops/weekly-data-review-template.md`
 - `ops/seo-support-page-plan.md`
 - `ops/manual-channel-submission-pack.md`
+- `ops/gsc-bing-indexing-submit-checklist.md`
 
 ## Current Pending Review Items
 

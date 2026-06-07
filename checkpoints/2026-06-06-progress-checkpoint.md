@@ -435,3 +435,11 @@ SEO support internal-link closure on 2026-06-07:
 - Added the three core guide links to homepage and tool-page footers, and added a `Practical guides` section to `/faq`.
 - Deployed to Cloudflare Worker version `c9e36f52-f8e0-4f82-a3a7-9aebf45ba777`.
 - Verification: `npm run lint` exit 0; internal-link static validation exit 0; `npm run build` exit 0 and generated 29 static pages; `npm run cf:build` exit 0; `npm run cf:deploy` exit 0; production browser on `/logo-to-stl` showed `Related guides` with the logo guide plus footer guide links; production HTTP checks with browser UA confirmed homepage, `/faq`, `/lithophane-generator`, and `/heightmap-to-stl` include the expected guide links.
+
+GSC/Bing indexing submission prep on 2026-06-07:
+
+- Verified production `robots.txt`, `sitemap.xml`, and `llms.txt` with a normal browser User-Agent. Robots returns 200 and global `User-agent: *` allows `/`; sitemap returns 200 `application/xml` with 23 URLs; llms.txt returns 200 and includes the new guide URLs.
+- Clarified that Cloudflare Managed Content Signals block AI training/extended crawlers such as `GPTBot`, `Google-Extended`, and `ClaudeBot`, but do not block Google Search indexing because the global search crawler group is allowed.
+- Verified the three new support URLs: `/how-to-turn-logo-into-stl`, `/lithophane-image-guide`, and `/heightmap-to-stl-terrain-guide` each return 200, have title/meta description, absolute self canonical, `robots` meta `index, follow`, exactly one H1, and appear in sitemap and llms.txt.
+- Added `ops/gsc-bing-indexing-submit-checklist.md` with GSC sitemap submission, URL Inspection request sequence, Bing Webmaster submission steps, verification commands, and stop conditions.
+- Updated `ops/launch-follow-up-plan.md` to link the indexing checklist.
