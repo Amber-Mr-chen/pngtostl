@@ -102,6 +102,8 @@ https://pngtostl.net/lithophane-image-guide
 https://pngtostl.net/heightmap-to-stl-terrain-guide
 ```
 
+Current owner-confirmed status on 2026-06-07: request indexing completed for all three priority guide URLs. Next check should wait 24–72 hours and look for indexed / discovered / crawled statuses rather than submitting again immediately.
+
 ### 3. After 24–72 hours
 
 Check **Pages** and **Search results** for:

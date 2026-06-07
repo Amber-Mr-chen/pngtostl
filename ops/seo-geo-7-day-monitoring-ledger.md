@@ -139,9 +139,9 @@ GSC:
 - Discovered pages: 20.
 - Discovered videos: 0.
 - URL Inspection requested:
-  - Logo guide: [owner/agent to fill if individually requested]
-  - Lithophane guide: [owner/agent to fill if individually requested]
-  - Heightmap guide: [owner/agent to fill if individually requested]
+  - Logo guide: yes — owner confirmed GSC request indexing completed on 2026-06-07.
+  - Lithophane guide: yes — owner confirmed GSC request indexing completed on 2026-06-07.
+  - Heightmap guide: yes — owner confirmed GSC request indexing completed on 2026-06-07.
 - Pages status: sitemap accepted; individual indexing status still requires URL Inspection or Pages report follow-up.
 - Search results: likely too early.
 
@@ -181,7 +181,9 @@ Action taken today:
 
 Next action:
 
-- Use GSC URL Inspection for the three new guide URLs and request indexing if the UI says the URL is not currently indexed but indexing is allowed.
+- Wait 24–72 hours before treating public SERP absence as meaningful.
+- Recheck GSC Pages / URL Inspection for the three guide URLs on Day 2–3.
+- Do not rewrite titles, H1s, or content while indexing is pending unless GSC reports a technical problem.
 
 ### Day 2 — 2026-06-08
 

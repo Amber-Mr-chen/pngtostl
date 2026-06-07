@@ -475,3 +475,12 @@ Public URL inspection prep on 2026-06-07:
 - Extracted guide-page relevant links: each guide links to matching converter/sample preset routes and core tools.
 - Public Google web search was blocked by bot detection; Bing web search showed Cloudflare challenge. Bing RSS endpoint returned unrelated results and did not show the three guide URLs yet. This is early/inconclusive and not authoritative; use GSC URL Inspection / Pages report for index status.
 - Updated `ops/seo-geo-7-day-monitoring-ledger.md` with this public check and next action: use GSC URL Inspection for the three new guide URLs and request indexing if indexing is allowed but URL is not indexed.
+
+GSC URL Inspection request indexing on 2026-06-07:
+
+- Owner confirmed all three new SEO guide URLs have been checked in GSC URL Inspection and request indexing has been completed:
+  - `https://pngtostl.net/how-to-turn-logo-into-stl`
+  - `https://pngtostl.net/lithophane-image-guide`
+  - `https://pngtostl.net/heightmap-to-stl-terrain-guide`
+- Updated `ops/seo-geo-7-day-monitoring-ledger.md` and `ops/gsc-bing-indexing-submit-checklist.md`.
+- Next action: wait 24–72 hours and recheck GSC Pages / URL Inspection; do not rewrite TDH/content while indexing is pending unless GSC reports a technical problem.
