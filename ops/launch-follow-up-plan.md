@@ -13,6 +13,7 @@ Related files:
 - `ops/seo-support-page-plan.md`
 - `ops/manual-channel-submission-pack.md`
 - `ops/gsc-bing-indexing-submit-checklist.md`
+- `ops/seo-geo-7-day-monitoring-ledger.md`
 
 ## Current Pending Review Items
 

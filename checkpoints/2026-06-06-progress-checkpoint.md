@@ -443,3 +443,10 @@ GSC/Bing indexing submission prep on 2026-06-07:
 - Verified the three new support URLs: `/how-to-turn-logo-into-stl`, `/lithophane-image-guide`, and `/heightmap-to-stl-terrain-guide` each return 200, have title/meta description, absolute self canonical, `robots` meta `index, follow`, exactly one H1, and appear in sitemap and llms.txt.
 - Added `ops/gsc-bing-indexing-submit-checklist.md` with GSC sitemap submission, URL Inspection request sequence, Bing Webmaster submission steps, verification commands, and stop conditions.
 - Updated `ops/launch-follow-up-plan.md` to link the indexing checklist.
+
+7-day SEO/GEO monitoring ledger on 2026-06-07:
+
+- Added `ops/seo-geo-7-day-monitoring-ledger.md` to track daily GSC/Bing indexing, GA4/product funnel events, sample/proof/preset-assisted events, external/channel status, and Day-7 decision rules.
+- Ledger references `ops/gsc-bing-indexing-submit-checklist.md`, `ops/first-week-data-review-plan.md`, `ops/weekly-data-review-template.md`, `ops/launch-follow-up-plan.md`, `ops/manual-channel-submission-pack.md`, and `ops/seo-support-page-plan.md`.
+- Day 1 is prefilled with production technical baseline: robots/sitemap/llms verified, three new guide URLs indexable and discoverable, GitHub PR #92/Hackaday/Launching Next pending_review, and Dev Hunt/SideProjectors/AlternativeTo/SaaSHub manual_required.
+- Updated `ops/launch-follow-up-plan.md` to link the new 7-day ledger.
