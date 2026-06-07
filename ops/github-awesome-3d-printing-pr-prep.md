@@ -11,10 +11,10 @@ https://github.com/ad-si/awesome-3d-printing
 Current status:
 
 ```text
-manual_required / branch_pushed / PR creation blocked by GitHub token permission
+manual_required / branch_pushed / PR creation blocked by GitHub token permission / PR opened manually by owner
 ```
 
-This document prepared an owner-reviewable PR plan. After owner approval on 2026-06-07, the fork branch was created and pushed, but the PR itself was not opened because the available GitHub token lacks `createPullRequest` permission and the browser compare page was signed out.
+This document prepared an owner-reviewable PR plan. After owner approval on 2026-06-07, the fork branch was created and pushed. Automated PR creation failed because the available GitHub token lacks `createPullRequest` permission and the browser compare page was signed out. Owner then opened PR #92 manually in a logged-in browser, and `gh pr view` verified it is open and mergeable.
 
 Execution result after owner approval:
 
@@ -24,11 +24,12 @@ Branch: add-pngtostl-online-tool
 Commit: f062beb Add PNGtoSTL to Online Tools
 Compare URL: https://github.com/ad-si/awesome-3d-printing/compare/main...Amber-Mr-chen:awesome-3d-printing:add-pngtostl-online-tool?expand=1
 Compare state: Able to merge
-PR status: not opened; manual_required
-Blocker: gh pr create failed with GraphQL Resource not accessible by personal access token (createPullRequest); browser compare page showed signed-out GitHub session.
+PR status: OPEN / pending_review
+PR URL: https://github.com/ad-si/awesome-3d-printing/pull/92
+Verification: gh pr view returned state OPEN, mergeable MERGEABLE, base main, head add-pngtostl-online-tool.
 ```
 
-No upstream PR, upstream write, payment, CAPTCHA bypass, or reciprocal action has been executed.
+No upstream merge, payment, CAPTCHA bypass, or reciprocal action has been executed. The only upstream-facing action after owner login was opening PR #92.
 
 ## Repository Signals
 

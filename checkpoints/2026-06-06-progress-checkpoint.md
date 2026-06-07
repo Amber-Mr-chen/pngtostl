@@ -380,3 +380,10 @@ GitHub awesome-3d-printing owner-approved branch push on 2026-06-07:
 - Compare page showed `Able to merge`, 1 commit, 1 file changed.
 - PR creation did not complete: `gh pr create` failed with `GraphQL: Resource not accessible by personal access token (createPullRequest)`; browser compare page showed signed-out GitHub session.
 - Current status: branch is pushed and ready, but PR remains `manual_required` until owner opens the compare URL in a logged-in GitHub browser or provides a token with PR creation permission.
+
+GitHub awesome-3d-printing PR opened manually by owner on 2026-06-07:
+
+- Owner provided PR URL: `https://github.com/ad-si/awesome-3d-printing/pull/92`.
+- Verified with `gh pr view`: number `92`, state `OPEN`, mergeable `MERGEABLE`, author `Amber-Mr-chen`, base `main`, head `add-pngtostl-online-tool`, title `Add PNGtoSTL to Online Tools`, created at `2026-06-07T10:12:21Z`.
+- Updated `ops/coldstart-submission-log.md` status for GitHub awesome-3d-printing from `manual_required` to `pending_review`.
+- Follow-up rule: monitor for maintainer review/merge; do not comment or push extra commits unless the maintainer requests changes.
