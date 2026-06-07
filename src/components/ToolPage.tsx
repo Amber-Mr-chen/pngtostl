@@ -12,7 +12,18 @@ const primaryNav = [
   { href: "/faq", label: "Guides" },
 ];
 
-function Header() {
+function activeNavFor(currentPath: string, itemHref: string) {
+  const groupedRoutes: Record<string, string[]> = {
+    "/image-to-stl": ["/image-to-stl", "/png-to-stl", "/jpg-to-stl", "/convert-image-to-stl", "/2d-image-to-3d-model", "/3d-print-photo"],
+    "/lithophane-generator": ["/lithophane-generator", "/photo-to-lithophane"],
+    "/heightmap-to-stl": ["/heightmap-to-stl"],
+    "/logo-to-stl": ["/logo-to-stl"],
+    "/faq": ["/faq", "/image-contrast-guide", "/print-settings-checker"],
+  };
+  return groupedRoutes[itemHref]?.includes(currentPath) ?? itemHref === currentPath;
+}
+
+function Header({ currentPath }: { currentPath: string }) {
   return (
     <header className="container toolHeader">
       <nav>
@@ -21,15 +32,63 @@ function Header() {
           PNGtoSTL
         </Link>
         <div className="toolNavLinks">
-          {primaryNav.map((item) => (
-            <Link key={item.href} className="pill" href={item.href}>
-              {item.label}
-            </Link>
-          ))}
+          {primaryNav.map((item) => {
+            const isActive = activeNavFor(currentPath, item.href);
+            return (
+              <Link key={item.href} className={isActive ? "pill activePill" : "pill"} aria-current={isActive ? "page" : undefined} href={item.href}>
+                {item.label}
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </header>
   );
+}
+
+const toolGuidance: Record<string, {
+  bestFor: string[];
+  avoid: string[];
+  printTips: string[];
+}> = {
+  "image-to-stl": {
+    bestFor: ["High-contrast icons, line art, simple illustrations, and clean subject photos.", "Makers who are choosing between relief, logo, lithophane, and heightmap output.", "Fast single-file tests before spending time in CAD or a slicer."],
+    avoid: ["Expecting a complete 3D object reconstruction from one normal photo.", "Very low-contrast images where the subject blends into the background.", "Images where color is the main information, because STL stores geometry only."],
+    printTips: ["Start with the default relief mode, then lower detail if the STL is too large.", "Use the preview and triangle count before downloading large files.", "Open the STL in a slicer from the front/top view and confirm scale before printing."],
+  },
+  "png-to-stl": {
+    bestFor: ["Transparent PNG icons, emojis, silhouettes, stamps, and black-and-white artwork.", "Clean alpha edges that should become raised or recessed geometry.", "Simple maker badges where color does not need to survive in the STL."],
+    avoid: ["Noisy screenshots, tiny text, and PNGs where the important detail is color rather than shape.", "Photographic PNGs that would work better as lithophanes or photo reliefs.", "Expecting transparent pixels to become colored material; they only affect shape/background."],
+    printTips: ["Keep the icon simple and remove background clutter before upload.", "Use lower smoothing for crisp badges and higher smoothing for jagged pixel art.", "Check thin strokes in the preview; tiny raised lines may fail on small nozzles."],
+  },
+  "jpg-to-stl": {
+    bestFor: ["JPG photos or downloaded images with a clear subject and strong contrast.", "Testing whether a photo is better as relief or lithophane before printing.", "Users who do not want to manually convert JPG to PNG first."],
+    avoid: ["Portraits with subtle skin tones when you actually want a backlit lithophane.", "Compressed, blurry, or shadow-heavy photos that will create noisy surface bumps.", "Full object reconstruction claims; this creates relief-style STL output."],
+    printTips: ["Crop the subject and increase contrast before upload when possible.", "If the relief looks noisy, try lithophane mode or reduce detail/smoothing.", "Use a larger output width for photo reliefs so small features remain printable."],
+  },
+  "logo-to-stl": {
+    bestFor: ["Simple SVG or transparent PNG logos with strong edges.", "Badges, plaques, signs, product marks, makerspace labels, and name plates.", "Flat artwork that should become a raised logo on a printable base."],
+    avoid: ["Complex mascot art, gradients, tiny text, and low-resolution screenshots.", "Logos that rely on multiple colors rather than silhouette or contrast.", "Trying to create a sculpted 3D character from a 2D logo."],
+    printTips: ["Use a thicker base for signs and a lower relief height for small badges.", "Simplify tiny text before conversion; very thin strokes may not slice well.", "Preview the edges and lower smoothing only when you need sharper geometry."],
+  },
+  "lithophane-generator": {
+    bestFor: ["Portraits, memorial photos, night lights, window panels, and backlit gifts.", "Images with clear subjects, balanced contrast, and visible highlights/shadows.", "Single-material prints where light passing through thickness creates the picture."],
+    avoid: ["Very dark images, blown-out highlights, cluttered backgrounds, or photos with no clear subject.", "Expecting color in the STL; lithophanes are geometry/thickness, not color images.", "Printing without a light source behind the panel."],
+    printTips: ["Use light filament and thin layers for clearer backlit detail.", "Keep min/max thickness conservative first, then adjust after a small test print.", "Check whether inversion is correct before slicing the full-size panel."],
+  },
+  "heightmap-to-stl": {
+    bestFor: ["Grayscale heightmaps, terrain maps, texture plates, and depth maps.", "Users who already know that brightness should map to surface height.", "Surface reliefs where black-to-white values represent low-to-high geometry."],
+    avoid: ["Normal photos that are not intended as height data.", "Expecting a watertight CAD assembly when the input is only a surface map.", "Color maps without a meaningful grayscale depth relationship."],
+    printTips: ["Use a true grayscale depth map for predictable height behavior.", "Start with lower max height and smoothing before increasing terrain exaggeration.", "Check the base and orientation in your slicer before printing large surfaces."],
+  },
+};
+
+function guidanceFor(tool: ToolConfig) {
+  return toolGuidance[tool.slug] ?? {
+    bestFor: [tool.promise, "Single-image maker workflows where a relief-style STL is acceptable.", "Quick tests before committing to a larger print."],
+    avoid: ["Full 3D object reconstruction from one image.", "Images where color, texture, or hidden backside geometry is required.", "Printing without checking scale, orientation, and slicer warnings."],
+    printTips: ["Use a clean, high-contrast image first.", "Start with default settings before changing advanced controls.", "Inspect the preview, size, and triangle count before printing."],
+  };
 }
 
 function advisorKindFromSlug(slug: string) {
@@ -63,10 +122,38 @@ function SiteFooter() {
 
 export function ToolPage({ tool }: { tool: ToolConfig }) {
   const advisorOnly = tool.slug === "3d-print-photo";
+  const guidance = guidanceFor(tool);
+  const faqItems = [
+    ...tool.faq,
+    {
+      q: "Is this a full 3D reconstruction from one photo?",
+      a: "No. The tools create printable relief, lithophane, logo, or heightmap-style STL surfaces from a 2D image.",
+    },
+    {
+      q: "How do I reduce STL file size?",
+      a: "Lower the detail level, reduce output width, or use a cleaner high-contrast image with less noise.",
+    },
+    {
+      q: "Can I print the STL directly?",
+      a: "Usually yes for simple reliefs, but you should still inspect orientation, scale, and slicer warnings before printing.",
+    },
+  ];
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.slice(0, 8).map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  };
 
   return (
     <>
-      <Header />
+      <Header currentPath={`/${tool.slug}`} />
       <main className="container toolPage">
         <section className="toolHero">
           <div>
@@ -97,6 +184,33 @@ export function ToolPage({ tool }: { tool: ToolConfig }) {
           ) : (
             <ConverterPanel tool={tool} />
           )}
+        </section>
+
+        <section className="supportGrid guidanceGrid" aria-label={`${tool.title} guidance`}>
+          <div className="shell">
+            <h2 className="sectionTitle">Best for</h2>
+            <ul>
+              {guidance.bestFor.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="shell">
+            <h2 className="sectionTitle">Avoid this input</h2>
+            <ul>
+              {guidance.avoid.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="shell">
+            <h2 className="sectionTitle">Print checks</h2>
+            <ul>
+              {guidance.printTips.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
         </section>
 
         <section id="how-it-works" className="stepGrid">
@@ -136,28 +250,17 @@ export function ToolPage({ tool }: { tool: ToolConfig }) {
         <section className="shell faqBlock">
           <h2 className="sectionTitle">Quick answers</h2>
           <div>
-            {tool.faq.map((item) => (
+            {faqItems.map((item) => (
               <details key={item.q}>
                 <summary>{item.q}</summary>
                 <p>{item.a}</p>
               </details>
             ))}
-            <details>
-              <summary>Is this a full 3D reconstruction from one photo?</summary>
-              <p>No. The tools create printable relief, lithophane, logo, or heightmap-style STL surfaces from a 2D image.</p>
-            </details>
-            <details>
-              <summary>How do I reduce STL file size?</summary>
-              <p>Lower the detail level, reduce output width, or use a cleaner high-contrast image with less noise.</p>
-            </details>
-            <details>
-              <summary>Can I print the STL directly?</summary>
-              <p>Usually yes for simple reliefs, but you should still inspect orientation, scale, and slicer warnings before printing.</p>
-            </details>
           </div>
         </section>
       </main>
       <SiteFooter />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script src="/stl-preview.js" defer />
       <script src="/converter.js" defer />
     </>

@@ -180,6 +180,13 @@ Verified current external/account state:
     - `pngtostl_download_clicked`
   - Error path verified with invalid PNG: `pngtostl_generate_error` reached `window.pngtostlEvents` and `dataLayer`.
 - Privacy page now discloses GA4 analytics events and Cloudflare Email Routing support forwarding.
+- No-data-stage content/UX optimization deployed on 2026-06-07:
+  - Deploy version: `a8f31104-355a-463b-9bde-74279fb91a25`
+  - Added per-tool guidance blocks for best inputs, inputs to avoid, and print checks.
+  - Added per-tool FAQPage JSON-LD alongside existing SoftwareApplication/WebSite JSON-LD.
+  - Added active top-nav state with route grouping so `/png-to-stl`, `/jpg-to-stl`, `/convert-image-to-stl`, `/2d-image-to-3d-model`, and `/3d-print-photo` highlight `Image to STL`; lithophane helper pages highlight `Lithophane`; guide utilities highlight `Guides`.
+  - Production-verified `/image-to-stl` and `/png-to-stl`: guidance present, FAQ details present, FAQPage JSON-LD present, GA4 script still present, `/png-to-stl` active nav shows `Image to STL` with `aria-current=page`.
+  - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`, and `node scripts/home_responsive_qa.js`.
 
 Remaining owner/account actions:
 

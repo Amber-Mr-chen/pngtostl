@@ -23,6 +23,21 @@ Each event should include:
 - `path`
 - optional `fileType`, `fileSizeKb`, `bytes`, `triangles`, `coverage`, `reason`
 
+## No-data-stage baseline improvements
+
+Completed before waiting for real traffic data:
+
+- Per-tool guidance blocks now explain best inputs, inputs to avoid, and print checks.
+- Per-tool FAQ details and FAQPage JSON-LD are available on tool pages.
+- Top navigation now has grouped active states so format/helper pages still orient users to the parent workflow.
+- Production verification deploy: `a8f31104-355a-463b-9bde-74279fb91a25`.
+
+Next no-data-stage candidates, if more work is needed before search data arrives:
+
+- Expand `/samples` with pet photo relief, stamp, coin relief, sign plate, and terrain use cases.
+- Add comparison/alternative pages only after keyword/SERP validation.
+- Consider outbound email setup only if support replies need to come from `support@pngtostl.net`.
+
 ## Daily metrics
 
 Acquisition:

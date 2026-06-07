@@ -1455,9 +1455,14 @@ body {
   box-shadow: none;
 }
 .homeNavLinks a:hover,
-.toolNavLinks .pill:hover {
+.toolNavLinks .pill:hover,
+.toolNavLinks .activePill {
   background: rgba(7,17,31,0.045);
   color: #07111f;
+}
+.toolNavLinks .activePill {
+  font-weight: 680;
+  box-shadow: inset 0 -2px 0 #2457ff;
 }
 .accountActions .signupButton {
   border-radius: 8px;
