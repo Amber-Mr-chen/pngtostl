@@ -263,3 +263,27 @@ First-batch submission field pack on 2026-06-07 15:55 CST:
 - The field pack includes shared product fields, contact/pricing/category/tag values, per-site title/tagline/short description/long description, per-site UTM URL, risk note, pre-submit checklist, execution order, post-submit logging template, and stop conditions.
 - Validation passed: all 5 first-batch candidates and their UTM URLs are present; execution boundary, no-overclaim guardrail, stop conditions, and post-submit logging rule are present.
 - No submission, public post, account action, CAPTCHA handling, payment, reciprocal listing, or PR was executed.
+
+First-batch launch media pack on 2026-06-07 16:08 CST:
+
+- Added `ops/launch-media/` with 13 PNG assets plus `README.md` for owner-approved first-batch submissions.
+- Added `scripts/capture_launch_media.js` to regenerate production screenshots with headless Chrome.
+- Page screenshots generated from production:
+  - `homepage-hero-1366x900.png`
+  - `image-to-stl-workspace-1366x900.png`
+  - `samples-gallery-1366x900.png`
+  - `samples-gallery-fullpage.png`
+  - `tool-proof-section-1366x900.png`
+- Logo/icon assets generated locally:
+  - `pngtostl-icon-512.png`
+  - `pngtostl-icon-256.png`
+  - `pngtostl-wordmark-transparent.png`
+- Sample proof assets copied from `public/samples/`:
+  - `sample-logo-badge-source.png`
+  - `sample-logo-badge-preview.png`
+  - `sample-lithophane-preview.png`
+  - `sample-heightmap-preview.png`
+  - `sample-sign-plate-preview.png`
+- Visual QA: homepage and samples screenshots are suitable for directory submission; corrected the proof screenshot selector to `.toolProofBlock`, and the final proof screenshot shows `REAL OUTPUT PROOF`, two real example cards, STL metrics, and Download STL buttons.
+- Validation passed: 14 launch-media files present, 13 PNGs non-empty, expected dimensions match for the key screenshots/icons/wordmark, README references every asset and maps assets to Launching Next, Dev Hunt, Insidr AI, MicroLaunch, and Hackaday.
+- No public upload, directory submission, account action, CAPTCHA handling, payment, reciprocal listing, PR, or external post was executed.
