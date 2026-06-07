@@ -60,11 +60,11 @@ No candidate below has been submitted yet. Status means recommended next handlin
 - Channel: Launching Next
   - Type: directory
   - Candidate URL: `https://www.launchingnext.com/submit/`
-  - Target URL: `https://pngtostl.net/?utm_source=launchingnext&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit_form`
+  - Target URL: `https://pngtostl.net/?utm_source=launchingnext&utm_campaign=launch_v1`
   - Suggested content: Use directory title option 1 and long directory description.
-  - Status: ready_to_submit
-  - Evidence: Browser preflight on 2026-06-07: page loaded as `Submit Your Project`; public form visible. Fields include startup name, website URL, 5-8 word tagline, full description up to 2,500 chars, 5-10 comma-separated tags, startup type radios, funding radios, owner name, owner email, newsletter opt-in checkbox, and quick check `What is 2+3?`. Page states submitting is free, with optional $99 upgrade on the next page for 1-business-day consideration.
-  - Notes: Ready only after owner approves actual submission. During execution, answer the quick check truthfully, uncheck newsletter unless owner wants it, and do not accept the $99 upgrade without approval.
+  - Status: pending_review
+  - Evidence: Submitted on 2026-06-07 after owner approval. Free submission accepted into queue; confirmation page displayed `Status: In Queue (Estimated Wait: 4 Months)` and offered optional Fast-Track upgrade `$199$99` / `Proceed to Secure Checkout - $99`.
+  - Notes: Used short UTM because Launching Next URL field has `maxlength=100`; did not select newsletter opt-in and did not click/accept any $99 fast-track checkout.
 
 - Channel: MicroLaunch
   - Type: directory
@@ -80,9 +80,9 @@ No candidate below has been submitted yet. Status means recommended next handlin
   - Candidate URL: `https://www.insidr.ai/submit-tool` (redirects to `https://www.insidr.ai/submit-tools/`).
   - Target URL: `https://pngtostl.net/?utm_source=insidr_ai&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit_tool`
   - Suggested content: Use short pitch; emphasize maker/3D-printing use case to avoid generic AI-tool framing.
-  - Status: ready_to_submit
-  - Evidence: Browser preflight on 2026-06-07: public `Submit AI Tools` form visible; fields include `Message`, `Link`, and required `Tag`. No immediate login, CAPTCHA, payment, or reciprocal-link blocker observed. Page also contains a separate email subscription iframe, not required for tool submission.
-  - Notes: Ready only after owner approves actual submission. Relevance remains medium because this is an AI-tool directory; keep copy focused on maker/3D-printing use cases and avoid overclaiming AI capability.
+  - Status: manual_required
+  - Evidence: Attempted on 2026-06-07 after owner approval. Public form accepted field values and `form.checkValidity()` returned true; clicked the real submit button twice, but page stayed on the form with no visible success, error, redirect, or alert. Fields remained populated.
+  - Notes: Do not force a backend request. Needs visible-browser/manual follow-up or site contact if owner wants to pursue. Relevance remains medium because this is an AI-tool directory; keep copy focused on maker/3D-printing use cases and avoid overclaiming AI capability.
 
 - Channel: Hackaday Submit A Tip
   - Type: newsletter
@@ -238,4 +238,26 @@ No candidate below has been submitted yet. Status means recommended next handlin
 
 ## Submission records
 
-_No submissions executed in this document-setup pass._
+## 2026-06-07
+
+- Channel: Launching Next
+  - Type: directory
+  - Candidate URL: `https://www.launchingnext.com/submit/`
+  - Target URL: `https://pngtostl.net/?utm_source=launchingnext&utm_campaign=launch_v1`
+  - UTM URL: `https://pngtostl.net/?utm_source=launchingnext&utm_campaign=launch_v1`
+  - Submitted content: `PNGtoSTL`; headline `Image to STL converter for makers`; description focused on practical image-to-STL, reliefs, logo badges, lithophanes, heightmap surfaces, real examples, and honest non-full-3D-reconstruction limits.
+  - Status: pending_review
+  - Evidence: Free submission accepted into queue. Confirmation page showed `Status: In Queue (Estimated Wait: 4 Months)` plus optional Fast-Track upgrade `$199$99`, `Upgrade to Fast-Track - $99`, and `Proceed to Secure Checkout - $99`; no paid option was clicked.
+  - Next follow-up date: 2026-06-14
+  - Notes: URL field had `maxlength=100`, so short UTM was used. Newsletter opt-in was unchecked. Startup type set to bootstrapped startup; marketing budget set to `$0`; quick check answered `5`.
+
+- Channel: Insidr AI
+  - Type: directory
+  - Candidate URL: `https://www.insidr.ai/submit-tool` / `https://www.insidr.ai/submit-tools/`
+  - Target URL: `https://pngtostl.net/?utm_source=insidr_ai&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit_tool`
+  - UTM URL: `https://pngtostl.net/?utm_source=insidr_ai&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit_tool`
+  - Submitted content: Prepared and filled message for `PNGtoSTL — Image to STL converter for 3D printing workflows`, plus link and tags `Image Tools, 3D Printing, Design Tools, Maker Tools`.
+  - Status: manual_required
+  - Evidence: Public form accepted values and passed browser form validity; two clicks on the real submit button produced no visible success, error, redirect, or alert, and fields stayed populated.
+  - Next follow-up date: 2026-06-14
+  - Notes: Not marked submitted because no confirmation was observed. Do not force backend request; retry only in visible browser/manual flow or contact Insidr AI directly.

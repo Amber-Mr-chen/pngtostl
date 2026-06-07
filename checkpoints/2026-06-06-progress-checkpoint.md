@@ -301,3 +301,19 @@ First-batch visible preflight on 2026-06-07:
 - Dev Hunt: legacy `/submit` route now renders 404; visible `Submit your Dev Tool` entry opens GitHub/Google login, so owner account is required before field-level preflight.
 - MicroLaunch: browser showed Cloudflare security verification; form was not inspected because security verification must not be bypassed.
 - Validation passed: first-batch queue has 5 entries, with 3 `ready_to_submit`, 2 `manual_required`, and no false `submitted`/`listed`/`pending_review` claims.
+
+Owner-approved first submission batch on 2026-06-07:
+
+- Scope approved/executed: Insidr AI and Launching Next only.
+- Not touched: Dev Hunt, MicroLaunch, Hackaday, Product Hunt, HN, any paid/launch/account-gated destination.
+- Launching Next:
+  - Result: `pending_review`.
+  - Evidence: free submission reached confirmation/upgrade page showing `Status: In Queue (Estimated Wait: 4 Months)`.
+  - Paid upgrade shown but not clicked: `$199$99`, `Upgrade to Fast-Track - $99`, and `Proceed to Secure Checkout - $99`.
+  - Used short URL `https://pngtostl.net/?utm_source=launchingnext&utm_campaign=launch_v1` because the site URL input has `maxlength=100`.
+  - Newsletter opt-in was unchecked; startup type set to bootstrapped; marketing budget set to `$0`; quick check answered `5`.
+- Insidr AI:
+  - Result: `manual_required`, not submitted.
+  - Evidence: form accepted field values and `form.checkValidity()` returned true; clicked the real submit button twice, but there was no visible success, error, redirect, or alert, and fields remained populated.
+  - Decision: did not force a backend request. Needs visible-browser/manual retry or direct contact if owner wants to pursue.
+- Validation passed: `ops/coldstart-submission-log.md` has one `pending_review` record for Launching Next and one `manual_required` record for Insidr AI; no false `submitted`/`listed` claim; no payment, login, CAPTCHA handling, reciprocal link, external post, or other channel action was executed.
