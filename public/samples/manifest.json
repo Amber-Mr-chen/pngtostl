@@ -42,5 +42,71 @@
     "triangles": 65532,
     "bytes": 3276684,
     "sourceDescription": "grayscale heightmap"
+  },
+  {
+    "slug": "rubber-stamp-expanded-v1",
+    "title": "Rubber stamp relief",
+    "mode": "logo",
+    "source": "/samples/rubber-stamp-expanded-v1-source.png",
+    "stl": "/samples/rubber-stamp-expanded-v1.stl",
+    "preview": "/samples/rubber-stamp-expanded-v1-preview.png",
+    "triangles": 17316,
+    "bytes": 865884,
+    "sourceDescription": "black stamp artwork PNG"
+  },
+  {
+    "slug": "coin-relief-expanded-v1",
+    "title": "Coin relief medallion",
+    "mode": "relief",
+    "source": "/samples/coin-relief-expanded-v1-source.png",
+    "stl": "/samples/coin-relief-expanded-v1.stl",
+    "preview": "/samples/coin-relief-expanded-v1-preview.png",
+    "triangles": 65532,
+    "bytes": 3276684,
+    "sourceDescription": "round medallion line art"
+  },
+  {
+    "slug": "sign-plate-expanded-v1",
+    "title": "Workshop sign plate",
+    "mode": "logo",
+    "source": "/samples/sign-plate-expanded-v1-source.png",
+    "stl": "/samples/sign-plate-expanded-v1.stl",
+    "preview": "/samples/sign-plate-expanded-v1-preview.png",
+    "triangles": 14396,
+    "bytes": 719884,
+    "sourceDescription": "bold text sign PNG"
+  },
+  {
+    "slug": "pet-photo-relief-expanded-v1",
+    "title": "Pet photo relief",
+    "mode": "relief",
+    "source": "/samples/pet-photo-relief-expanded-v1-source.png",
+    "stl": "/samples/pet-photo-relief-expanded-v1.stl",
+    "preview": "/samples/pet-photo-relief-expanded-v1-preview.png",
+    "triangles": 65532,
+    "bytes": 3276684,
+    "sourceDescription": "high-contrast pet portrait"
+  },
+  {
+    "slug": "portrait-lithophane-expanded-v1",
+    "title": "Portrait lithophane night light",
+    "mode": "lithophane",
+    "source": "/samples/portrait-lithophane-expanded-v1-source.png",
+    "stl": "/samples/portrait-lithophane-expanded-v1.stl",
+    "preview": "/samples/portrait-lithophane-expanded-v1-preview.png",
+    "triangles": 65532,
+    "bytes": 3276684,
+    "sourceDescription": "portrait photo for lithophane"
+  },
+  {
+    "slug": "terrain-tile-expanded-v1",
+    "title": "Terrain heightmap tile",
+    "mode": "heightmap",
+    "source": "/samples/terrain-tile-expanded-v1-source.png",
+    "stl": "/samples/terrain-tile-expanded-v1.stl",
+    "preview": "/samples/terrain-tile-expanded-v1-preview.png",
+    "triangles": 65532,
+    "bytes": 3276684,
+    "sourceDescription": "game terrain heightmap"
   }
 ]

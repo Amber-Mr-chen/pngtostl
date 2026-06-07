@@ -187,6 +187,12 @@ Verified current external/account state:
   - Added active top-nav state with route grouping so `/png-to-stl`, `/jpg-to-stl`, `/convert-image-to-stl`, `/2d-image-to-3d-model`, and `/3d-print-photo` highlight `Image to STL`; lithophane helper pages highlight `Lithophane`; guide utilities highlight `Guides`.
   - Production-verified `/image-to-stl` and `/png-to-stl`: guidance present, FAQ details present, FAQPage JSON-LD present, GA4 script still present, `/png-to-stl` active nav shows `Image to STL` with `aria-current=page`.
   - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`, and `node scripts/home_responsive_qa.js`.
+- `/samples` expanded from 4 baseline workflows to 10 real-world proof examples on 2026-06-07:
+  - Deploy version: `dc0c0302-6a93-46a2-9054-2f36eb51fafd`.
+  - Added source PNG + generated STL + preview PNG for rubber stamp relief, coin relief medallion, workshop sign plate, pet photo relief, portrait lithophane night light, and terrain heightmap tile.
+  - Added `scripts/render_expanded_v1_sample_assets.py` to regenerate expanded-v1 samples via the real `/api/stl/convert` endpoint while preserving premium-v4 baseline samples.
+  - Updated `public/samples/manifest.json` and `sampleWorkflows` so `/samples` shows all 10 cards with settings, best-for guidance, avoid guidance, and download CTAs.
+  - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`; production `/samples` showed 10 cards, 10 STL download links, 20 sample images; browser fetch returned HTTP 200 for representative expanded PNG/STL resources; Relief filter showed 3 cards.
 
 Remaining owner/account actions:
 
