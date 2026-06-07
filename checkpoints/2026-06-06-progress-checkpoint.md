@@ -242,3 +242,17 @@ Cold-start external discovery preparation on 2026-06-07 15:45 CST:
   - status labels, safety rules, record template, planned candidate queue, deferred HN/Product Hunt entries, and explicit note that no submissions were executed in the setup pass.
 - No public post, directory submission, Product Hunt, Show HN, account action, CAPTCHA handling, or paid/reciprocal listing was executed without owner approval.
 - Validation passed: cold-start docs contain required UTM links, owner-approval gate, no-overclaim rules, `manual_required`/`needs_approval` statuses, planned queue, and no-submission note.
+
+Cold-start real candidate pool update on 2026-06-07 15:36 CST:
+
+- Replaced placeholder cold-start queue in `ops/coldstart-submission-log.md` with 20 real reviewed candidates.
+- Candidate status distribution after validation:
+  - `planned`: 5
+  - `manual_required`: 12
+  - `needs_approval`: 3
+- Every candidate has a concrete `Candidate URL`, tracked `Target URL` with UTM, suggested content, status, evidence, and notes.
+- Best first-batch candidates after owner approval: Dev Hunt, Launching Next, MicroLaunch, Insidr AI, Hackaday Submit A Tip.
+- Manual/account-gated candidates recorded separately: Product Hunt, Hacker News, BetaList, StartupBase, Fazier, browser-check 403 candidates, Reddit/community/resource-list candidates.
+- Paid/high-visibility candidates marked `needs_approval`: Futurepedia, Future Tools, SideProjectors.
+- Validation passed: 20 channel entries, 20 UTM target URLs, no `[to research]` placeholders, and no false `submitted`/`listed`/`pending_review` claims.
+- No public post, directory submission, account action, CAPTCHA handling, payment, reciprocal listing, or PR was executed.
