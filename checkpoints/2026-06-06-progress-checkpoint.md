@@ -7,7 +7,19 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-07 21:40 CST:
+Latest update — 2026-06-07 21:57 CST:
+
+- Installed Ahrefs Web Analytics in the site `<head>` using the owner-provided script key.
+- Verification passed:
+  - `npm run lint`
+  - `npm run build`
+  - `npm run cf:build`
+  - `npm run cf:deploy`
+  - Production HTML contains `https://analytics.ahrefs.com/analytics.js` with the configured `data-key`.
+  - Browser DOM verification confirms the Ahrefs script is in `<head>` and `async=true`.
+- Cloudflare Worker version: `1521c932-4365-4052-afa9-261d273aa5ff`.
+
+Previous update — 2026-06-07 21:40 CST:
 
 - Owner approved the simplified site icon direction (`Minimal STL Cube`).
 - Exported and deployed the icon set:
