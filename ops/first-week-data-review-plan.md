@@ -36,6 +36,12 @@ Completed before waiting for real traffic data:
   - Added rubber stamp relief, coin relief medallion, workshop sign plate, pet photo relief, portrait lithophane night light, and terrain heightmap tile.
   - Each expanded sample has source PNG, generated STL, STL-preview PNG, settings, best-for guidance, avoid guidance, and download CTA.
   - Production verified: `/samples` shows 10 cards, 10 STL download links, 20 sample images; browser `fetch` returned HTTP 200 for representative expanded PNG/STL resources; Relief filter shows Universal image relief, Coin relief medallion, and Pet photo relief.
+- Tool pages now reuse `/samples` proof assets directly in the conversion flow:
+  - Deploy version: `ba8e79e0-87d2-49cf-970a-9940905a5a0b`.
+  - Added a "Real output proof" block after the converter/guidance area on relevant tool pages.
+  - Each block shows source image, generated STL preview, triangle/file metrics, best-for/avoid notes, an Open workflow link, and a Download STL link.
+  - Production verified route-to-proof matching: `/png-to-stl` shows Workshop sign plate + Logo badge relief; `/logo-to-stl` shows Logo badge relief + Rubber stamp relief; `/lithophane-generator` shows Backlit lithophane panel + Portrait lithophane night light; `/heightmap-to-stl` shows Heightmap surface + Terrain heightmap tile; `/jpg-to-stl` shows Pet photo relief + Universal image relief.
+  - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`, and homepage responsive QA.
 
 Next no-data-stage candidates, if more work is needed before search data arrives:
 

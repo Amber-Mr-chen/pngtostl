@@ -1,8 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ConverterPanel } from "@/components/ConverterPanel";
 import { ImageAnalyzer } from "@/components/ImageAnalyzer";
 import { UtilityAdvisor } from "@/components/UtilityAdvisor";
-import type { ToolConfig } from "@/lib/tools";
+import { sampleWorkflows, type ToolConfig } from "@/lib/tools";
 
 const primaryNav = [
   { href: "/image-to-stl", label: "Image to STL" },
@@ -91,6 +92,24 @@ function guidanceFor(tool: ToolConfig) {
   };
 }
 
+function relatedProofsFor(tool: ToolConfig) {
+  const currentPath = `/${tool.slug}`;
+  const routeAliases: Record<string, string[]> = {
+    "/image-to-stl": ["/image-to-stl", "/jpg-to-stl", "/png-to-stl"],
+    "/png-to-stl": ["/png-to-stl", "/logo-to-stl", "/image-to-stl"],
+    "/jpg-to-stl": ["/jpg-to-stl", "/image-to-stl", "/lithophane-generator"],
+    "/logo-to-stl": ["/logo-to-stl", "/png-to-stl"],
+    "/lithophane-generator": ["/lithophane-generator", "/photo-to-lithophane"],
+    "/photo-to-lithophane": ["/photo-to-lithophane", "/lithophane-generator"],
+    "/heightmap-to-stl": ["/heightmap-to-stl"],
+  };
+  const aliases = routeAliases[currentPath] ?? [currentPath];
+  return sampleWorkflows
+    .filter((sample) => aliases.includes(sample.route))
+    .sort((a, b) => aliases.indexOf(a.route) - aliases.indexOf(b.route))
+    .slice(0, 2);
+}
+
 function advisorKindFromSlug(slug: string) {
   if (slug === "jpg-to-stl") return "jpg-gate";
   return "photo-path";
@@ -123,6 +142,7 @@ function SiteFooter() {
 export function ToolPage({ tool }: { tool: ToolConfig }) {
   const advisorOnly = tool.slug === "3d-print-photo";
   const guidance = guidanceFor(tool);
+  const relatedProofs = relatedProofsFor(tool);
   const faqItems = [
     ...tool.faq,
     {
@@ -212,6 +232,43 @@ export function ToolPage({ tool }: { tool: ToolConfig }) {
             </ul>
           </div>
         </section>
+
+        {relatedProofs.length > 0 ? (
+          <section className="shell toolProofBlock" aria-label={`${tool.title} real example outputs`}>
+            <div className="toolProofHeader">
+              <div>
+                <p className="homeKicker">Real output proof</p>
+                <h2 className="sectionTitle">See what this workflow can generate</h2>
+                <p>Each example uses a source image, a generated STL preview, and a downloadable STL file from the same converter pipeline.</p>
+              </div>
+              <Link className="proofExamplesLink" href="/samples">View all examples</Link>
+            </div>
+            <div className="toolProofGrid">
+              {relatedProofs.map((sample) => (
+                <article className="proofCard toolProofCard" key={sample.title}>
+                  <div className="proofVisual realProofVisual" aria-label={`${sample.title} source image and STL preview`}>
+                    <Image className="proofSourceImage" src={sample.sourceImage} width={320} height={320} alt={`${sample.title} source image`} />
+                    <span className="proofArrow" aria-hidden="true">→</span>
+                    <Image className="proofPreviewImage" src={sample.previewImage} width={420} height={276} alt={`${sample.title} STL preview`} />
+                  </div>
+                  <div>
+                    <strong>{sample.title}</strong>
+                    <p>{sample.output}</p>
+                    <small>{sample.metrics}</small>
+                    <ul>
+                      <li>Best for: {sample.bestFor}</li>
+                      <li>Avoid: {sample.avoid}</li>
+                    </ul>
+                    <div className="toolProofActions">
+                      <Link className="pill" href={sample.route}>Open workflow</Link>
+                      <a className="pill" href={sample.stlPath} download>Download STL</a>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section id="how-it-works" className="stepGrid">
           {tool.steps.map((step, index) => (
