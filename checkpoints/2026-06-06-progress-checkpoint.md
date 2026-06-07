@@ -232,3 +232,13 @@ Search-engine discovery confirmation on 2026-06-07 15:29 CST:
   - unavailable: `gws`, `gcloud`
   - unset: `GOOGLE_APPLICATION_CREDENTIALS`, `GSC_TOKEN`, `GOOGLE_SEARCH_CONSOLE_TOKEN`, `BING_WEBMASTER_API_KEY`, `BING_API_KEY`, `INDEXNOW_KEY`
 - Updated `ops/gsc-bing-submission-checklist.md` with the public verification evidence and exact owner/UI follow-up steps for GSC and Bing.
+
+Cold-start external discovery preparation on 2026-06-07 15:45 CST:
+
+- Loaded and followed `site-ops-growth-launch`, `student-backlink-building`, and `product-coldstart-x-first` safety rules.
+- Rebuilt `ops/coldstart-assets-utm-plan.md` into a complete low-risk launch asset pack:
+  - honest positioning, short/long directory descriptions, no-overclaim rules, source-of-truth canonical URLs, screenshot checklist, UTM conventions, canonical UTM examples, safe channel priority, first 7-day sequence, directory/X/maker-forum/Reddit-safe copy templates, candidate evaluation checklist, launch gates, and metrics to review.
+- Added `ops/coldstart-submission-log.md` as the execution ledger:
+  - status labels, safety rules, record template, planned candidate queue, deferred HN/Product Hunt entries, and explicit note that no submissions were executed in the setup pass.
+- No public post, directory submission, Product Hunt, Show HN, account action, CAPTCHA handling, or paid/reciprocal listing was executed without owner approval.
+- Validation passed: cold-start docs contain required UTM links, owner-approval gate, no-overclaim rules, `manual_required`/`needs_approval` statuses, planned queue, and no-submission note.
