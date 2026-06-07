@@ -388,13 +388,28 @@ export const tools: ToolConfig[] = [
   },
 ];
 
-export const helperPages = [
+type HelperPage = {
+  slug: string;
+  title: string;
+  description: string;
+  cta: string;
+  href: string;
+  checks: string[];
+  intent?: string;
+  advisorKind?: "photo-path" | "jpg-gate" | "contrast" | "print-settings" | "logo" | "heightmap";
+  sampleSlugs?: string[];
+  faqs?: Array<{ q: string; a: string }>;
+  steps?: Array<{ title: string; body: string }>;
+};
+
+export const helperPages: HelperPage[] = [
   {
     slug: "image-contrast-guide",
     title: "Image Contrast Guide",
     description: "Make your image easier to convert into a clean STL.",
     cta: "Try Image to STL",
     href: "/image-to-stl",
+    advisorKind: "contrast",
     checks: ["Use clear edges.", "Avoid noisy backgrounds.", "Increase contrast for better relief separation.", "Keep the subject simple when possible."],
   },
   {
@@ -403,7 +418,83 @@ export const helperPages = [
     description: "Get basic printing suggestions for relief and lithophane files.",
     cta: "Check Print Settings",
     href: "/lithophane-generator",
+    advisorKind: "print-settings",
     checks: ["Layer height suggestion.", "Orientation suggestion.", "Thickness guidance.", "Material note."],
+  },
+  {
+    slug: "how-to-turn-logo-into-stl",
+    title: "How to Turn a Logo into an STL for 3D Printing",
+    description: "A practical logo-to-STL workflow for badges, signs, stamps, and maker labels, with checks for clean edges, relief height, and printable text.",
+    cta: "Load logo badge preset",
+    href: "/logo-to-stl?sample=logo-badge-relief&utm_source=seo_helper&utm_medium=internal&utm_campaign=logo_to_stl_guide",
+    intent: "Users want to convert a logo into a printable raised badge or sign, not reconstruct a full 3D mascot.",
+    advisorKind: "logo",
+    sampleSlugs: ["logo-badge-relief", "rubber-stamp-relief", "workshop-sign-plate"],
+    checks: [
+      "Use a transparent PNG or simple black-on-white logo.",
+      "Avoid thin serif text, tiny taglines, gradients, and mascot illustrations.",
+      "Start around 80-120 mm width for signs and 2.0-2.4 mm relief height.",
+      "Keep a base plate when the logo has disconnected islands or loose letters.",
+    ],
+    steps: [
+      { title: "Prepare the artwork", body: "Use the highest-resolution logo you have. Transparent PNG works best because the converter can treat empty areas as background instead of raised geometry." },
+      { title: "Choose badge-style settings", body: "Start with low smoothing, a printable base, and conservative relief height. Very tall relief can look dramatic but may print slowly or create fragile edges." },
+      { title: "Inspect before printing", body: "Open the downloaded STL in a slicer. Check small letters, holes inside characters, and whether separated pieces need a shared base plate." },
+    ],
+    faqs: [
+      { q: "Can I turn any logo into an STL?", a: "Simple, high-contrast logos work best. Gradients, shadows, tiny text, and detailed mascots often need cleanup before conversion." },
+      { q: "Should a logo STL have a base plate?", a: "Usually yes for badges, signs, and stamps. A base keeps separated letters or icon islands connected and easier to print." },
+    ],
+  },
+  {
+    slug: "lithophane-image-guide",
+    title: "Best Image for Lithophane 3D Prints",
+    description: "Choose photos that work well as lithophanes, set thickness safely, and avoid washed-out or underexposed images before generating an STL.",
+    cta: "Load lithophane preset",
+    href: "/lithophane-generator?sample=backlit-lithophane-panel&utm_source=seo_helper&utm_medium=internal&utm_campaign=lithophane_image_guide",
+    intent: "Users need to know whether a photo will become a readable backlit lithophane before wasting a print.",
+    advisorKind: "photo-path",
+    sampleSlugs: ["backlit-lithophane-panel", "portrait-lithophane-night-light"],
+    checks: [
+      "Pick photos with one clear subject and visible midtone contrast.",
+      "Avoid blown-out highlights, very dark faces, and cluttered backgrounds.",
+      "Use thin-to-thick ranges such as 0.8-3.0 mm or 0.8-3.2 mm for first tests.",
+      "Print vertically or with enough support depending on panel size and slicer settings.",
+    ],
+    steps: [
+      { title: "Check the subject", body: "Faces, pets, and simple scenes usually work better than busy landscapes. If the subject disappears in grayscale, it will likely disappear in the lithophane." },
+      { title: "Set thickness range", body: "Thin areas transmit more light and thick areas block it. Start conservative so the panel is printable and still shows contrast when backlit." },
+      { title: "Test with light", body: "A lithophane can look flat without backlight. Inspect the STL, slice it, and test a small crop before committing to a large panel." },
+    ],
+    faqs: [
+      { q: "What kind of photo is best for a lithophane?", a: "A clear subject, balanced contrast, and simple background usually produce the most readable backlit print." },
+      { q: "Should lithophanes be inverted?", a: "Often yes, because thickness controls brightness. The generator presets use lithophane-oriented inversion as a starting point." },
+    ],
+  },
+  {
+    slug: "heightmap-to-stl-terrain-guide",
+    title: "Heightmap to STL Terrain Guide",
+    description: "Turn grayscale heightmaps into printable terrain-style STL surfaces with practical width, max height, smoothing, and input checks.",
+    cta: "Load terrain preset",
+    href: "/heightmap-to-stl?sample=terrain-heightmap-tile&utm_source=seo_helper&utm_medium=internal&utm_campaign=heightmap_terrain_guide",
+    intent: "Users with grayscale terrain or texture maps need brightness-to-height rules and safe print starting points.",
+    advisorKind: "heightmap",
+    sampleSlugs: ["heightmap-surface", "terrain-heightmap-tile"],
+    checks: [
+      "Use an actual grayscale heightmap where white means higher elevation and black means lower elevation.",
+      "Do not use a normal color photo unless it was designed as height data.",
+      "Start around 110-120 mm width and 5.5-6 mm max height for terrain tiles.",
+      "Use low smoothing for readable terrain, more smoothing only when steps look too jagged.",
+    ],
+    steps: [
+      { title: "Confirm the map type", body: "A heightmap is data, not just a landscape photo. Brightness values become geometry, so labels, colors, and shadows can create unwanted terrain." },
+      { title: "Set safe height", body: "A max height around 5.5-6 mm gives visible terrain without creating cliffs that are hard to print at small scale." },
+      { title: "Inspect the surface", body: "Check whether the terrain needs a base slab, lower smoothing, or a crop before printing the full tile." },
+    ],
+    faqs: [
+      { q: "Can I use any terrain image as a heightmap?", a: "No. Use a grayscale heightmap or depth map. Regular photos and colored maps usually do not encode height cleanly." },
+      { q: "What does white mean in a heightmap?", a: "In this workflow, brighter pixels become higher areas and darker pixels become lower areas." },
+    ],
   },
 ];
 

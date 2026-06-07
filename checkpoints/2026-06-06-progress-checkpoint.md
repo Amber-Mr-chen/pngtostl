@@ -417,3 +417,14 @@ Sample preset lifecycle analytics on 2026-06-07:
 - Preset analytics payloads include safe context only (`sample_slug`, `sample_title`, `sample_category`, tool/mode/path, file type/size, output metrics) and do not include raw filenames.
 - Deployed to Cloudflare Worker version `1dc691ff-fbc6-48ec-a886-a9be3dc51c3c`.
 - Verification: `npm run lint` exit 0; static event validation exit 0; `npm run build` exit 0; `npm run cf:build` exit 0; `npm run cf:deploy` exit 0; production preset route emitted `sample_preset_loaded`; synthetic PNG upload/generate on `/logo-to-stl?sample=logo-badge-relief...` emitted upload/generate/success preset events; clicking the generated STL link emitted `sample_preset_download_clicked`; normal `/logo-to-stl` emitted no `sample_preset_*` events.
+
+SEO support pages and manual channel pack on 2026-06-07:
+
+- Added `ops/seo-support-page-plan.md` with selected support-page contracts, SERP access limitations, and quality gates.
+- Added three non-thin SEO support routes via `helperPages`: `/how-to-turn-logo-into-stl`, `/lithophane-image-guide`, and `/heightmap-to-stl-terrain-guide`.
+- Each support page includes an interactive recommendation module, on-page checklist, 3-step workflow, FAQ, related tools, and route-specific sample preset links into the live converter.
+- Added `logo` and `heightmap` advisor modes so support-page recommendation copy matches the page intent instead of defaulting to lithophane.
+- Deployed to Cloudflare Worker version `c88aecd3-e983-448d-b97d-c2690bcc7fe7`.
+- Verification: `npm run lint` exit 0; `npm run build` exit 0 and generated 29 static pages; `npm run cf:build` exit 0; `npm run cf:deploy` exit 0; production `/how-to-turn-logo-into-stl` showed logo-specific recommendation, checklist, FAQ, and three sample preset links; clicking the hero preset opened `/logo-to-stl?sample=logo-badge-relief...` with `Sample preset loaded`, width `95`, and relief height `2.4`; production `/lithophane-image-guide` and `/heightmap-to-stl-terrain-guide` returned HTTP 200 with expected sample preset links; `sitemap.xml` and `llms.txt` include all three routes.
+- Added `ops/manual-channel-submission-pack.md` for owner-assisted Dev Hunt, SideProjectors, AlternativeTo, and SaaSHub submissions, with channel-specific copy, stop conditions, proof URLs, and manual execution rules.
+- Manual channel access checks: Dev Hunt requires GitHub/Google login after `Submit your Dev Tool`; SideProjectors `/submit` redirects to `/auth/login`; AlternativeTo `/software/new/` shows Cloudflare security verification; SaaSHub `/submit` shows Cloudflare block. Current execution status for these four channels is owner-assisted/manual_required, with copy and proof URLs prepared in `ops/manual-channel-submission-pack.md`.

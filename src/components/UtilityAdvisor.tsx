@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ToolConfig } from "@/lib/tools";
 
-type AdvisorKind = "photo-path" | "jpg-gate" | "contrast" | "print-settings";
+type AdvisorKind = "photo-path" | "jpg-gate" | "contrast" | "print-settings" | "logo" | "heightmap";
 
 const fieldStyle = {
   border: "1px solid var(--line)",
@@ -36,6 +36,44 @@ export function UtilityAdvisor({ kind, tool }: { kind: AdvisorKind; tool?: ToolC
   const [fileType, setFileType] = useState("jpg");
 
   const result = useMemo(() => {
+    if (kind === "logo") {
+      const contrastScore = Math.round(contrast * 0.48);
+      const bgScore = background === "simple" ? 30 : background === "mixed" ? 14 : 4;
+      const detailScore = detail === "high" ? 18 : detail === "medium" ? 15 : 9;
+      const score = Math.min(100, contrastScore + bgScore + detailScore);
+      return {
+        score,
+        title: scoreLabel(score),
+        recommendation: score >= 75 ? "Start with Logo to STL and keep the base plate on for a badge or sign." : score >= 50 ? "Use Logo to STL, but simplify tiny text or clean the background first." : "Prepare the logo before converting: remove background noise and increase edge contrast.",
+        nextHref: "/logo-to-stl",
+        nextLabel: "Open Logo to STL",
+        bullets: [
+          `Logo edges: ${contrast >= 70 ? "strong" : contrast >= 45 ? "usable" : "too soft"}`,
+          `Background: ${background === "simple" ? "transparent/simple" : "cleanup recommended"}`,
+          `Detail target: ${detail === "high" ? "check tiny text carefully" : "good for first badge test"}`,
+        ],
+      };
+    }
+
+    if (kind === "heightmap") {
+      const contrastScore = Math.round(contrast * 0.42);
+      const bgScore = background === "simple" ? 26 : background === "mixed" ? 12 : 4;
+      const detailScore = detail === "high" ? 22 : detail === "medium" ? 17 : 10;
+      const score = Math.min(100, contrastScore + bgScore + detailScore);
+      return {
+        score,
+        title: score >= 75 ? "Good terrain heightmap" : score >= 50 ? "Usable height data" : "Needs heightmap cleanup",
+        recommendation: score >= 75 ? "Open Heightmap to STL with the terrain preset and keep max height conservative for a first tile." : score >= 50 ? "Use Heightmap to STL, but crop labels or noisy areas before printing." : "Do not use a normal landscape photo as a heightmap; prepare a grayscale depth map first.",
+        nextHref: "/heightmap-to-stl",
+        nextLabel: "Open Heightmap to STL",
+        bullets: [
+          `Brightness separation: ${contrast >= 70 ? "clear" : contrast >= 45 ? "moderate" : "weak"}`,
+          `Map content: ${background === "simple" ? "height-focused" : "may contain non-height artifacts"}`,
+          `Detail target: ${detail}`,
+        ],
+      };
+    }
+
     if (kind === "print-settings") {
       const layer = Number(layerHeight);
       const lithophane = goal === "backlit-photo";

@@ -10,6 +10,8 @@ Related files:
 - `ops/github-awesome-3d-printing-pr-prep.md`
 - `ops/first-week-data-review-plan.md`
 - `ops/weekly-data-review-template.md`
+- `ops/seo-support-page-plan.md`
+- `ops/manual-channel-submission-pack.md`
 
 ## Current Pending Review Items
 
