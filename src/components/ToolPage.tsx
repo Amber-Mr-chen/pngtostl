@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ConverterPanel } from "@/components/ConverterPanel";
 import { ImageAnalyzer } from "@/components/ImageAnalyzer";
+import { ToolProofBlock } from "@/components/ToolProofBlock";
 import { UtilityAdvisor } from "@/components/UtilityAdvisor";
 import { sampleWorkflows, type ToolConfig } from "@/lib/tools";
 
@@ -233,42 +233,7 @@ export function ToolPage({ tool }: { tool: ToolConfig }) {
           </div>
         </section>
 
-        {relatedProofs.length > 0 ? (
-          <section className="shell toolProofBlock" aria-label={`${tool.title} real example outputs`}>
-            <div className="toolProofHeader">
-              <div>
-                <p className="homeKicker">Real output proof</p>
-                <h2 className="sectionTitle">See what this workflow can generate</h2>
-                <p>Each example uses a source image, a generated STL preview, and a downloadable STL file from the same converter pipeline.</p>
-              </div>
-              <Link className="proofExamplesLink" href="/samples">View all examples</Link>
-            </div>
-            <div className="toolProofGrid">
-              {relatedProofs.map((sample) => (
-                <article className="proofCard toolProofCard" key={sample.title}>
-                  <div className="proofVisual realProofVisual" aria-label={`${sample.title} source image and STL preview`}>
-                    <Image className="proofSourceImage" src={sample.sourceImage} width={320} height={320} alt={`${sample.title} source image`} />
-                    <span className="proofArrow" aria-hidden="true">→</span>
-                    <Image className="proofPreviewImage" src={sample.previewImage} width={420} height={276} alt={`${sample.title} STL preview`} />
-                  </div>
-                  <div>
-                    <strong>{sample.title}</strong>
-                    <p>{sample.output}</p>
-                    <small>{sample.metrics}</small>
-                    <ul>
-                      <li>Best for: {sample.bestFor}</li>
-                      <li>Avoid: {sample.avoid}</li>
-                    </ul>
-                    <div className="toolProofActions">
-                      <Link className="pill" href={sample.route}>Open workflow</Link>
-                      <a className="pill" href={sample.stlPath} download>Download STL</a>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
-        ) : null}
+        <ToolProofBlock tool={tool} samples={relatedProofs} />
 
         <section id="how-it-works" className="stepGrid">
           {tool.steps.map((step, index) => (

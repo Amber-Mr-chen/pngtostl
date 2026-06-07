@@ -42,6 +42,12 @@ Completed before waiting for real traffic data:
   - Each block shows source image, generated STL preview, triangle/file metrics, best-for/avoid notes, an Open workflow link, and a Download STL link.
   - Production verified route-to-proof matching: `/png-to-stl` shows Workshop sign plate + Logo badge relief; `/logo-to-stl` shows Logo badge relief + Rubber stamp relief; `/lithophane-generator` shows Backlit lithophane panel + Portrait lithophane night light; `/heightmap-to-stl` shows Heightmap surface + Terrain heightmap tile; `/jpg-to-stl` shows Pet photo relief + Universal image relief.
   - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`, and homepage responsive QA.
+- Tool proof analytics events now track whether examples help conversion:
+  - Deploy version: `5847a079-95c6-4367-9b3c-61cd3905b6f6`.
+  - Added `sample_proof_view`, `sample_proof_open_workflow`, and `sample_proof_download`.
+  - Refactored the proof block into a client component so visibility and click events are captured without changing the server-rendered page content.
+  - Production verified on `/png-to-stl`: `sample_proof_view`, `sample_proof_open_workflow`, and `sample_proof_download` reached both `window.pngtostlEvents` and GA4 `dataLayer` with tool, sample, route/category, STL path, and position/sample-count payloads.
+  - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`, and homepage responsive QA.
 
 Next no-data-stage candidates, if more work is needed before search data arrives:
 

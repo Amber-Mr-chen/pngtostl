@@ -199,6 +199,12 @@ Verified current external/account state:
   - Added a "Real output proof" block after converter/guidance with source image, generated STL preview, metrics, best-for/avoid notes, Open workflow link, and Download STL link.
   - Production verified: `/png-to-stl` -> Workshop sign plate + Logo badge relief; `/logo-to-stl` -> Logo badge relief + Rubber stamp relief; `/lithophane-generator` -> Backlit lithophane panel + Portrait lithophane night light; `/heightmap-to-stl` -> Heightmap surface + Terrain heightmap tile; `/jpg-to-stl` -> Pet photo relief + Universal image relief.
   - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`, and `node scripts/home_responsive_qa.js`.
+- Tool proof analytics events now track whether real examples influence conversion on 2026-06-07:
+  - Deploy version: `5847a079-95c6-4367-9b3c-61cd3905b6f6`.
+  - Added `sample_proof_view`, `sample_proof_open_workflow`, and `sample_proof_download` to `src/lib/analytics.ts`.
+  - Refactored the proof UI into `src/components/ToolProofBlock.tsx` client component so IntersectionObserver and click handlers can emit events while preserving the server-rendered `ToolPage` structure.
+  - Production verified on `/png-to-stl`: all three events reached both `window.pngtostlEvents` and GA4 `dataLayer`; payloads include tool, path, sample, sample route/category, STL path, position, and sample count where applicable.
+  - QA passed: `npm run lint`, `npm run build`, `npm run cf:build`, `npm run cf:deploy`, and `node scripts/home_responsive_qa.js`.
 
 Remaining owner/account actions:
 
