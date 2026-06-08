@@ -215,8 +215,8 @@
     geometry.boundingBox.getSize(size);
 
     const material = new THREE.MeshStandardMaterial({
-      color: 0xc9ced3,
-      roughness: 0.82,
+      color: 0xaeb5bc,
+      roughness: 0.88,
       metalness: 0,
       side: THREE.DoubleSide,
     });
@@ -234,6 +234,28 @@
     platform.position.y = -Math.max(size.y * 0.62, radius * 0.16);
     platform.receiveShadow = true;
     scene.add(platform);
+
+    const shadowCanvas = document.createElement('canvas');
+    shadowCanvas.width = 256;
+    shadowCanvas.height = 256;
+    const shadowCtx = shadowCanvas.getContext('2d');
+    if (shadowCtx) {
+      const shadowGradient = shadowCtx.createRadialGradient(128, 128, 18, 128, 128, 122);
+      shadowGradient.addColorStop(0, 'rgba(31, 41, 55, 0.24)');
+      shadowGradient.addColorStop(0.58, 'rgba(31, 41, 55, 0.10)');
+      shadowGradient.addColorStop(1, 'rgba(31, 41, 55, 0)');
+      shadowCtx.fillStyle = shadowGradient;
+      shadowCtx.fillRect(0, 0, 256, 256);
+      const shadowTexture = new THREE.CanvasTexture(shadowCanvas);
+      const contactShadow = new THREE.Mesh(
+        new THREE.PlaneGeometry(platformSize * 0.82, platformSize * 0.46),
+        new THREE.MeshBasicMaterial({ map: shadowTexture, transparent: true, depthWrite: false })
+      );
+      contactShadow.rotation.x = -Math.PI / 2;
+      contactShadow.position.y = platform.position.y + Math.max(radius * 0.025, 0.06);
+      contactShadow.renderOrder = 1;
+      scene.add(contactShadow);
+    }
 
     const grid = new THREE.GridHelper(platformSize, 16, 0xc7d0d8, 0xd9e0e6);
     grid.position.y = platform.position.y + Math.max(radius * 0.02, 0.05);
@@ -257,7 +279,7 @@
     const fitOrthographicCamera = () => {
       const next = canvas.getBoundingClientRect();
       const nextAspect = Math.max(1, next.width) / Math.max(1, next.height);
-      const halfHeight = radius * 1.18;
+      const halfHeight = radius * 1.08;
       camera.left = -halfHeight * nextAspect;
       camera.right = halfHeight * nextAspect;
       camera.top = halfHeight;
@@ -265,7 +287,7 @@
       camera.updateProjectionMatrix();
     };
     fitOrthographicCamera();
-    camera.position.set(0, radius * 0.68, -cameraDistance);
+    camera.position.set(radius * 0.28, radius * 0.82, -cameraDistance);
     camera.lookAt(0, 0, 0);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -287,7 +309,7 @@
     canvas._pngtostlApplyMode = applyMode;
     canvas._pngtostlResetView = () => {
       controls.reset();
-      camera.position.set(0, radius * 0.68, -cameraDistance);
+      camera.position.set(radius * 0.28, radius * 0.82, -cameraDistance);
       camera.lookAt(0, 0, 0);
     };
     applyMode();
