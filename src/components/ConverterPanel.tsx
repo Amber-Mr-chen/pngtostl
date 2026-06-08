@@ -351,6 +351,14 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
             </div>
           </div>
 
+          <div className="cleanPreviewPanel" data-clean-preview-panel="true" hidden>
+            <div>
+              <span className="smallMuted">Cleaned line art</span>
+              <strong>Original noise suppressed before STL</strong>
+            </div>
+            <img data-clean-preview-image="true" alt="Cleaned sketch preview before STL generation" />
+          </div>
+
           <ol className="generationStepper" aria-label="Generation flow">
             <li>Upload image</li>
             <li>Generate mesh</li>

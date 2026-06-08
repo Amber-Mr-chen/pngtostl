@@ -290,7 +290,7 @@ export default function HomePage() {
       </footer>
     </main>
     <script src="/stl-preview.js?v=webgl-final-20260608a" defer></script>
-    <script src="/converter.js?v=metrics-final-20260608a" defer></script>
+    <script src="/converter.js?v=clean-preview-20260608a" defer></script>
     </>
   );
 }

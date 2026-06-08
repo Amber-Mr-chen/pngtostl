@@ -12,6 +12,8 @@
     const message = form.querySelector('[data-converter-message]');
     const previewCanvas = form.querySelector('[data-stl-preview="true"]');
     const metrics = form.querySelector('[data-result-metrics="true"]');
+    const cleanPreviewPanel = form.querySelector('[data-clean-preview-panel="true"]');
+    const cleanPreviewImage = form.querySelector('[data-clean-preview-image="true"]');
     const modeInput = form.querySelector('select[name="mode"]');
     const widthInput = form.querySelector('input[name="widthMm"]');
     const depthInput = form.querySelector('input[name="depth"]');
@@ -117,6 +119,24 @@
       metrics.style.display = 'grid';
     }
 
+    function clearCleanPreview() {
+      if (cleanPreviewImage && cleanPreviewImage.dataset.objectUrl) {
+        URL.revokeObjectURL(cleanPreviewImage.dataset.objectUrl);
+        cleanPreviewImage.removeAttribute('data-object-url');
+      }
+      if (cleanPreviewImage) cleanPreviewImage.removeAttribute('src');
+      if (cleanPreviewPanel) cleanPreviewPanel.hidden = true;
+    }
+
+    function showCleanPreview(blob) {
+      if (!cleanPreviewPanel || !cleanPreviewImage || !blob) return;
+      if (cleanPreviewImage.dataset.objectUrl) URL.revokeObjectURL(cleanPreviewImage.dataset.objectUrl);
+      const url = URL.createObjectURL(blob);
+      cleanPreviewImage.src = url;
+      cleanPreviewImage.dataset.objectUrl = url;
+      cleanPreviewPanel.hidden = false;
+    }
+
     function setButtonState(label, disabled) {
       if (!button) return;
       button.disabled = Boolean(disabled);
@@ -141,6 +161,7 @@
           downloadLink.removeAttribute('href');
         }
         setMetrics([]);
+        clearCleanPreview();
         return;
       }
       const signature = [file.name, file.size, file.lastModified || 0].join(':');
@@ -161,6 +182,7 @@
       trackBoth('converter_upload_selected', 'pngtostl_upload_selected', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       trackSamplePreset('sample_preset_upload_selected', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       setMetrics([]);
+      clearCleanPreview();
     }
 
     function inspectImageFile(file) {
@@ -323,6 +345,15 @@
       formData.set('invert', String(invertInput ? invertInput.checked : selectedMode() === 'lithophane'));
       formData.set('minThicknessMm', form.dataset.minThicknessMm || '0.8');
       formData.set('maxThicknessMm', form.dataset.maxThicknessMm || (depthInput ? depthInput.value : '3.2'));
+
+      if (selectedMode() === 'sketch') {
+        try {
+          const previewResponse = await fetch('/api/stl/clean-preview', { method: 'POST', body: formData });
+          if (previewResponse.ok) showCleanPreview(await previewResponse.blob());
+        } catch (_) {}
+      } else {
+        clearCleanPreview();
+      }
 
       try {
         const controller = new AbortController();

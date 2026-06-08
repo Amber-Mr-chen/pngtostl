@@ -1,4 +1,4 @@
-import { decode } from "fast-png";
+import { decode, encode } from "fast-png";
 
 export type StlMode = "icon" | "relief" | "sketch" | "heightmap" | "logo" | "lithophane";
 
@@ -441,6 +441,58 @@ function encodeBinaryStl(triangles: Vec3[][], title: string) {
   }
 
   return bytes;
+}
+
+async function sampleImageGrid(file: File, options: ConvertOptions) {
+  const buffer = new Uint8Array(await file.arrayBuffer());
+  const decoded = decode(buffer);
+  const sourceWidth = decoded.width;
+  const sourceHeight = decoded.height;
+  const channels = decoded.channels || 4;
+  const longestSide = Math.max(sourceWidth, sourceHeight);
+  const targetLongestSide = Math.min(longestSide, options.detail, MAX_DETAIL);
+  const scale = targetLongestSide / longestSide;
+  const columns = Math.max(2, Math.round(sourceWidth * scale));
+  const rows = Math.max(2, Math.round(sourceHeight * scale));
+
+  const samples: ImageSample[][] = [];
+  for (let y = 0; y < rows; y += 1) {
+    const row: ImageSample[] = [];
+    for (let x = 0; x < columns; x += 1) {
+      const sx = Math.min(sourceWidth - 1, Math.round((x / Math.max(1, columns - 1)) * (sourceWidth - 1)));
+      const sy = Math.min(sourceHeight - 1, Math.round((y / Math.max(1, rows - 1)) * (sourceHeight - 1)));
+      row.push(samplePixel(decoded.data, sourceWidth, channels, sx, sy));
+    }
+    samples.push(row);
+  }
+
+  return { sourceWidth, sourceHeight, columns, rows, samples };
+}
+
+export async function cleanSketchPreviewPng(file: File, options: ConvertOptions) {
+  const grid = await sampleImageGrid(file, { ...options, mode: "sketch" });
+  const lineArtSamples = preprocessLineArtSamples(grid.samples, { ...options, mode: "sketch" });
+  const sketchContentMask = buildSketchContentMask(lineArtSamples, { ...options, mode: "sketch" });
+  const preparedSamples = applySketchContentMask(lineArtSamples, sketchContentMask, { ...options, mode: "sketch" });
+  const imageData = new Uint8Array(grid.columns * grid.rows * 4);
+
+  for (let y = 0; y < grid.rows; y += 1) {
+    for (let x = 0; x < grid.columns; x += 1) {
+      const offset = (y * grid.columns + x) * 4;
+      const darkness = preparedSamples[y][x].darkness;
+      const shade = Math.round(255 - clamp(darkness, 0, 1) * 255);
+      imageData[offset] = shade;
+      imageData[offset + 1] = shade;
+      imageData[offset + 2] = shade;
+      imageData[offset + 3] = 255;
+    }
+  }
+
+  return {
+    png: encode({ width: grid.columns, height: grid.rows, data: imageData, channels: 4 }),
+    width: grid.columns,
+    height: grid.rows,
+  };
 }
 
 export async function pngToStl(file: File, options: ConvertOptions): Promise<{ stl: Uint8Array } & MeshStats> {
