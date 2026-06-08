@@ -7,7 +7,20 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-08 10:35 CST:
+Latest update — 2026-06-08 10:49 CST:
+
+- Fixed homepage footer English layout issue reported by owner after the AITDK cleanup.
+- Root cause: `.siteFooter` used `grid-template-columns: minmax(0, 1fr) auto`; the many footer links in the auto column consumed most of the row width and squeezed the left English paragraph into one-word-per-line wrapping. Chinese appeared less broken because it can wrap character-by-character.
+- CSS fix: changed the footer grid to `minmax(280px, 420px) minmax(0, 1fr)`, added a stable column gap, constrained the paragraph width, and kept footer nav in the second flexible column.
+- Verification after deploy:
+  - `npm run lint` passed with the existing non-blocking direct-img warning for the tiny favicon logo.
+  - `npm run build`, `npm run cf:build`, `npm run cf:deploy` passed.
+  - Production browser geometry: footer width 1140px, intro width 420px, nav width 678px, grid columns `420px 678px`.
+  - No document-level horizontal overflow.
+  - Visual check confirmed the English footer tagline now wraps as a normal readable paragraph instead of one word per line.
+- Cloudflare Worker version: `1a306e8d-8d24-4334-b987-353bd6fdea50`.
+
+Previous update — 2026-06-08 10:35 CST:
 
 - Owner clarified they did not intentionally use browser translation, but AITDK Images still showed the missing-alt asset as `https://fonts.gstatic.com/s/i/productlogos/translate/v14/24px.svg`.
 - Verified this URL is not in the project source or production HTML:
