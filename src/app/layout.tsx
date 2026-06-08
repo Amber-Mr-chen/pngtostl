@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://pngtostl.net"),
   title: {
-    default: "Image to STL Converter | PNGtoSTL",
+    default: "Image to STL Converter for 3D Printing | PNGtoSTL",
     template: "%s | PNGtoSTL",
   },
   description:
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://pngtostl.net",
     siteName: "PNGtoSTL",
-    title: "Image to STL Converter | PNGtoSTL",
+    title: "Image to STL Converter for 3D Printing | PNGtoSTL",
     description: "Upload PNG, JPG, WebP, GIF, or BMP to create printable STL files for relief signs, logo badges, lithophanes, and heightmap surfaces in your browser.",
     images: [
       {

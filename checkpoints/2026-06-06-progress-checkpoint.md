@@ -7,7 +7,23 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-07 22:43 CST:
+Latest update — 2026-06-08 09:50 CST:
+
+- Investigated owner screenshot showing two AITDK yellow warnings: `Meta Title Check` and `Image Alt Text Check`.
+- Screenshot page content was browser-translated into Chinese, which likely changed AITDK's DOM-derived title measurement to 19 characters; raw production HTML still had the prior English title at 33 characters.
+- Adjusted homepage/default Open Graph title to a more standard SEO length: `Image to STL Converter for 3D Printing | PNGtoSTL` (49 characters).
+- Re-verified image/alt state after deployment:
+  - Browser DOM title length: 49.
+  - Meta description length: 148.
+  - Production `imgCount`: 12.
+  - Production missing image alt list: empty.
+  - Production image preload links: 0.
+  - H1 count: 1.
+  - Canonical remains `https://pngtostl.net`.
+- Cloudflare Worker version: `c664a3f4-10fb-48f3-b328-079d7e797ed6`.
+- If AITDK still shows the alt warning, next evidence needed is the AITDK `Images` tab row/URL for the missing item; source HTML and live DOM no longer show a missing alt.
+
+Previous update — 2026-06-07 22:43 CST:
 
 - Owner rechecked AITDK after removing homepage image preload links; AITDK still shows `Image Alt Text Check: 1 images missing alt text`.
 - Current verified production facts remain:
