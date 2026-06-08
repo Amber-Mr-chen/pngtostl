@@ -186,15 +186,16 @@
     const container = document.createElement('div');
     container.className = 'webglStlPreview';
     container.setAttribute('aria-label', 'Interactive STL preview');
-    container.style.cssText = 'position:absolute;inset:0;border-radius:inherit;overflow:hidden;background:#e8ecef;';
+    container.style.cssText = 'position:absolute;inset:0;border-radius:inherit;overflow:hidden;background:#f1f3f5;';
     canvas.style.visibility = 'hidden';
     parent.style.position = 'relative';
     parent.querySelectorAll('.webglStlPreview').forEach((node) => node.remove());
     parent.insertBefore(container, canvas.nextSibling);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xe8ecef);
-    const camera = new THREE.PerspectiveCamera(24, Math.max(1, rect.width) / Math.max(1, rect.height), 0.1, 5000);
+    scene.background = new THREE.Color(0xf1f3f5);
+    const aspect = Math.max(1, rect.width) / Math.max(1, rect.height);
+    const camera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0.1, 5000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(rect.width, rect.height);
@@ -213,12 +214,10 @@
     const size = new THREE.Vector3();
     geometry.boundingBox.getSize(size);
 
-    const material = new THREE.MeshPhysicalMaterial({
-      color: 0xb8bec4,
-      roughness: 0.66,
+    const material = new THREE.MeshStandardMaterial({
+      color: 0xc9ced3,
+      roughness: 0.82,
       metalness: 0,
-      clearcoat: 0.08,
-      clearcoatRoughness: 0.72,
       side: THREE.DoubleSide,
     });
     const mesh = new THREE.Mesh(geometry, material);
@@ -238,26 +237,34 @@
 
     const grid = new THREE.GridHelper(platformSize, 16, 0xc7d0d8, 0xd9e0e6);
     grid.position.y = platform.position.y + Math.max(radius * 0.02, 0.05);
-    grid.material.opacity = 0.42;
+    grid.material.opacity = 0.22;
     grid.material.transparent = true;
     scene.add(grid);
 
-    const fill = new THREE.HemisphereLight(0xffffff, 0x7d858d, 1.12);
+    const fill = new THREE.HemisphereLight(0xffffff, 0x9aa1a8, 1.55);
     scene.add(fill);
-    const key = new THREE.DirectionalLight(0xffffff, 3.4);
-    key.position.set(-radius * 1.15, radius * 1.9, -radius * 2.35);
+    const key = new THREE.DirectionalLight(0xffffff, 2.45);
+    key.position.set(-radius * 1.4, radius * 2.2, -radius * 2.8);
     key.castShadow = true;
     key.shadow.mapSize.width = 1024;
     key.shadow.mapSize.height = 1024;
     scene.add(key);
-    const soft = new THREE.DirectionalLight(0xdff6ff, 1.35);
-    soft.position.set(radius * 1.8, radius * 0.8, radius * 1.1);
+    const soft = new THREE.DirectionalLight(0xffffff, 0.7);
+    soft.position.set(radius * 1.8, radius * 0.9, radius * 1.3);
     scene.add(soft);
-    const rim = new THREE.DirectionalLight(0x77dcff, 1.6);
-    rim.position.set(radius * 1.8, radius * 1.0, -radius * 1.6);
-    scene.add(rim);
 
     const cameraDistance = radius * 2.9;
+    const fitOrthographicCamera = () => {
+      const next = canvas.getBoundingClientRect();
+      const nextAspect = Math.max(1, next.width) / Math.max(1, next.height);
+      const halfHeight = radius * 1.18;
+      camera.left = -halfHeight * nextAspect;
+      camera.right = halfHeight * nextAspect;
+      camera.top = halfHeight;
+      camera.bottom = -halfHeight;
+      camera.updateProjectionMatrix();
+    };
+    fitOrthographicCamera();
     camera.position.set(0, radius * 0.68, -cameraDistance);
     camera.lookAt(0, 0, 0);
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -270,8 +277,8 @@
     function applyMode() {
       const wireframe = canvas.dataset.previewMode === 'wireframe';
       material.wireframe = wireframe;
-      material.color.setHex(wireframe ? 0x1d3445 : 0xb8bec4);
-      material.roughness = wireframe ? 0.72 : 0.34;
+      material.color.setHex(wireframe ? 0x1d3445 : 0xc9ced3);
+      material.roughness = wireframe ? 0.72 : 0.82;
       material.needsUpdate = true;
     }
 
@@ -296,8 +303,7 @@
     const resize = () => {
       if (!container.isConnected) return;
       const next = canvas.getBoundingClientRect();
-      camera.aspect = Math.max(1, next.width) / Math.max(1, next.height);
-      camera.updateProjectionMatrix();
+      fitOrthographicCamera();
       renderer.setSize(next.width, next.height);
     };
     window.addEventListener('resize', resize, { passive: true });
