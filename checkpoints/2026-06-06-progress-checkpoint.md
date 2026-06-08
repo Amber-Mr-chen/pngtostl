@@ -7,6 +7,13 @@ Branch: `main`
 
 ## Current status
 
+Latest update — 2026-06-08 14:23 CST:
+
+- Owner completed SideProjectors account-assisted submission.
+- SideProjectors status updated to `pending_review` in `ops/coldstart-submission-log.md`.
+- Evidence recorded: owner-assisted login reached project submission wizard; final screen reported `项目已成功提交`; review notice said approval usually takes `2-3` working days.
+- Follow-up date: 2026-06-11 or after email/review result.
+
 Latest update — 2026-06-08 13:50 CST:
 
 - Owner completed Indie Dev Tools account-assisted submission.

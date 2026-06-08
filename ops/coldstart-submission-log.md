@@ -172,11 +172,11 @@ Some candidates below have since been attempted after owner approval. Treat each
 - Channel: SideProjectors
   - Type: directory
   - Candidate URL: `https://www.sideprojectors.com/project/new`
-  - Target URL: `https://pngtostl.net/?utm_source=sideprojectors&utm_medium=listing&utm_campaign=launch_v1&utm_content=project_new`
+  - Target URL: `https://pngtostl.net/?utm_source=sideprojectors&utm_medium=listing&utm_campaign=launch_v1&utm_content=homepage_import`
   - Suggested content: Use startup/tool listing copy only if free listing is confirmed.
-  - Status: manual_required
-  - Evidence: Second-batch browser preflight on 2026-06-07: page loaded, `+ SUBMIT A PROJECT` routed to `Login to SideProjectors`; login options included Google, GitHub, GitLab, ProductHunt, LinkedIn, and email/password. No product form was available without login. HTTP preflight saw mixed `paid`/`sponsor`/`free` signals but no form.
-  - Notes: Owner/account action required before field-level check. After login, stop if project submission is paid, sponsored-only, sale/marketplace-oriented, or requires reciprocal link/site modification.
+  - Status: pending_review
+  - Evidence: Owner-assisted login on 2026-06-08 reached the project submission wizard. Owner used homepage import/manual fields, kept project sale intent off, opened ComingUp only if no payment/upgrade appeared, and final screen reported `项目已成功提交`; review notice said approval usually takes `2-3` working days.
+  - Notes: Submitted as a free basic project listing. Do not enable NDA, identity verification, badge, BuyMeCoffee, paid membership, or additional promotion unless owner separately approves.
 
 #### Browser-check candidates blocked to scripts
 
