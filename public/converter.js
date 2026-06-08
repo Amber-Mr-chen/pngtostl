@@ -45,6 +45,11 @@
       window.dataLayer.push({ event: eventName, ...payload });
     }
 
+    function trackBoth(primaryEventName, legacyEventName, detail) {
+      track(primaryEventName, detail || {});
+      track(legacyEventName, detail || {});
+    }
+
     function trackSamplePreset(eventName, detail) {
       if (!hasSamplePreset) return;
       track(eventName, detail || {});
@@ -130,7 +135,7 @@
         if (ctx) ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
       }
       setText(message, file.name + ' selected.\nTune the basic settings, then generate a previewable STL.');
-      track('pngtostl_upload_selected', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
+      trackBoth('converter_upload_selected', 'pngtostl_upload_selected', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       trackSamplePreset('sample_preset_upload_selected', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       setMetrics([]);
     }
@@ -182,7 +187,7 @@
       }
 
       setButtonState('Generating STL...', true);
-      track('pngtostl_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
+      trackBoth('converter_generate_clicked', 'pngtostl_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       trackSamplePreset('sample_preset_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       setText(status, 'Processing');
       setText(message, 'Generating a fast preview STL at detail level ' + (detailInput ? detailInput.value : '96') + '...');
@@ -193,7 +198,7 @@
       } catch (error) {
         setText(status, 'Needs fix');
         setText(message, error && error.message ? error.message : 'Use a PNG, JPG, WebP, GIF, BMP, or SVG image.');
-        track('pngtostl_generate_error', { reason: 'normalize_failed' });
+        trackBoth('converter_generate_error', 'pngtostl_generate_error', { reason: 'normalize_failed' });
         trackSamplePreset('sample_preset_generate_error', { reason: 'normalize_failed' });
         setButtonState('Generate STL', false);
         return;
@@ -222,7 +227,7 @@
           try { body = await response.json(); } catch (_) {}
           setText(status, 'Needs fix');
           setText(message, body.message || 'Conversion failed.');
-          track('pngtostl_generate_error', { reason: body.message || 'response_not_ok', status: response.status });
+          trackBoth('converter_generate_error', 'pngtostl_generate_error', { reason: body.message || 'response_not_ok', status: response.status });
           trackSamplePreset('sample_preset_generate_error', { reason: body.message || 'response_not_ok', status: response.status });
           return;
         }
@@ -242,7 +247,7 @@
           downloadLink.style.display = 'block';
           downloadLink.onclick = () => {
             const downloadPayload = { output_kind: outputKind, bytes: blob.size, triangles: triangleCount };
-            track('pngtostl_download_clicked', downloadPayload);
+            trackBoth('converter_download_click', 'pngtostl_download_clicked', downloadPayload);
             trackSamplePreset('sample_preset_download_clicked', downloadPayload);
           };
         }
@@ -250,7 +255,7 @@
           window.PNGTOSTLPreview.mount(previewCanvas, blob);
         }
         setText(status, 'STL ready');
-        track('pngtostl_generate_success', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
+        trackBoth('converter_generate_success', 'pngtostl_generate_success', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
         trackSamplePreset('sample_preset_generate_success', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
         setMetrics([
           { label: 'Triangles', value: triangleCount },
@@ -268,7 +273,7 @@
       } catch (error) {
         setText(status, 'Needs fix');
         setText(message, 'Conversion failed. Please try another image or lower the detail level.');
-        track('pngtostl_generate_error', {
+        trackBoth('converter_generate_error', 'pngtostl_generate_error', {
           reason: error && error.name === 'AbortError' ? 'timeout' : 'network_or_runtime_error',
           message: error && error.message ? error.message : 'Conversion failed'
         });
