@@ -105,17 +105,24 @@
     }).sort((a, b) => a.z - b.z);
 
     projected.forEach(({ pts, heightSignal }) => {
-      const shade = Math.max(34, Math.min(88, 88 - heightSignal * 54));
+      const shade = Math.max(24, Math.min(92, 92 - heightSignal * 68));
       ctx.beginPath();
       ctx.moveTo(pts[0].x, pts[0].y);
       ctx.lineTo(pts[1].x, pts[1].y);
       ctx.lineTo(pts[2].x, pts[2].y);
       ctx.closePath();
-      ctx.fillStyle = `hsl(205 42% ${shade}%)`;
+      const fill = `hsl(204 56% ${shade}%)`;
+      ctx.fillStyle = fill;
       ctx.fill();
-      ctx.strokeStyle = 'rgba(19,32,51,.08)';
-      ctx.lineWidth = 0.4;
-      ctx.stroke();
+      if (canvas.dataset.previewMode === 'wireframe') {
+        ctx.strokeStyle = 'rgba(10,22,38,.22)';
+        ctx.lineWidth = 0.45;
+        ctx.stroke();
+      } else {
+        ctx.strokeStyle = fill;
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
     });
   }
 
