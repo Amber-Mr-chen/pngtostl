@@ -108,5 +108,38 @@
     "triangles": 65532,
     "bytes": 3276684,
     "sourceDescription": "game terrain heightmap"
+  },
+  {
+    "slug": "cookie-cutter-outline-expanded-v2",
+    "title": "Cookie cutter outline",
+    "mode": "logo",
+    "source": "/samples/cookie-cutter-expanded-v2-source.png",
+    "stl": "/samples/cookie-cutter-expanded-v2.stl",
+    "preview": "/samples/cookie-cutter-expanded-v2-preview.png",
+    "triangles": 12972,
+    "bytes": 648684,
+    "sourceDescription": "bold outline cookie cutter PNG"
+  },
+  {
+    "slug": "keychain-tag-expanded-v2",
+    "title": "Keychain name tag",
+    "mode": "logo",
+    "source": "/samples/keychain-tag-expanded-v2-source.png",
+    "stl": "/samples/keychain-tag-expanded-v2.stl",
+    "preview": "/samples/keychain-tag-expanded-v2-preview.png",
+    "triangles": 11180,
+    "bytes": 559084,
+    "sourceDescription": "simple name tag PNG"
+  },
+  {
+    "slug": "topographic-coaster-expanded-v2",
+    "title": "Topographic coaster heightmap",
+    "mode": "heightmap",
+    "source": "/samples/topographic-coaster-expanded-v2-source.png",
+    "stl": "/samples/topographic-coaster-expanded-v2.stl",
+    "preview": "/samples/topographic-coaster-expanded-v2-preview.png",
+    "triangles": 65532,
+    "bytes": 3276684,
+    "sourceDescription": "circular grayscale topo heightmap"
   }
 ]

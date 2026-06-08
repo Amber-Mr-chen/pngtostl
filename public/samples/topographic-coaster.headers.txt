@@ -1,0 +1,17 @@
+HTTP/1.1 200 OK
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+content-disposition: attachment; filename="pngtostl-relief.stl"
+content-length: 3276684
+content-type: model/stl
+x-tool-grid-columns: 128
+x-tool-grid-rows: 128
+x-tool-mode: heightmap
+x-tool-occupied-ratio: 0.9697
+x-tool-output-kind: heightmap
+x-tool-source-height: 560
+x-tool-source-width: 560
+x-tool-triangle-count: 65532
+Date: Mon, 08 Jun 2026 07:23:57 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
