@@ -51,6 +51,11 @@ export const converterBootstrapScript = `
         width_mm: widthInput ? widthInput.value : '90'
       }, extra || {});
     }
+    function trackConverterError(extra) {
+      const payload = converterContext(extra);
+      trackEvent('converter_generate_error', payload);
+      trackEvent('pngtostl_generate_error', payload);
+    }
     function mode() { return modeInput ? modeInput.value : (form.dataset.mode || ''); }
     function syncWidth() { setText(widthValue, (widthInput ? widthInput.value : '90') + ' mm'); }
     function syncDepth() { setText(depthValue, Number(depthInput ? depthInput.value : 1.8).toFixed(1) + ' mm'); }
@@ -64,9 +69,11 @@ export const converterBootstrapScript = `
         const fileSignature = [file.name, file.size, file.type || 'unknown', file.lastModified || 0].join(':');
         if (form.dataset.lastTrackedFile !== fileSignature) {
           form.dataset.lastTrackedFile = fileSignature;
-          trackEvent('pngtostl_upload_selected', converterContext({
+          const uploadPayload = converterContext({
             file_name_length: file.name ? file.name.length : 0
-          }));
+          });
+          trackEvent('converter_upload_selected', uploadPayload);
+          trackEvent('pngtostl_upload_selected', uploadPayload);
         }
         setText(status, 'File selected');
         setText(message, file.name + ' selected.\nTip: STL stores geometry only, so colors will not appear in Paint 3D.');
@@ -89,24 +96,26 @@ export const converterBootstrapScript = `
     async function generateStl(event) {
       if (event) event.preventDefault();
       const selectedMode = mode();
-      trackEvent('pngtostl_generate_clicked', converterContext({ has_mode: Boolean(selectedMode) }));
+      const generatePayload = converterContext({ has_mode: Boolean(selectedMode) });
+      trackEvent('converter_generate_clicked', generatePayload);
+      trackEvent('pngtostl_generate_clicked', generatePayload);
       if (!selectedMode) {
         setText(status, 'Helper tool');
         setText(message, 'Use this helper to choose the right STL workflow before generating a file.');
-        trackEvent('pngtostl_generate_error', converterContext({
+        trackConverterError({
           error_type: 'missing_mode',
           error_message: 'No STL workflow selected'
-        }));
+        });
         return;
       }
       const file = fileInput && fileInput.files && fileInput.files[0];
       if (!file) {
         setText(status, 'Needs fix');
         setText(message, 'Choose a PNG file first.');
-        trackEvent('pngtostl_generate_error', converterContext({
+        trackConverterError({
           error_type: 'missing_file',
           error_message: 'Choose a file first'
-        }));
+        });
         return;
       }
       setText(status, 'Processing');
@@ -131,11 +140,11 @@ export const converterBootstrapScript = `
           try { body = await response.json(); } catch (_) {}
           setText(status, 'Needs fix');
           setText(message, body.message || 'Conversion failed.');
-          trackEvent('pngtostl_generate_error', converterContext({
+          trackConverterError({
             error_type: 'api_error',
             status_code: response.status,
             error_message: body.message || 'Conversion failed.'
-          }));
+          });
           return;
         }
         const blob = await response.blob();
@@ -145,7 +154,7 @@ export const converterBootstrapScript = `
         const gridRows = response.headers.get('x-tool-grid-rows');
         const occupiedRatio = response.headers.get('x-tool-occupied-ratio');
         const url = URL.createObjectURL(blob);
-        trackEvent('pngtostl_generate_success', {
+        const successPayload = {
           tool: form.dataset.tool || form.dataset.mode || 'converter',
           mode: selectedMode,
           path: location.pathname,
@@ -153,18 +162,22 @@ export const converterBootstrapScript = `
           bytes: blob.size,
           triangles: triangleCount,
           coverage: occupiedRatio || 'n/a'
-        });
+        };
+        trackEvent('converter_generate_success', successPayload);
+        trackEvent('pngtostl_generate_success', successPayload);
         const anchor = document.createElement('a');
         anchor.href = url;
         anchor.download = outputKind === 'lithophane' ? 'pngtostl-lithophane.stl' : 'pngtostl-' + outputKind + '.stl';
         document.body.appendChild(anchor);
         anchor.click();
-        trackEvent('pngtostl_download_clicked', converterContext({
+        const downloadPayload = converterContext({
           output_kind: outputKind,
           bytes: blob.size,
           triangles: triangleCount,
           auto_download: true
-        }));
+        });
+        trackEvent('converter_download_click', downloadPayload);
+        trackEvent('pngtostl_download_clicked', downloadPayload);
         anchor.remove();
         URL.revokeObjectURL(url);
         setText(status, 'STL ready');
@@ -179,10 +192,10 @@ export const converterBootstrapScript = `
       } catch (error) {
         setText(status, 'Needs fix');
         setText(message, 'Conversion failed. Please try another PNG or lower the detail level.');
-        trackEvent('pngtostl_generate_error', converterContext({
+        trackConverterError({
           error_type: 'network_or_runtime_error',
           error_message: error && error.message ? error.message : 'Conversion failed'
-        }));
+        });
       } finally {
         if (button) { button.disabled = false; button.textContent = 'Generate STL'; }
       }

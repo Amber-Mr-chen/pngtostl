@@ -102,6 +102,7 @@ export const tools: ToolConfig[] = [
     limit: "The universal converter creates printable STL workflows from one image; it does not reconstruct a full 3D object from a single photo.",
     related: [
       { label: "PNG to STL", href: "/png-to-stl" },
+      { label: "Relief Settings", href: "/image-to-stl-relief-settings" },
       { label: "Contrast Guide", href: "/image-contrast-guide" },
       { label: "Convert Image to STL", href: "/convert-image-to-stl" },
     ],
@@ -172,6 +173,7 @@ export const tools: ToolConfig[] = [
     limit: "Lithophane results depend on image contrast, thickness, and print settings.",
     related: [
       { label: "Photo to Lithophane", href: "/photo-to-lithophane" },
+      { label: "Best Lithophane Settings", href: "/best-lithophane-settings" },
       { label: "3D Print Photo", href: "/3d-print-photo" },
       { label: "Print Settings", href: "/print-settings-checker" },
     ],
@@ -532,6 +534,58 @@ export const helperPages: HelperPage[] = [
     faqs: [
       { q: "Can I use any terrain image as a heightmap?", a: "No. Use a grayscale heightmap or depth map. Regular photos and colored maps usually do not encode height cleanly." },
       { q: "What does white mean in a heightmap?", a: "In this workflow, brighter pixels become higher areas and darker pixels become lower areas." },
+    ],
+  },
+  {
+    slug: "best-lithophane-settings",
+    title: "Best Lithophane Settings for 3D Printing",
+    description: "Choose safe lithophane thickness, image inversion, panel size, layer height, and test-print settings before downloading a photo-to-STL lithophane.",
+    cta: "Open lithophane generator",
+    href: "/lithophane-generator?sample=portrait-lithophane-night-light&utm_source=seo_helper&utm_medium=internal&utm_campaign=best_lithophane_settings",
+    intent: "Users searching for lithophane settings usually have a photo ready and need practical numbers before they print.",
+    advisorKind: "print-settings",
+    sampleSlugs: ["backlit-lithophane-panel", "portrait-lithophane-night-light"],
+    checks: [
+      "Start with about 0.8 mm minimum thickness and 3.0-3.2 mm maximum thickness for a first test.",
+      "Use image inversion when thicker areas should block more light and thin areas should glow brighter.",
+      "Keep the subject simple and crop tightly so faces or pets stay readable when backlit.",
+      "Print a small crop before committing to a full portrait, gift panel, or night-light insert.",
+    ],
+    steps: [
+      { title: "Prepare the photo", body: "Pick a clear subject with visible midtones. Very dark faces, blown highlights, and cluttered backgrounds usually make weak lithophanes." },
+      { title: "Set thickness first", body: "Thickness controls brightness. A conservative 0.8-3.2 mm range is easier to slice and test than extreme thin or thick settings." },
+      { title: "Validate with a test print", body: "Download the STL, slice a small crop, and check it with a light source before printing the final panel." },
+    ],
+    faqs: [
+      { q: "What thickness is best for lithophanes?", a: "A practical first range is about 0.8 mm minimum and 3.0-3.2 mm maximum, then adjust for your filament, light source, and printer." },
+      { q: "Should I invert a lithophane image?", a: "Usually yes. In lithophanes, geometry thickness controls how much light passes through, so inversion often makes the final backlit image read correctly." },
+      { q: "What layer height should I use?", a: "Use a smaller layer height for more detail, then verify with a small test because printer, nozzle, and panel size matter." },
+    ],
+  },
+  {
+    slug: "image-to-stl-relief-settings",
+    title: "Image to STL Relief Settings for 3D Printing",
+    description: "Pick practical relief depth, base thickness, image contrast, smoothing, and width settings when turning images, icons, and line art into STL files.",
+    cta: "Open image to STL converter",
+    href: "/image-to-stl?sample=universal-image-relief&utm_source=seo_helper&utm_medium=internal&utm_campaign=image_to_stl_relief_settings",
+    intent: "Users with an image often need starting settings that make the STL printable instead of noisy, fragile, or too flat.",
+    advisorKind: "contrast",
+    sampleSlugs: ["universal-image-relief", "coin-relief-medallion", "pet-photo-relief"],
+    checks: [
+      "Use strong subject-background contrast before raising brightness into geometry.",
+      "Start with moderate relief depth rather than a very tall surface that creates fragile details.",
+      "Keep a base plate when letters, islands, or icon parts would otherwise become disconnected.",
+      "Use smoothing carefully: too little can look jagged, while too much can erase text and edges.",
+    ],
+    steps: [
+      { title: "Choose the right image", body: "Icons, line art, silhouettes, and simple high-contrast photos make cleaner relief STL files than busy scenes or low-contrast screenshots." },
+      { title: "Start with safe geometry", body: "Set a printable width, moderate relief height, and base thickness before chasing maximum detail. The goal is a clean first STL, not the tallest possible surface." },
+      { title: "Inspect before download", body: "Check whether small text merged, edges became noisy, or large flat areas need cropping before using the STL for a full print." },
+    ],
+    faqs: [
+      { q: "What relief depth should I start with?", a: "Start moderate, then raise it only if the preview looks too flat. Very tall relief can be slow to print and may make thin details fragile." },
+      { q: "Do I need a base plate?", a: "Use a base plate for logos, text, badges, signs, and any design with separated islands so the print stays connected." },
+      { q: "Can a normal photo become a relief STL?", a: "Sometimes, but high-contrast subjects work best. Many photos are better as lithophanes instead of raised relief." },
     ],
   },
 ];
