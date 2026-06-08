@@ -3456,3 +3456,15 @@ html body .infoPage .sampleCard h2 {
   }
 }
 
+@media (min-width: 981px) {
+  .homeHero {
+    grid-template-columns: minmax(0, 1fr) minmax(540px, 590px);
+    column-gap: 24px;
+  }
+
+  .heroUploadPanel {
+    justify-self: stretch;
+    width: 100%;
+  }
+}
+

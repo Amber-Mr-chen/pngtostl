@@ -7,7 +7,22 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-08 11:22 CST:
+Latest update — 2026-06-08 11:38 CST:
+
+- Owner requested the homepage hero function/upload panel stretch farther right and align with the `View all examples` button below.
+- Added a desktop-only final CSS override:
+  - `.homeHero` desktop columns changed to `minmax(0, 1fr) minmax(540px, 590px)`.
+  - Desktop column gap held at `24px`.
+  - `.heroUploadPanel` stretches to fill the wider right column.
+  - Mobile/tablet layout remains controlled by existing `max-width: 980px` single-column rules.
+- Verification after deploy:
+  - `npm run lint` passed with the existing non-blocking direct-img warning for the tiny favicon logo.
+  - `npm run build`, `npm run cf:build`, `npm run cf:deploy` passed.
+  - Production browser geometry: hero grid `506px 590px`, panel width 590px, panel right edge 1193px, `View all examples` right edge 1199px, difference 6px, no horizontal overflow.
+  - Visual check confirmed the hero upload/function panel now reads aligned with the lower section CTA and has no overlap.
+- Cloudflare Worker version: `73f839e5-e907-4573-8bac-7bec9d95543d`.
+
+Previous update — 2026-06-08 11:22 CST:
 
 - Owner confirmed AITDK turned yellow again after translation support was restored, so the remaining issue is tied to Google Translate UI injection.
 - Added a narrowly-scoped compatibility script in `src/app/layout.tsx`:
