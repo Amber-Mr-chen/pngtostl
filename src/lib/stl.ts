@@ -235,6 +235,16 @@ type CroppedGrid = {
 function cropToMaskBounds(heights: number[][], mask?: boolean[][]): CroppedGrid {
   if (!mask) return { heights, mask };
 
+  const bounds = contentBounds(mask);
+  if (!bounds) return { heights, mask };
+  const { minX, maxX, minY, maxY } = bounds;
+
+  const croppedHeights = heights.slice(minY, maxY + 1).map((row) => row.slice(minX, maxX + 1));
+  const croppedMask = mask.slice(minY, maxY + 1).map((row) => row.slice(minX, maxX + 1));
+  return { heights: croppedHeights, mask: croppedMask };
+}
+
+function contentBounds(mask: boolean[][], padding = 0) {
   const rows = mask.length;
   const columns = mask[0]?.length ?? 0;
   let minX = columns;
@@ -252,7 +262,14 @@ function cropToMaskBounds(heights: number[][], mask?: boolean[][]): CroppedGrid 
     }
   }
 
-  if (maxX < minX || maxY < minY) return { heights, mask };
+  if (maxX < minX || maxY < minY) return undefined;
+  const padX = Math.max(1, Math.round((maxX - minX + 1) * padding));
+  const padY = Math.max(1, Math.round((maxY - minY + 1) * padding));
+  minX = Math.max(0, minX - padX);
+  maxX = Math.min(columns - 1, maxX + padX);
+  minY = Math.max(0, minY - padY);
+  maxY = Math.min(rows - 1, maxY + padY);
+
   if (maxX === minX) {
     minX = Math.max(0, minX - 1);
     maxX = Math.min(columns - 1, maxX + 1);
@@ -261,10 +278,43 @@ function cropToMaskBounds(heights: number[][], mask?: boolean[][]): CroppedGrid 
     minY = Math.max(0, minY - 1);
     maxY = Math.min(rows - 1, maxY + 1);
   }
+  return { minX, maxX, minY, maxY };
+}
 
-  const croppedHeights = heights.slice(minY, maxY + 1).map((row) => row.slice(minX, maxX + 1));
-  const croppedMask = mask.slice(minY, maxY + 1).map((row) => row.slice(minX, maxX + 1));
-  return { heights: croppedHeights, mask: croppedMask };
+function buildSketchContentMask(samples: ImageSample[][], options: ConvertOptions) {
+  if (options.mode !== "sketch") return undefined;
+  const rows = samples.length;
+  const columns = samples[0]?.length ?? 0;
+  const seed = samples.map((row) => row.map((sample) => sample.darkness >= options.threshold));
+
+  return seed.map((row, y) =>
+    row.map((active, x) => {
+      if (!active) return false;
+      let neighbors = 0;
+      for (let yy = Math.max(0, y - 1); yy <= Math.min(rows - 1, y + 1); yy += 1) {
+        for (let xx = Math.max(0, x - 1); xx <= Math.min(columns - 1, x + 1); xx += 1) {
+          if (xx === x && yy === y) continue;
+          if (seed[yy][xx]) neighbors += 1;
+        }
+      }
+      return neighbors >= 2;
+    }),
+  );
+}
+
+function cropSketchPlateToContent(heights: number[][], contentMask?: boolean[][]): CroppedGrid {
+  if (!contentMask) return { heights };
+  const bounds = contentBounds(contentMask, 0.1);
+  if (!bounds) return { heights };
+  const rows = heights.length;
+  const columns = heights[0]?.length ?? 0;
+  const contentWidth = bounds.maxX - bounds.minX + 1;
+  const contentHeight = bounds.maxY - bounds.minY + 1;
+  if (contentWidth > columns * 0.92 && contentHeight > rows * 0.92) return { heights };
+
+  return {
+    heights: heights.slice(bounds.minY, bounds.maxY + 1).map((row) => row.slice(bounds.minX, bounds.maxX + 1)),
+  };
 }
 
 function subtract(a: Vec3, b: Vec3): Vec3 {
@@ -384,10 +434,11 @@ export async function pngToStl(file: File, options: ConvertOptions): Promise<{ s
   const preparedSamples = preprocessLineArtSamples(samples, options);
   const { heights, occupiedRatio } = buildHeightGrid(preparedSamples, options);
   const geometryMask = buildGeometryMask(preparedSamples, heights, options);
-  const mesh = cropToMaskBounds(heights, geometryMask);
+  const sketchContentMask = buildSketchContentMask(preparedSamples, options);
+  const mesh = options.mode === "sketch" ? cropSketchPlateToContent(heights, sketchContentMask) : cropToMaskBounds(heights, geometryMask);
   const meshRows = mesh.heights.length;
   const meshColumns = mesh.heights[0]?.length ?? 0;
-  const outputHeightMm = mesh.mask && meshRows > 1 && meshColumns > 1 ? widthMm * ((meshRows - 1) / (meshColumns - 1)) : heightMm;
+  const outputHeightMm = (mesh.mask || options.mode === "sketch") && meshRows > 1 && meshColumns > 1 ? widthMm * ((meshRows - 1) / (meshColumns - 1)) : heightMm;
   const triangles = buildReliefTriangles(mesh.heights, widthMm, outputHeightMm, mesh.mask);
   const stl = encodeBinaryStl(triangles, `pngtostl ${options.mode} ${sourceWidth}x${sourceHeight}`);
 
