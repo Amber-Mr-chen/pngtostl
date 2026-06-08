@@ -2,15 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { BrandMark } from "@/components/BrandMark";
 import { TrackedLink } from "@/components/TrackedLink";
+import { ConverterPanel } from "@/components/ConverterPanel";
 import { MiniToolExample, ShowcaseDemo } from "@/components/HomeShowcase";
 import { helperPages, tools } from "@/lib/tools";
-
-const heroTools = [
-  { label: "Image to STL", href: "/image-to-stl", note: "Upload PNG, JPG, WebP, GIF, or BMP" },
-  { label: "Logo to STL", href: "/logo-to-stl", note: "SVG or high-contrast logo relief" },
-  { label: "Lithophane", href: "/lithophane-generator", note: "Backlit photo panels" },
-  { label: "Heightmap", href: "/heightmap-to-stl", note: "Brightness mapped into surface height" },
-];
 
 const primaryTools = ["image-to-stl", "logo-to-stl", "lithophane-generator", "heightmap-to-stl"];
 
@@ -81,8 +75,10 @@ function findTool(slug: string) {
 
 export default function HomePage() {
   const featured = primaryTools.map(findTool).filter(Boolean);
+  const universalTool = findTool("image-to-stl");
 
   return (
+    <>
     <main className="homePage">
       <header className="homeNav">
         <BrandMark />
@@ -97,48 +93,73 @@ export default function HomePage() {
           <Link href="/faq">Guides</Link>
         </nav>
         <div className="accountActions" aria-label="Primary action">
-          <Link className="signupButton" href="/image-to-stl">Start converting</Link>
+          <Link className="signupButton" href="#converter">Start converting</Link>
         </div>
         </div>
       </header>
 
       <section className="homeHero">
         <div className="homeHeroCopy">
-          <p className="homeKicker">Image to 3D printing toolkit</p>
-          <h1>Turn images into printable STL files.</h1>
+          <p className="homeKicker">Upload-first image to STL workspace</p>
+          <h1>Convert sketches, logos, and images into printable STL models.</h1>
           <p>
-            Upload PNG, JPG, WebP, GIF, or BMP and choose the right output: relief, logo badge, lithophane, or heightmap. Preview the mesh before you download.
+            Upload directly on this page, inspect the source image beside a slicer-style 3D preview, tune relief thickness, then download a print-ready STL without leaving the homepage.
           </p>
           <div className="heroActions" aria-label="Popular conversion tools">
-            <Link className="btnPrimary" href="/image-to-stl">Upload image</Link>
-            <Link className="btnSecondary" href="#tools">Browse tools</Link>
+            <Link className="btnPrimary" href="#converter">Upload and generate STL</Link>
+            <Link className="btnSecondary" href="#examples">See real examples</Link>
           </div>
         </div>
 
-        <aside className="heroUploadPanel" aria-label="Start image upload">
-          <div className="uploadMockDropzone">
-            <span className="uploadIcon" aria-hidden="true">↑</span>
-            <strong>Drop image here</strong>
-            <p>Open the converter and generate a relief-style STL in your browser.</p>
-            <Link className="btnPrimary" href="/image-to-stl">Upload image</Link>
-            <small>No signup required · PNG, JPG, WebP, GIF, BMP</small>
+        <aside className="heroResultPanel" aria-label="Input image to generated STL proof">
+          <div className="heroProofTopline">
+            <span>Live workflow preview</span>
+            <strong>Input → STL</strong>
           </div>
-          <div className="workflowPicker" aria-label="Output workflows">
-            {heroTools.map((tool, index) => (
-              <Link key={tool.href} className={index === 0 ? "heroToolLink workflowChoice primary" : "heroToolLink workflowChoice"} href={tool.href}>
-                <span>{tool.label}</span>
-                <small>{tool.note}</small>
-              </Link>
-            ))}
+          <div className="heroProofVisual">
+            <figure>
+              <Image
+                src="/samples/logo-badge-premium-v4-source.png"
+                alt="Example source image for STL conversion"
+                width={160}
+                height={160}
+                priority
+              />
+              <figcaption>Source image</figcaption>
+            </figure>
+            <span className="heroProofArrow" aria-hidden="true">→</span>
+            <figure className="heroOutputFigure">
+              <Image
+                src="/samples/logo-badge-premium-v4-preview.png"
+                alt="Generated STL preview from the source image"
+                width={280}
+                height={210}
+                priority
+              />
+              <figcaption>Generated STL preview</figcaption>
+            </figure>
           </div>
-          <div className="toolPanelNote">
-            <strong>Choose the output after upload</strong>
-            <span>Relief, logo, lithophane, and heightmap modes share one focused workspace.</span>
+          <div className="heroProofMetrics" aria-label="Example mesh metrics">
+            <span><b>95 mm</b> raised plate</span>
+            <span><b>22,300</b> triangles</span>
+            <span><b>Printable</b> STL</span>
           </div>
+          <Link className="btnSecondary heroProofCta" href="#converter">Upload your own image below</Link>
         </aside>
       </section>
 
-      <section className="proofStrip" aria-label="Example outputs with source and mesh evidence">
+      {universalTool && (
+        <section className="homeConverterDock" id="converter" aria-labelledby="home-converter-title">
+          <div className="sectionIntro compact">
+            <p className="homeKicker">Use it here</p>
+            <h2 id="home-converter-title">Upload, preview, and download without leaving the homepage.</h2>
+            <p>Designed like a lightweight slicer workspace: source image on the left, STL preview and mesh checks on the right.</p>
+          </div>
+          <ConverterPanel tool={universalTool} />
+        </section>
+      )}
+
+      <section className="proofStrip" id="examples" aria-label="Example outputs with source and mesh evidence">
         <div className="proofIntro">
           <div>
             <p className="homeKicker">Pick an output type</p>
@@ -268,5 +289,8 @@ export default function HomePage() {
         </nav>
       </footer>
     </main>
+    <script src="/stl-preview.js?v=webgl-final-20260608a" defer></script>
+    <script src="/converter.js?v=metrics-final-20260608a" defer></script>
+    </>
   );
 }
