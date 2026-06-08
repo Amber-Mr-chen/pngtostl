@@ -369,12 +369,44 @@ function buildSketchContentMask(samples: ImageSample[][], options: ConvertOption
   );
 }
 
+function smoothSketchMask(mask: boolean[][]) {
+  const rows = mask.length;
+  const columns = mask[0]?.length ?? 0;
+  const dilated = mask.map((row, y) =>
+    row.map((active, x) => {
+      if (active) return true;
+      let neighbors = 0;
+      for (let yy = Math.max(0, y - 1); yy <= Math.min(rows - 1, y + 1); yy += 1) {
+        for (let xx = Math.max(0, x - 1); xx <= Math.min(columns - 1, x + 1); xx += 1) {
+          if (mask[yy][xx]) neighbors += 1;
+        }
+      }
+      return neighbors >= 2;
+    }),
+  );
+
+  return dilated.map((row, y) =>
+    row.map((active, x) => {
+      if (!active) return false;
+      let neighbors = 0;
+      for (let yy = Math.max(0, y - 1); yy <= Math.min(rows - 1, y + 1); yy += 1) {
+        for (let xx = Math.max(0, x - 1); xx <= Math.min(columns - 1, x + 1); xx += 1) {
+          if (dilated[yy][xx]) neighbors += 1;
+        }
+      }
+      return neighbors >= 2;
+    }),
+  );
+}
+
 function applySketchContentMask(samples: ImageSample[][], contentMask: boolean[][] | undefined, options: ConvertOptions) {
   if (options.mode !== "sketch" || !contentMask) return samples;
+  const minProtectedStroke = Math.min(0.9, Math.max(options.threshold + 0.04, 0.58));
   return samples.map((row, y) =>
     row.map((sample, x) => {
       if (!contentMask[y]?.[x]) return { ...sample, luma: 1, darkness: 0 };
-      const darkness = Math.max(sample.darkness, 0.42);
+      const isOriginalStroke = sample.darkness >= options.threshold;
+      const darkness = isOriginalStroke ? Math.max(sample.darkness, minProtectedStroke) : Math.max(sample.darkness, 0.42);
       return { ...sample, luma: 1 - darkness, darkness };
     }),
   );
@@ -513,7 +545,8 @@ async function sampleImageGrid(file: File, options: ConvertOptions) {
 export async function cleanSketchPreviewPng(file: File, options: ConvertOptions) {
   const grid = await sampleImageGrid(file, { ...options, mode: "sketch" });
   const lineArtSamples = preprocessLineArtSamples(grid.samples, { ...options, mode: "sketch" });
-  const sketchContentMask = buildSketchContentMask(lineArtSamples, { ...options, mode: "sketch" });
+  const rawSketchContentMask = buildSketchContentMask(lineArtSamples, { ...options, mode: "sketch" });
+  const sketchContentMask = rawSketchContentMask ? smoothSketchMask(rawSketchContentMask) : undefined;
   const preparedSamples = applySketchContentMask(lineArtSamples, sketchContentMask, { ...options, mode: "sketch" });
   const imageData = new Uint8Array(grid.columns * grid.rows * 4);
 
@@ -562,7 +595,8 @@ export async function pngToStl(file: File, options: ConvertOptions): Promise<{ s
   }
 
   const lineArtSamples = preprocessLineArtSamples(samples, options);
-  const sketchContentMask = buildSketchContentMask(lineArtSamples, options);
+  const rawSketchContentMask = buildSketchContentMask(lineArtSamples, options);
+  const sketchContentMask = rawSketchContentMask ? smoothSketchMask(rawSketchContentMask) : undefined;
   const preparedSamples = applySketchContentMask(lineArtSamples, sketchContentMask, options);
   const { heights, occupiedRatio } = buildHeightGrid(preparedSamples, options);
   const geometryMask = buildGeometryMask(preparedSamples, heights, options);
