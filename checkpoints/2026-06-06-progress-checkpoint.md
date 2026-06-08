@@ -7,7 +7,29 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-08 09:50 CST:
+Latest update — 2026-06-08 10:04 CST:
+
+- Deep follow-up for persistent AITDK `Image Alt Text Check: 1 images missing alt text` after multiple normal `<img>` checks passed.
+- Full production inventory before the final fix showed:
+  - 12 `<img>` elements, all with non-empty alt.
+  - 0 `<svg>`, 0 `<canvas>`, 0 `<picture>`, 0 `<source>`, 0 `<object>`, 0 `<embed>`.
+  - 0 `rel="preload" as="image"` links.
+  - Only remaining visually image-like header asset was the CSS-rendered brand logo `<span>`.
+- Final fix: replaced the CSS-only brand mark with a real reusable `BrandMark` component using a Next `<Image>` sourced from `/icon-192.png` with `alt="PNGtoSTL logo"`.
+- Applied the new brand image consistently on homepage, tool pages, slug/info pages, and helper utility pages.
+- Verification after deploy:
+  - `npm run lint` passed.
+  - `npm run build` passed.
+  - `npm run cf:build` passed.
+  - `npm run cf:deploy` passed.
+  - Production image count is now 13.
+  - Production missing/empty alt count remains 0.
+  - Production logo image is present as `.brandMarkIcon` with `alt="PNGtoSTL logo"`.
+  - Production image preload count remains 0.
+  - Title remains 49 characters.
+- Cloudflare Worker version: `8155caaf-6f0a-4b8e-8f5b-c56e7a83c334`.
+
+Previous update — 2026-06-08 09:50 CST:
 
 - Investigated owner screenshot showing two AITDK yellow warnings: `Meta Title Check` and `Image Alt Text Check`.
 - Screenshot page content was browser-translated into Chinese, which likely changed AITDK's DOM-derived title measurement to 19 characters; raw production HTML still had the prior English title at 33 characters.

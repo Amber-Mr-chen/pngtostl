@@ -66,11 +66,10 @@ a {
   font-size: 1.04rem;
 }
 
-.brandMark span {
+.brandMarkIcon {
   width: 30px;
   height: 30px;
   border-radius: 8px;
-  background: #101828;
   box-shadow: inset 10px 0 0 var(--accent);
 }
 
@@ -1426,12 +1425,12 @@ body {
   font-weight: 650;
   letter-spacing: -0.02em;
 }
-.brandMark span {
+.brandMarkIcon {
   width: 27px;
   height: 27px;
   border-radius: 7px;
-  background: linear-gradient(135deg, #07111f 0 52%, #2457ff 52% 100%);
   box-shadow: var(--shadow-ring);
+  flex-shrink: 0;
 }
 .homeNavLinks,
 .toolNavLinks {

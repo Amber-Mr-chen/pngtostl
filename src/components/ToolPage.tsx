@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/BrandMark";
 import { ConverterPanel } from "@/components/ConverterPanel";
 import { ImageAnalyzer } from "@/components/ImageAnalyzer";
 import { ToolProofBlock } from "@/components/ToolProofBlock";
@@ -35,10 +36,7 @@ function Header({ currentPath }: { currentPath: string }) {
   return (
     <header className="container toolHeader">
       <nav>
-        <Link href="/" className="brandMark" aria-label="PNGtoSTL home">
-          <span aria-hidden="true" />
-          PNGtoSTL
-        </Link>
+        <BrandMark />
         <div className="toolNavLinks">
           {primaryNav.map((item) => {
             const isActive = activeNavFor(currentPath, item.href);

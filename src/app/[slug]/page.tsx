@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/BrandMark";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { SampleGalleryFilter } from "@/components/SampleGalleryFilter";
@@ -64,10 +65,7 @@ function InfoHeader() {
   return (
     <header className="container toolHeader infoHeader">
       <nav>
-        <Link href="/" className="brandMark" aria-label="PNGtoSTL home">
-          <span aria-hidden="true" />
-          PNGtoSTL
-        </Link>
+        <BrandMark />
         <div className="toolNavLinks">
           {primaryInfoNav.map((item) => (
             <Link key={item.href} className="pill" href={item.href}>

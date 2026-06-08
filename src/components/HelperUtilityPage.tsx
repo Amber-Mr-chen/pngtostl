@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/BrandMark";
 import { ImageAnalyzer } from "@/components/ImageAnalyzer";
 import { UtilityAdvisor } from "@/components/UtilityAdvisor";
 import { getSampleWorkflow, helperPages, sampleWorkflowSlug, tools } from "@/lib/tools";
@@ -15,10 +16,7 @@ function HelperHeader() {
   return (
     <header className="container toolHeader infoHeader">
       <nav>
-        <Link href="/" className="brandMark" aria-label="PNGtoSTL home">
-          <span aria-hidden="true" />
-          PNGtoSTL
-        </Link>
+        <BrandMark />
         <div className="toolNavLinks">
           {helperNav.map((item) => (
             <Link key={item.href} className="pill" href={item.href}>

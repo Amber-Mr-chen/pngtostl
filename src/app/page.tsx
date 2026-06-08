@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { BrandMark } from "@/components/BrandMark";
 import { TrackedLink } from "@/components/TrackedLink";
 import { MiniToolExample, ShowcaseDemo } from "@/components/HomeShowcase";
 import { helperPages, tools } from "@/lib/tools";
@@ -84,10 +85,7 @@ export default function HomePage() {
   return (
     <main className="homePage">
       <header className="homeNav">
-        <Link href="/" className="brandMark" aria-label="PNGtoSTL home">
-          <span aria-hidden="true" />
-          PNGtoSTL
-        </Link>
+        <BrandMark />
         <div className="homeNavRight">
         <nav className="homeNavLinks" aria-label="Primary">
           <Link href="/image-to-stl">Image to STL</Link>
