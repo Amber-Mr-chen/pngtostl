@@ -161,6 +161,46 @@ function buildGeometryMask(samples: ImageSample[][], heights: number[][], option
   return mask;
 }
 
+type CroppedGrid = {
+  heights: number[][];
+  mask?: boolean[][];
+};
+
+function cropToMaskBounds(heights: number[][], mask?: boolean[][]): CroppedGrid {
+  if (!mask) return { heights, mask };
+
+  const rows = mask.length;
+  const columns = mask[0]?.length ?? 0;
+  let minX = columns;
+  let maxX = -1;
+  let minY = rows;
+  let maxY = -1;
+
+  for (let y = 0; y < rows; y += 1) {
+    for (let x = 0; x < columns; x += 1) {
+      if (!mask[y][x]) continue;
+      minX = Math.min(minX, x);
+      maxX = Math.max(maxX, x);
+      minY = Math.min(minY, y);
+      maxY = Math.max(maxY, y);
+    }
+  }
+
+  if (maxX < minX || maxY < minY) return { heights, mask };
+  if (maxX === minX) {
+    minX = Math.max(0, minX - 1);
+    maxX = Math.min(columns - 1, maxX + 1);
+  }
+  if (maxY === minY) {
+    minY = Math.max(0, minY - 1);
+    maxY = Math.min(rows - 1, maxY + 1);
+  }
+
+  const croppedHeights = heights.slice(minY, maxY + 1).map((row) => row.slice(minX, maxX + 1));
+  const croppedMask = mask.slice(minY, maxY + 1).map((row) => row.slice(minX, maxX + 1));
+  return { heights: croppedHeights, mask: croppedMask };
+}
+
 function subtract(a: Vec3, b: Vec3): Vec3 {
   return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 }
@@ -277,7 +317,11 @@ export async function pngToStl(file: File, options: ConvertOptions): Promise<{ s
 
   const { heights, occupiedRatio } = buildHeightGrid(samples, options);
   const geometryMask = buildGeometryMask(samples, heights, options);
-  const triangles = buildReliefTriangles(heights, widthMm, heightMm, geometryMask);
+  const mesh = cropToMaskBounds(heights, geometryMask);
+  const meshRows = mesh.heights.length;
+  const meshColumns = mesh.heights[0]?.length ?? 0;
+  const outputHeightMm = mesh.mask && meshRows > 1 && meshColumns > 1 ? widthMm * ((meshRows - 1) / (meshColumns - 1)) : heightMm;
+  const triangles = buildReliefTriangles(mesh.heights, widthMm, outputHeightMm, mesh.mask);
   const stl = encodeBinaryStl(triangles, `pngtostl ${options.mode} ${sourceWidth}x${sourceHeight}`);
 
   return {
