@@ -7,6 +7,13 @@ Branch: `main`
 
 ## Current status
 
+Latest update — 2026-06-08 13:50 CST:
+
+- Owner completed Indie Dev Tools account-assisted submission.
+- Indie Dev Tools status updated to `pending_review` in `ops/coldstart-submission-log.md`.
+- Evidence recorded: owner-assisted login reached the add-tool form; form was submitted successfully without payment, reciprocal link, CAPTCHA, or forced upgrade appearing in screenshots; owner reported `成功了`.
+- Follow-up date: 2026-06-15.
+
 Latest update — 2026-06-08 13:01 CST:
 
 - Owner asked to submit after SEO on-site optimization was complete.

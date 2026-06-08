@@ -306,10 +306,10 @@ Some candidates below have since been attempted after owner approval. Treat each
   - Type: directory
   - Candidate URL: `https://indiedev.tools/add-tool`
   - Target URL: `https://pngtostl.net/?utm_source=indiedev_tools&utm_medium=listing&utm_campaign=launch_v1&utm_content=add_tool`
-  - Status: manual_required
-  - Evidence: Browser route rendered login UI (`Sign up`, `Log in`, `Sign in with Google`) and no add-tool form was available without account action.
+  - Status: pending_review
+  - Evidence: Owner-assisted login on 2026-06-08 reached the add-tool form. Form was submitted successfully without payment, reciprocal link, CAPTCHA, or forced upgrade appearing in the owner screenshots. Owner reported `成功了` after submission.
   - Next follow-up date: 2026-06-15
-  - Notes: Relevant directory, but owner login/account required. Do not proceed automatically.
+  - Notes: Submitted with free listing flow. Copy used: PNGtoSTL, browser-based image-to-STL converter, Design category, tags around 3D printing/image-to-STL/maker tools/design tools/STL, and the UTM target URL above.
 
 - Channel: GeekWire Startup List
   - Type: startup_directory
