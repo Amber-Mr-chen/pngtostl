@@ -232,7 +232,67 @@ function buildGeometryMask(samples: ImageSample[][], heights: number[][], option
     }
   }
 
-  return mask;
+  return options.mode === "extrude" ? cleanExtrudeMask(mask) : mask;
+}
+
+function cleanExtrudeMask(mask: boolean[][]) {
+  const rows = mask.length;
+  const columns = mask[0]?.length ?? 0;
+  const total = rows * columns;
+  const visited = Array.from({ length: rows }, () => Array.from({ length: columns }, () => false));
+  const kept = Array.from({ length: rows }, () => Array.from({ length: columns }, () => false));
+  const minComponentArea = Math.max(18, Math.round(total * 0.0005));
+
+  for (let y = 0; y < rows; y += 1) {
+    for (let x = 0; x < columns; x += 1) {
+      if (!mask[y][x] || visited[y][x]) continue;
+      const stack: Array<[number, number]> = [[x, y]];
+      const component: Array<[number, number]> = [];
+      visited[y][x] = true;
+
+      while (stack.length) {
+        const [cx, cy] = stack.pop()!;
+        component.push([cx, cy]);
+        for (let yy = Math.max(0, cy - 1); yy <= Math.min(rows - 1, cy + 1); yy += 1) {
+          for (let xx = Math.max(0, cx - 1); xx <= Math.min(columns - 1, cx + 1); xx += 1) {
+            if (!mask[yy][xx] || visited[yy][xx]) continue;
+            visited[yy][xx] = true;
+            stack.push([xx, yy]);
+          }
+        }
+      }
+
+      if (component.length >= minComponentArea) {
+        for (const [cx, cy] of component) kept[cy][cx] = true;
+      }
+    }
+  }
+
+  const filled = kept.map((row, y) =>
+    row.map((active, x) => {
+      if (active) return true;
+      let neighbors = 0;
+      for (let yy = Math.max(0, y - 1); yy <= Math.min(rows - 1, y + 1); yy += 1) {
+        for (let xx = Math.max(0, x - 1); xx <= Math.min(columns - 1, x + 1); xx += 1) {
+          if (kept[yy][xx]) neighbors += 1;
+        }
+      }
+      return neighbors >= 6;
+    }),
+  );
+
+  return filled.map((row, y) =>
+    row.map((active, x) => {
+      if (!active) return false;
+      let neighbors = 0;
+      for (let yy = Math.max(0, y - 1); yy <= Math.min(rows - 1, y + 1); yy += 1) {
+        for (let xx = Math.max(0, x - 1); xx <= Math.min(columns - 1, x + 1); xx += 1) {
+          if (filled[yy][xx]) neighbors += 1;
+        }
+      }
+      return neighbors >= 2;
+    }),
+  );
 }
 
 type CroppedGrid = {
