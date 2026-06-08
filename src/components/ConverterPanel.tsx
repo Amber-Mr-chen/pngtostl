@@ -2,7 +2,7 @@ import { sampleWorkflowSlug, type SampleWorkflow, type ToolConfig } from "@/lib/
 
 const defaultModeBySlug: Record<string, NonNullable<ToolConfig["converter"]>["mode"]> = {
   "png-to-stl": "icon",
-  "image-to-stl": "sketch",
+  "image-to-stl": "extrude",
   "convert-image-to-stl": "relief",
   "logo-to-stl": "logo",
   "heightmap-to-stl": "heightmap",
@@ -15,6 +15,7 @@ const defaultModeBySlug: Record<string, NonNullable<ToolConfig["converter"]>["mo
 const modeLabels = {
   icon: "Icon / emoji relief",
   logo: "Transparent logo relief",
+  extrude: "Clean solid extrude",
   sketch: "Sketch / line art relief",
   relief: "Photo-style relief",
   heightmap: "Heightmap terrain",
@@ -36,17 +37,17 @@ const toolPresets: Record<string, Partial<NonNullable<ToolConfig["converter"]>>>
     filename: "pngtostl-icon-relief.stl",
   },
   "image-to-stl": {
-    mode: "sketch",
+    mode: "extrude",
     accept: "image/png,image/jpeg,image/webp,image/gif,image/bmp",
     widthMm: 110,
-    depth: 2.2,
-    baseMm: 1.1,
+    depth: 3.2,
+    baseMm: 1.2,
     threshold: 54,
-    smoothing: 52,
-    detail: 180,
-    helper: "Universal image entry with sketch-first cleanup: upload hand drawings, logos, PNG, JPG, WebP, GIF, or BMP, then switch modes if needed.",
-    preview: "Best default for hand sketches and line art: suppress paper/grid noise, raise the drawing strokes, and keep a printable backing plate.",
-    filename: "sketch-line-art-relief.stl",
+    smoothing: 0,
+    detail: 256,
+    helper: "Universal image entry: default to clean solid extrusion for logos, icons, stickers, transparent PNGs, and high-contrast subjects. Switch to Photo relief, Sketch, Lithophane, or Heightmap when needed.",
+    preview: "Default matches ImageToSTL-style extrude: convert the detected subject into a flat-top printable solid with vertical walls instead of a noisy shallow texture.",
+    filename: "clean-image-extrude.stl",
   },
   "convert-image-to-stl": {
     mode: "relief",
@@ -284,7 +285,7 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
                   <option key={value} value={value}>{label}</option>
                 ))}
               </select>
-              <small>Choose sketch, photo relief, logo, lithophane, or heightmap defaults before generating.</small>
+              <small>Choose clean extrude, photo relief, sketch, logo, lithophane, or heightmap defaults before generating.</small>
             </label>
           ) : null}
 

@@ -33,6 +33,7 @@ export async function POST(request: Request) {
     const result = await pngToStl(file, options);
     const filename =
       options.mode === "lithophane" ? "pngtostl-lithophane.stl" :
+      options.mode === "extrude" ? "pngtostl-clean-extrude.stl" :
       options.mode === "sketch" ? "pngtostl-sketch-relief.stl" :
       "pngtostl-relief.stl";
 

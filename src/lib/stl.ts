@@ -1,6 +1,6 @@
 import { decode, encode } from "fast-png";
 
-export type StlMode = "icon" | "relief" | "sketch" | "heightmap" | "logo" | "lithophane";
+export type StlMode = "icon" | "relief" | "sketch" | "extrude" | "heightmap" | "logo" | "lithophane";
 
 export type ConvertOptions = {
   mode: StlMode;
@@ -51,13 +51,13 @@ function parseNumber(value: FormDataEntryValue | null, fallback: number, min: nu
 export function parseConvertOptions(formData: FormData): ConvertOptions {
   const modeRaw = formData.get("mode");
   const mode: StlMode =
-    modeRaw === "lithophane" || modeRaw === "heightmap" || modeRaw === "logo" || modeRaw === "sketch" || modeRaw === "relief" || modeRaw === "icon"
+    modeRaw === "lithophane" || modeRaw === "heightmap" || modeRaw === "logo" || modeRaw === "extrude" || modeRaw === "sketch" || modeRaw === "relief" || modeRaw === "icon"
       ? modeRaw
       : "icon";
 
   return {
     mode,
-    depth: parseNumber(formData.get("depth"), mode === "icon" || mode === "logo" || mode === "sketch" ? 1.8 : 2.5, 0.3, 8),
+    depth: parseNumber(formData.get("depth"), mode === "icon" || mode === "logo" || mode === "sketch" || mode === "extrude" ? 1.8 : 2.5, 0.3, 8),
     widthMm: parseNumber(formData.get("widthMm"), 90, 20, 220),
     baseMm: parseNumber(formData.get("baseMm"), 1, 0.2, 5),
     invert: formData.get("invert") === "true",
@@ -110,7 +110,7 @@ function percentile(values: number[], ratio: number) {
 }
 
 function preprocessLineArtSamples(samples: ImageSample[][], options: ConvertOptions) {
-  if (options.mode !== "sketch" && options.mode !== "logo" && options.mode !== "icon") return samples;
+  if (options.mode !== "sketch" && options.mode !== "logo" && options.mode !== "icon" && options.mode !== "extrude") return samples;
 
   const flat = samples.flat().filter((sample) => sample.alpha > 0.05);
   if (!flat.length || flat.some((sample) => sample.alpha < 0.95)) return samples;
@@ -184,6 +184,14 @@ function buildHeightGrid(samples: ImageSample[][], options: ConvertOptions) {
       } else if (options.mode === "sketch") {
         signal = options.invert ? sample.luma : sample.darkness;
         signal = signal >= options.threshold ? Math.max(0.38, signal) : 0;
+      } else if (options.mode === "extrude") {
+        const transparentBackground = sample.alpha <= 0.05;
+        if (hasTransparentPixels) {
+          signal = transparentBackground ? 0 : 1;
+        } else {
+          const foreground = options.invert ? sample.luma >= options.threshold : sample.darkness >= options.threshold;
+          signal = foreground ? 1 : 0;
+        }
       } else if (options.mode === "icon" || options.mode === "logo") {
         const transparentBackground = sample.alpha <= 0.05;
         if (hasTransparentPixels) {
@@ -205,13 +213,13 @@ function buildHeightGrid(samples: ImageSample[][], options: ConvertOptions) {
   }
 
   return {
-    heights: smoothGrid(raw, options.mode === "icon" || options.mode === "logo" ? options.smoothing : options.mode === "sketch" ? Math.min(0.72, options.smoothing + 0.18) : options.smoothing * 0.5),
+    heights: smoothGrid(raw, options.mode === "extrude" ? 0 : options.mode === "icon" || options.mode === "logo" ? options.smoothing : options.mode === "sketch" ? Math.min(0.72, options.smoothing + 0.18) : options.smoothing * 0.5),
     occupiedRatio: rows * columns ? occupied / (rows * columns) : 0,
   };
 }
 
 function buildGeometryMask(samples: ImageSample[][], heights: number[][], options: ConvertOptions) {
-  if (options.mode !== "icon" && options.mode !== "logo") return undefined;
+  if (options.mode !== "icon" && options.mode !== "logo" && options.mode !== "extrude") return undefined;
   const rows = samples.length;
   const columns = samples[0]?.length ?? 0;
   const mask = Array.from({ length: rows }, () => Array.from({ length: columns }, () => false));
