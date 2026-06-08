@@ -224,6 +224,7 @@
     const mesh = new THREE.Mesh(geometry, material);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
+    mesh.scale.x = -1;
     scene.add(mesh);
 
     const platformSize = Math.max(size.x, size.z, radius * 1.6) * 1.28;
@@ -244,7 +245,7 @@
     const fill = new THREE.HemisphereLight(0xffffff, 0x7d858d, 1.12);
     scene.add(fill);
     const key = new THREE.DirectionalLight(0xffffff, 3.4);
-    key.position.set(-radius * 1.15, radius * 1.9, radius * 2.35);
+    key.position.set(-radius * 1.15, radius * 1.9, -radius * 2.35);
     key.castShadow = true;
     key.shadow.mapSize.width = 1024;
     key.shadow.mapSize.height = 1024;
@@ -256,8 +257,8 @@
     rim.position.set(radius * 1.8, radius * 1.0, -radius * 1.6);
     scene.add(rim);
 
-    const cameraDistance = radius * 2.85;
-    camera.position.set(radius * 0.78, radius * 1.12, cameraDistance);
+    const cameraDistance = radius * 2.9;
+    camera.position.set(0, radius * 0.68, -cameraDistance);
     camera.lookAt(0, 0, 0);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -279,7 +280,7 @@
     canvas._pngtostlApplyMode = applyMode;
     canvas._pngtostlResetView = () => {
       controls.reset();
-      camera.position.set(radius * 0.78, radius * 1.12, cameraDistance);
+      camera.position.set(0, radius * 0.68, -cameraDistance);
       camera.lookAt(0, 0, 0);
     };
     applyMode();
