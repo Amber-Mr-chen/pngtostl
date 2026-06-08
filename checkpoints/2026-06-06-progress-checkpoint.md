@@ -7,6 +7,20 @@ Branch: `main`
 
 ## Current status
 
+Latest update — 2026-06-08 12:48 CST:
+
+- Owner approved remaining P2 optimization.
+- Optimized static page descriptions in `src/lib/tools.ts` for:
+  - `/pricing`: 145 chars, now covers free access, Pro, batch, API, makers, schools, shops, commercial workflows.
+  - `/developers`: 142 chars, now covers batch conversion, API workflows, commercial usage, higher limits, repeatable STL generation.
+  - `/samples`: 144 chars, now covers source images, STL previews, settings, file sizes, downloadable models.
+- Build/deploy passed: `npm run lint && npm run build && npm run cf:build && npm run cf:deploy`.
+  - Existing lint warning only: `src/components/BrandMark.tsx` uses `<img>`.
+  - Cloudflare Worker version: `bf85e25d-9ff5-41c5-a6f2-90cb9ba3ae4a`.
+- Production verification passed for `/pricing`, `/developers`, `/samples`:
+  - description/OG/Twitter description lengths: 145 / 142 / 144.
+  - `H1 = 1`, missing image alt = 0.
+
 Latest update — 2026-06-08 12:32 CST:
 
 - Owner asked to optimize remaining SEO/GEO items in priority order and consider related items.

@@ -540,7 +540,7 @@ export const staticPages = [
   {
     slug: "samples",
     title: "Image to STL Examples",
-    description: "Sample image-to-STL workflows for logo reliefs, lithophanes, heightmaps, and photo reliefs.",
+    description: "Explore real image-to-STL examples with source images, generated STL previews, recommended settings, file sizes, and downloadable sample models.",
   },
   {
     slug: "privacy",
@@ -555,12 +555,12 @@ export const staticPages = [
   {
     slug: "developers",
     title: "PNGtoSTL Developers and Batch Conversion",
-    description: "Request early access for batch image-to-STL conversion, API workflows, and commercial PNGtoSTL use cases.",
+    description: "Request early access for batch image-to-STL conversion, API workflows, commercial usage, higher limits, and repeatable STL generation support.",
   },
   {
     slug: "pricing",
     title: "PNGtoSTL Pricing",
-    description: "Current free image-to-STL access and planned Pro, batch, and API options for commercial workflows.",
+    description: "Review current free image-to-STL access plus planned Pro, batch conversion, and API options for makers, schools, shops, and commercial workflows.",
   },
   {
     slug: "contact",
