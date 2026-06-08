@@ -1,6 +1,6 @@
 import { decode } from "fast-png";
 
-export type StlMode = "icon" | "relief" | "lithophane" | "heightmap" | "logo";
+export type StlMode = "icon" | "relief" | "sketch" | "heightmap" | "logo" | "lithophane";
 
 export type ConvertOptions = {
   mode: StlMode;
@@ -51,13 +51,13 @@ function parseNumber(value: FormDataEntryValue | null, fallback: number, min: nu
 export function parseConvertOptions(formData: FormData): ConvertOptions {
   const modeRaw = formData.get("mode");
   const mode: StlMode =
-    modeRaw === "lithophane" || modeRaw === "heightmap" || modeRaw === "logo" || modeRaw === "relief" || modeRaw === "icon"
+    modeRaw === "lithophane" || modeRaw === "heightmap" || modeRaw === "logo" || modeRaw === "sketch" || modeRaw === "relief" || modeRaw === "icon"
       ? modeRaw
       : "icon";
 
   return {
     mode,
-    depth: parseNumber(formData.get("depth"), mode === "icon" || mode === "logo" ? 1.8 : 2.5, 0.3, 8),
+    depth: parseNumber(formData.get("depth"), mode === "icon" || mode === "logo" || mode === "sketch" ? 1.8 : 2.5, 0.3, 8),
     widthMm: parseNumber(formData.get("widthMm"), 90, 20, 220),
     baseMm: parseNumber(formData.get("baseMm"), 1, 0.2, 5),
     invert: formData.get("invert") === "true",
@@ -102,6 +102,63 @@ function smoothGrid(grid: number[][], amount: number) {
   );
 }
 
+function percentile(values: number[], ratio: number) {
+  if (!values.length) return 1;
+  const sorted = [...values].sort((a, b) => a - b);
+  const index = Math.min(sorted.length - 1, Math.max(0, Math.round((sorted.length - 1) * ratio)));
+  return sorted[index];
+}
+
+function preprocessLineArtSamples(samples: ImageSample[][], options: ConvertOptions) {
+  if (options.mode !== "sketch" && options.mode !== "logo" && options.mode !== "icon") return samples;
+
+  const flat = samples.flat().filter((sample) => sample.alpha > 0.05);
+  if (!flat.length || flat.some((sample) => sample.alpha < 0.95)) return samples;
+
+  const background = percentile(flat.map((sample) => sample.luma), 0.86);
+  const foreground = percentile(flat.map((sample) => sample.luma), 0.16);
+  const average = flat.reduce((sum, sample) => sum + sample.luma, 0) / flat.length;
+  const darkRatio = flat.filter((sample) => background - sample.luma > 0.22).length / flat.length;
+  const looksLikeSketchOrLogo = background > 0.68 && average > 0.56 && foreground < background - 0.18 && darkRatio < 0.48;
+
+  if (!looksLikeSketchOrLogo) return samples;
+
+  const rows = samples.length;
+  const columns = samples[0]?.length ?? 0;
+  const denoised = samples.map((row, y) =>
+    row.map((sample, x) => {
+      let localSum = 0;
+      let count = 0;
+      for (let yy = Math.max(0, y - 1); yy <= Math.min(rows - 1, y + 1); yy += 1) {
+        for (let xx = Math.max(0, x - 1); xx <= Math.min(columns - 1, x + 1); xx += 1) {
+          localSum += samples[yy][xx].luma;
+          count += 1;
+        }
+      }
+      const localAverage = count ? localSum / count : sample.luma;
+      const globalStroke = clamp((background - sample.luma - 0.055) / Math.max(0.22, background - foreground), 0, 1);
+      const localStroke = clamp((localAverage - sample.luma - 0.018) / 0.2, 0, 1);
+      const gridSuppressed = globalStroke < 0.12 ? 0 : globalStroke;
+      const signal = clamp(Math.pow(Math.max(gridSuppressed, localStroke * 0.75), 0.72), 0, 1);
+      const darkness = signal < 0.08 ? 0 : signal;
+      return { ...sample, luma: 1 - darkness, darkness };
+    }),
+  );
+
+  return denoised.map((row, y) =>
+    row.map((sample, x) => {
+      let maxNeighbor = sample.darkness;
+      for (let yy = Math.max(0, y - 1); yy <= Math.min(rows - 1, y + 1); yy += 1) {
+        for (let xx = Math.max(0, x - 1); xx <= Math.min(columns - 1, x + 1); xx += 1) {
+          maxNeighbor = Math.max(maxNeighbor, denoised[yy][xx].darkness);
+        }
+      }
+      const reinforced = sample.darkness > 0 ? Math.max(sample.darkness, maxNeighbor * 0.38) : maxNeighbor > 0.72 ? 0.18 : 0;
+      return { ...sample, luma: 1 - reinforced, darkness: reinforced };
+    }),
+  );
+}
+
 function buildHeightGrid(samples: ImageSample[][], options: ConvertOptions) {
   const rows = samples.length;
   const columns = samples[0]?.length ?? 0;
@@ -124,6 +181,9 @@ function buildHeightGrid(samples: ImageSample[][], options: ConvertOptions) {
 
       if (options.mode === "heightmap") {
         signal = options.invert ? sample.luma : sample.darkness;
+      } else if (options.mode === "sketch") {
+        signal = options.invert ? sample.luma : sample.darkness;
+        signal = signal >= options.threshold ? Math.max(0.38, signal) : 0;
       } else if (options.mode === "icon" || options.mode === "logo") {
         const transparentBackground = sample.alpha <= 0.05;
         if (hasTransparentPixels) {
@@ -145,7 +205,7 @@ function buildHeightGrid(samples: ImageSample[][], options: ConvertOptions) {
   }
 
   return {
-    heights: smoothGrid(raw, options.mode === "icon" || options.mode === "logo" ? options.smoothing : options.smoothing * 0.5),
+    heights: smoothGrid(raw, options.mode === "icon" || options.mode === "logo" ? options.smoothing : options.mode === "sketch" ? Math.min(0.72, options.smoothing + 0.18) : options.smoothing * 0.5),
     occupiedRatio: rows * columns ? occupied / (rows * columns) : 0,
   };
 }
@@ -321,8 +381,9 @@ export async function pngToStl(file: File, options: ConvertOptions): Promise<{ s
     samples.push(row);
   }
 
-  const { heights, occupiedRatio } = buildHeightGrid(samples, options);
-  const geometryMask = buildGeometryMask(samples, heights, options);
+  const preparedSamples = preprocessLineArtSamples(samples, options);
+  const { heights, occupiedRatio } = buildHeightGrid(preparedSamples, options);
+  const geometryMask = buildGeometryMask(preparedSamples, heights, options);
   const mesh = cropToMaskBounds(heights, geometryMask);
   const meshRows = mesh.heights.length;
   const meshColumns = mesh.heights[0]?.length ?? 0;

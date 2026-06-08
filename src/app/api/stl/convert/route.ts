@@ -31,7 +31,10 @@ export async function POST(request: Request) {
   try {
     const options = parseConvertOptions(formData);
     const result = await pngToStl(file, options);
-    const filename = options.mode === "lithophane" ? "pngtostl-lithophane.stl" : "pngtostl-relief.stl";
+    const filename =
+      options.mode === "lithophane" ? "pngtostl-lithophane.stl" :
+      options.mode === "sketch" ? "pngtostl-sketch-relief.stl" :
+      "pngtostl-relief.stl";
 
     const body = new ArrayBuffer(result.stl.byteLength);
     new Uint8Array(body).set(result.stl);

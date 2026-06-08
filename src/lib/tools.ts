@@ -21,7 +21,7 @@ export type ToolConfig = {
   related: Array<{ label: string; href: string }>;
   faq: Array<{ q: string; a: string }>;
   converter?: {
-    mode: "icon" | "logo" | "relief" | "heightmap" | "lithophane";
+    mode: "icon" | "logo" | "sketch" | "relief" | "heightmap" | "lithophane";
     accept?: string;
     widthMm?: number;
     depth?: number;
