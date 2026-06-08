@@ -186,14 +186,15 @@
     const container = document.createElement('div');
     container.className = 'webglStlPreview';
     container.setAttribute('aria-label', 'Interactive STL preview');
-    container.style.cssText = 'position:absolute;inset:0;border-radius:inherit;overflow:hidden;background:linear-gradient(135deg,#f8fbff,#edf7fb);';
+    container.style.cssText = 'position:absolute;inset:0;border-radius:inherit;overflow:hidden;background:#e8ecef;';
     canvas.style.visibility = 'hidden';
     parent.style.position = 'relative';
     parent.querySelectorAll('.webglStlPreview').forEach((node) => node.remove());
     parent.insertBefore(container, canvas.nextSibling);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(34, Math.max(1, rect.width) / Math.max(1, rect.height), 0.1, 5000);
+    scene.background = new THREE.Color(0xe8ecef);
+    const camera = new THREE.PerspectiveCamera(24, Math.max(1, rect.width) / Math.max(1, rect.height), 0.1, 5000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(rect.width, rect.height);
@@ -209,13 +210,15 @@
     geometry.computeBoundingBox();
     geometry.computeBoundingSphere();
     const radius = Math.max(geometry.boundingSphere ? geometry.boundingSphere.radius : 1, 1);
+    const size = new THREE.Vector3();
+    geometry.boundingBox.getSize(size);
 
     const material = new THREE.MeshPhysicalMaterial({
-      color: 0x5cc7e6,
-      roughness: 0.34,
-      metalness: 0.02,
-      clearcoat: 0.28,
-      clearcoatRoughness: 0.48,
+      color: 0xb8bec4,
+      roughness: 0.66,
+      metalness: 0,
+      clearcoat: 0.08,
+      clearcoatRoughness: 0.72,
       side: THREE.DoubleSide,
     });
     const mesh = new THREE.Mesh(geometry, material);
@@ -223,10 +226,28 @@
     mesh.receiveShadow = true;
     scene.add(mesh);
 
-    const fill = new THREE.HemisphereLight(0xf8fdff, 0x8aa1b8, 1.75);
+    const platformSize = Math.max(size.x, size.z, radius * 1.6) * 1.28;
+    const platform = new THREE.Mesh(
+      new THREE.BoxGeometry(platformSize, Math.max(radius * 0.035, 0.08), platformSize * 0.72),
+      new THREE.MeshStandardMaterial({ color: 0xd4d9de, roughness: 0.86, metalness: 0 })
+    );
+    platform.position.y = -Math.max(size.y * 0.62, radius * 0.16);
+    platform.receiveShadow = true;
+    scene.add(platform);
+
+    const grid = new THREE.GridHelper(platformSize, 16, 0xc7d0d8, 0xd9e0e6);
+    grid.position.y = platform.position.y + Math.max(radius * 0.02, 0.05);
+    grid.material.opacity = 0.42;
+    grid.material.transparent = true;
+    scene.add(grid);
+
+    const fill = new THREE.HemisphereLight(0xffffff, 0x7d858d, 1.12);
     scene.add(fill);
-    const key = new THREE.DirectionalLight(0xffffff, 3.1);
-    key.position.set(-radius * 0.9, radius * 1.6, radius * 2.2);
+    const key = new THREE.DirectionalLight(0xffffff, 3.4);
+    key.position.set(-radius * 1.15, radius * 1.9, radius * 2.35);
+    key.castShadow = true;
+    key.shadow.mapSize.width = 1024;
+    key.shadow.mapSize.height = 1024;
     scene.add(key);
     const soft = new THREE.DirectionalLight(0xdff6ff, 1.35);
     soft.position.set(radius * 1.8, radius * 0.8, radius * 1.1);
@@ -235,8 +256,8 @@
     rim.position.set(radius * 1.8, radius * 1.0, -radius * 1.6);
     scene.add(rim);
 
-    const cameraDistance = radius * 2.45;
-    camera.position.set(radius * 0.18, radius * 0.72, cameraDistance);
+    const cameraDistance = radius * 2.85;
+    camera.position.set(radius * 0.78, radius * 1.12, cameraDistance);
     camera.lookAt(0, 0, 0);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -248,7 +269,7 @@
     function applyMode() {
       const wireframe = canvas.dataset.previewMode === 'wireframe';
       material.wireframe = wireframe;
-      material.color.setHex(wireframe ? 0x123f62 : 0x5cc7e6);
+      material.color.setHex(wireframe ? 0x1d3445 : 0xb8bec4);
       material.roughness = wireframe ? 0.72 : 0.34;
       material.needsUpdate = true;
     }
@@ -258,7 +279,7 @@
     canvas._pngtostlApplyMode = applyMode;
     canvas._pngtostlResetView = () => {
       controls.reset();
-      camera.position.set(radius * 0.18, radius * 0.72, cameraDistance);
+      camera.position.set(radius * 0.78, radius * 1.12, cameraDistance);
       camera.lookAt(0, 0, 0);
     };
     applyMode();
