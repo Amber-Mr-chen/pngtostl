@@ -178,19 +178,23 @@
     }
 
     function normalizeImageFile(file) {
-      if (file.type === 'image/png') return Promise.resolve(file);
-      const supportedInput = ['image/jpeg', 'image/webp', 'image/gif', 'image/bmp', 'image/svg+xml'].includes(file.type);
+      const supportedInput = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/bmp', 'image/svg+xml'].includes(file.type);
       if (!supportedInput) return Promise.reject(new Error('Unsupported image format. Use PNG, JPG, WebP, GIF, BMP, or SVG.'));
       return new Promise((resolve, reject) => {
         const image = new Image();
         const objectUrl = URL.createObjectURL(file);
         image.onload = () => {
           try {
+            const sourceWidth = image.naturalWidth || image.width;
+            const sourceHeight = image.naturalHeight || image.height;
+            const maxInputSide = 1024;
+            const scale = Math.min(1, maxInputSide / Math.max(sourceWidth, sourceHeight, 1));
             const canvas = document.createElement('canvas');
-            canvas.width = image.naturalWidth || image.width;
-            canvas.height = image.naturalHeight || image.height;
+            canvas.width = Math.max(1, Math.round(sourceWidth * scale));
+            canvas.height = Math.max(1, Math.round(sourceHeight * scale));
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(image, 0, 0);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
             URL.revokeObjectURL(objectUrl);
             canvas.toBlob((blob) => {
               if (!blob) {
@@ -261,7 +265,7 @@
 
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 25000);
+        const timeoutId = setTimeout(() => controller.abort(), 60000);
         const response = await fetch('/api/stl/convert', { method: 'POST', body: formData, signal: controller.signal });
         clearTimeout(timeoutId);
         if (!response.ok) {
