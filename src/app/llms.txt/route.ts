@@ -21,6 +21,11 @@ export function GET() {
     .map((page) => `- [${page.title}](${base}/${page.slug}): ${page.description}`)
     .join("\n");
 
+  const commercial = [
+    ["Pricing", `${base}/pricing`, "Current free image-to-STL access and planned Pro, batch, and API options for commercial workflows."],
+    ["Developers and Batch Conversion", `${base}/developers`, "Early access information for batch image-to-STL conversion, API workflows, and commercial PNGtoSTL use cases."],
+  ];
+
   const examples = sampleWorkflows
     .map((sample) => `- [${sample.title}](${base}/samples): ${sample.input} -> ${sample.output}. Example STL: ${base}${sample.stlPath}`)
     .join("\n");
@@ -46,6 +51,10 @@ ${helpers}
 
 - [Image to STL Examples](${base}/samples): Source images, generated STL previews, recommended settings, and downloadable STL files for real image-to-STL workflows.
 ${examples}
+
+## Commercial and API Access
+
+${commercial.map(([title, url, description]) => `- [${title}](${url}): ${description}`).join("\n")}
 
 ## Key Facts
 

@@ -98,6 +98,18 @@ export async function generateMetadata({ params }: { params: SlugParams }): Prom
       title: tool.title,
       description: tool.description,
       alternates: { canonical: `/${tool.slug}` },
+      openGraph: {
+        type: "website",
+        url: `https://pngtostl.net/${tool.slug}`,
+        siteName: "PNGtoSTL",
+        title: `${tool.title} | PNGtoSTL`,
+        description: tool.description,
+      },
+      twitter: {
+        card: "summary",
+        title: `${tool.title} | PNGtoSTL`,
+        description: tool.description,
+      },
     };
   }
 
@@ -107,6 +119,18 @@ export async function generateMetadata({ params }: { params: SlugParams }): Prom
       title: helper.title,
       description: helper.description,
       alternates: { canonical: `/${helper.slug}` },
+      openGraph: {
+        type: "website",
+        url: `https://pngtostl.net/${helper.slug}`,
+        siteName: "PNGtoSTL",
+        title: `${helper.title} | PNGtoSTL`,
+        description: helper.description,
+      },
+      twitter: {
+        card: "summary",
+        title: `${helper.title} | PNGtoSTL`,
+        description: helper.description,
+      },
     };
   }
 
@@ -133,10 +157,24 @@ export async function generateMetadata({ params }: { params: SlugParams }): Prom
   }
 
   if (slug === "faq") {
+    const title = "PNG to STL FAQ";
+    const description = "Quick answers about PNG to STL, image to STL, lithophane output, supported image formats, print limits, and realistic 2D-to-3D expectations.";
     return {
-      title: "PNG to STL FAQ",
-      description: "Quick answers about PNG to STL, image to STL, lithophane output, and 3D printing limits.",
+      title,
+      description,
       alternates: { canonical: "/faq" },
+      openGraph: {
+        type: "website",
+        url: "https://pngtostl.net/faq",
+        siteName: "PNGtoSTL",
+        title: `${title} | PNGtoSTL`,
+        description,
+      },
+      twitter: {
+        card: "summary",
+        title: `${title} | PNGtoSTL`,
+        description,
+      },
     };
   }
 

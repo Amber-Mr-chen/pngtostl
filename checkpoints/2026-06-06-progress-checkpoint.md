@@ -7,6 +7,25 @@ Branch: `main`
 
 ## Current status
 
+Latest update — 2026-06-08 12:32 CST:
+
+- Owner asked to optimize remaining SEO/GEO items in priority order and consider related items.
+- Completed P1/P2 optimization pass:
+  - Added page-specific Open Graph and Twitter metadata for dynamic tool pages, helper pages, and FAQ in `src/app/[slug]/page.tsx`.
+  - Expanded short meta descriptions in `src/lib/tools.ts` for `/logo-to-stl`, `/lithophane-generator`, `/heightmap-to-stl`, `/convert-image-to-stl`, `/photo-to-lithophane`, `/3d-print-photo`, `/2d-image-to-3d-model`, `/image-contrast-guide`, and `/print-settings-checker`.
+  - Added richer intent, checklist, steps, FAQs, and sample preset links for `/image-contrast-guide` and `/print-settings-checker`.
+  - Added `Commercial and API Access` section to `/llms.txt` route covering `/pricing` and `/developers`.
+- Build/deploy passed: `npm run lint && npm run build && npm run cf:build && npm run cf:deploy`.
+  - Lint warning only: existing `BrandMark.tsx` uses `<img>`.
+  - Cloudflare Worker version: `1aaf4c14-2bb7-4b00-b681-dca45f3bda5d`.
+- Production verification passed:
+  - Checked `/logo-to-stl`, `/lithophane-generator`, `/heightmap-to-stl`, `/convert-image-to-stl`, `/photo-to-lithophane`, `/3d-print-photo`, `/2d-image-to-3d-model`, `/image-contrast-guide`, `/print-settings-checker`, `/faq`.
+  - Description lengths now 136–153 for optimized pages, FAQ 140.
+  - OG/Twitter descriptions match page-specific metadata.
+  - `H1 = 1`, missing image alt = 0 for all checked pages.
+  - `/image-contrast-guide` words: 1498; `/print-settings-checker` words: 1601.
+  - `/llms.txt` contains `/pricing`, `/developers`, and `Commercial and API Access`.
+
 Latest update — 2026-06-08 11:52 CST:
 
 - Owner reported the browser/site icon disappeared.
