@@ -105,6 +105,7 @@ function smoothGrid(grid: number[][], amount: number) {
 function buildHeightGrid(samples: ImageSample[][], options: ConvertOptions) {
   const rows = samples.length;
   const columns = samples[0]?.length ?? 0;
+  const hasTransparentPixels = samples.some((row) => row.some((sample) => sample.alpha < 0.95));
   const raw: number[][] = [];
   let occupied = 0;
 
@@ -125,9 +126,14 @@ function buildHeightGrid(samples: ImageSample[][], options: ConvertOptions) {
         signal = options.invert ? sample.luma : sample.darkness;
       } else if (options.mode === "icon" || options.mode === "logo") {
         const transparentBackground = sample.alpha <= 0.05;
-        const darkEnough = sample.darkness >= options.threshold;
-        signal = transparentBackground || !darkEnough ? 0 : sample.darkness;
-        if (options.invert) signal = transparentBackground ? 0 : sample.luma >= options.threshold ? sample.luma : 0;
+        if (hasTransparentPixels) {
+          signal = transparentBackground ? 0 : Math.max(0.35, sample.darkness);
+          if (options.invert) signal = transparentBackground ? 0 : Math.max(0.35, sample.luma);
+        } else {
+          const darkEnough = sample.darkness >= options.threshold;
+          signal = !darkEnough ? 0 : sample.darkness;
+          if (options.invert) signal = sample.luma >= options.threshold ? sample.luma : 0;
+        }
       } else {
         signal = options.invert ? sample.luma : sample.darkness;
       }

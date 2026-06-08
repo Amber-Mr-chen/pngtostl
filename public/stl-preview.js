@@ -45,6 +45,16 @@
     return box;
   }
 
+  function previewTriangles(triangles, box) {
+    const minRaisedY = box.minY + Math.max(0.03, (box.maxY - box.minY) * 0.02);
+    const raised = triangles.filter((tri) => tri.some((p) => p.y > minRaisedY));
+    const source = raised.length ? raised : triangles;
+    const maxPreviewTriangles = 22000;
+    if (source.length <= maxPreviewTriangles) return source;
+    const stride = Math.ceil(source.length / maxPreviewTriangles);
+    return source.filter((_, index) => index % stride === 0);
+  }
+
   function render(canvas, triangles, angle) {
     const ctx = canvas.getContext('2d');
     const rect = canvas.getBoundingClientRect();
@@ -63,6 +73,7 @@
 
     if (!triangles.length) return;
     const box = bounds(triangles);
+    const displayTriangles = previewTriangles(triangles, box);
     const cx = (box.minX + box.maxX) / 2;
     const cy = (box.minY + box.maxY) / 2;
     const cz = (box.minZ + box.maxZ) / 2;
@@ -86,13 +97,15 @@
       return { x: w / 2 + x1 * scale, y: h / 2 - y2 * scale, z: z2 };
     }
 
-    const projected = triangles.map((tri) => {
+    const heightSpan = Math.max(box.maxY - box.minY, 0.001);
+    const projected = displayTriangles.map((tri) => {
       const pts = tri.map(project);
-      return { pts, z: (pts[0].z + pts[1].z + pts[2].z) / 3 };
+      const avgY = tri.reduce((sum, p) => sum + p.y, 0) / 3;
+      return { pts, z: (pts[0].z + pts[1].z + pts[2].z) / 3, heightSignal: (avgY - box.minY) / heightSpan };
     }).sort((a, b) => a.z - b.z);
 
-    projected.forEach(({ pts, z }) => {
-      const shade = Math.max(45, Math.min(86, 66 + z * 2));
+    projected.forEach(({ pts, heightSignal }) => {
+      const shade = Math.max(34, Math.min(88, 88 - heightSignal * 54));
       ctx.beginPath();
       ctx.moveTo(pts[0].x, pts[0].y);
       ctx.lineTo(pts[1].x, pts[1].y);

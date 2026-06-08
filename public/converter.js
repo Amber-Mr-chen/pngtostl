@@ -145,6 +145,38 @@
       setMetrics([]);
     }
 
+    function inspectImageFile(file) {
+      if (!file || !file.type || !file.type.startsWith('image/')) return Promise.resolve({ hasTransparency: false });
+      return new Promise((resolve) => {
+        const image = new Image();
+        const objectUrl = URL.createObjectURL(file);
+        image.onload = () => {
+          try {
+            const max = 80;
+            const scale = Math.min(1, max / Math.max(image.naturalWidth || image.width, image.naturalHeight || image.height, 1));
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.max(1, Math.round((image.naturalWidth || image.width) * scale));
+            canvas.height = Math.max(1, Math.round((image.naturalHeight || image.height) * scale));
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+            let transparent = 0;
+            for (let i = 3; i < data.length; i += 4) if (data[i] < 245) transparent += 1;
+            URL.revokeObjectURL(objectUrl);
+            resolve({ hasTransparency: transparent / Math.max(1, data.length / 4) > 0.08 });
+          } catch (_) {
+            URL.revokeObjectURL(objectUrl);
+            resolve({ hasTransparency: false });
+          }
+        };
+        image.onerror = () => {
+          URL.revokeObjectURL(objectUrl);
+          resolve({ hasTransparency: false });
+        };
+        image.src = objectUrl;
+      });
+    }
+
     function normalizeImageFile(file) {
       if (file.type === 'image/png') return Promise.resolve(file);
       const supportedInput = ['image/jpeg', 'image/webp', 'image/gif', 'image/bmp', 'image/svg+xml'].includes(file.type);
@@ -192,10 +224,15 @@
       }
 
       setButtonState('Generating STL...', true);
-      trackBoth('converter_generate_clicked', 'pngtostl_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
+      const imageInfo = await inspectImageFile(file);
+      if (modeInput && selectedMode() === 'relief' && imageInfo.hasTransparency) {
+        modeInput.value = 'logo';
+        setText(message, 'Transparent background detected. Using logo/cutout relief so the subject does not become a full square plate...');
+      }
+      trackBoth('converter_generate_clicked', 'pngtostl_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024), auto_mode: selectedMode() });
       trackSamplePreset('sample_preset_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       setText(status, 'Processing');
-      setText(message, 'Generating a fast preview STL at detail level ' + (detailInput ? detailInput.value : '96') + '...');
+      if (!imageInfo.hasTransparency) setText(message, 'Generating a fast preview STL at detail level ' + (detailInput ? detailInput.value : '96') + '...');
 
       let normalizedFile;
       try {
