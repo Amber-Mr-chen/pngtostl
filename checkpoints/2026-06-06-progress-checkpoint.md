@@ -7,6 +7,24 @@ Branch: `main`
 
 ## Current status
 
+Latest update — 2026-06-08 13:01 CST:
+
+- Owner asked to submit after SEO on-site optimization was complete.
+- Loaded/followed `student-backlink-building` and `site-ops-growth-launch` rules: submit only free/public/allowed routes; stop for login, CAPTCHA/Cloudflare, payment, reciprocal link, or site modification.
+- Reconfirmed existing pending channels from earlier cold-start work:
+  - Launching Next: `pending_review`.
+  - Hackaday Submit A Tip: `pending_review`.
+  - GitHub awesome-3d-printing PR #92: `pending_review`.
+- New 2026-06-08 directory preflight outcomes logged in `ops/coldstart-submission-log.md`:
+  - Startup List: `manual_required` — sign-in/create-account required before form.
+  - The Startup Project: `needs_approval` — public form requires a backlink from PNGtoSTL to maintain the listing.
+  - Indie Dev Tools: `manual_required` — add-tool route showed login/sign-up UI.
+  - GeekWire Startup List: `manual_required` — Cloudflare block page.
+  - YourStory Companies: `manual_required` — Google Form required Google sign-in.
+  - 1000.tools: `needs_approval` — after URL/email, routed to Stripe subscription checkout: `$1` today, then `$5.99/mo`.
+  - FinancesOnline: `needs_approval` — B2B/SaaS lead form has hidden reCAPTCHA, monthly ad budget field, and consent to receive service offer.
+- No new public submission was marked submitted/listed/pending_review because no new candidate passed the safe/free/no-login/no-CAPTCHA/no-payment/no-reciprocal gates.
+
 Latest update — 2026-06-08 12:48 CST:
 
 - Owner approved remaining P2 optimization.

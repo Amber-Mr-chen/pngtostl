@@ -281,3 +281,68 @@ Some candidates below have since been attempted after owner approval. Treat each
   - Evidence: HTTP POST to the public Jetpack contact form returned 200; final URL included `contact-form-id=2542&contact-form-sent=1116626&contact-form-hash=380eee749dc8097bb2079b2bd11d9b24e9ff6474`; response text included `Thank you for your response.` Evidence snippet saved at `ops/hackaday-submit-response-snippet.txt`.
   - Next follow-up date: 2026-06-14
   - Notes: Browser rendering timed out, matching preflight behavior, but no CAPTCHA/payment/login/reciprocal requirement was present in the public form. No files were uploaded.
+
+## 2026-06-08
+
+- Channel: Startup List
+  - Type: startup_directory
+  - Candidate URL: `https://startup-list.org/submit`
+  - Target URL: `https://pngtostl.net/?utm_source=startup_list&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit`
+  - Status: manual_required
+  - Evidence: Browser preflight loaded the submit page, but the page showed `Sign in to Submit` with `Sign In` and `Create Account` links; no public product form was available without account action.
+  - Next follow-up date: 2026-06-15
+  - Notes: Do not create/login account automatically. Revisit only if owner wants account-assisted listing.
+
+- Channel: The Startup Project
+  - Type: startup_directory
+  - Candidate URL: `https://startupproject.org/submit-startup/`
+  - Target URL: `https://pngtostl.net/?utm_source=startup_project&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit_startup`
+  - Status: needs_approval
+  - Evidence: Public form was visible, but required checkbox text said a link back to the listing from the product website is required to maintain the listing.
+  - Next follow-up date: none
+  - Notes: Stopped before submission because reciprocal/site-modification requirements require explicit owner approval and likely are not worth changing the product site now.
+
+- Channel: Indie Dev Tools
+  - Type: directory
+  - Candidate URL: `https://indiedev.tools/add-tool`
+  - Target URL: `https://pngtostl.net/?utm_source=indiedev_tools&utm_medium=listing&utm_campaign=launch_v1&utm_content=add_tool`
+  - Status: manual_required
+  - Evidence: Browser route rendered login UI (`Sign up`, `Log in`, `Sign in with Google`) and no add-tool form was available without account action.
+  - Next follow-up date: 2026-06-15
+  - Notes: Relevant directory, but owner login/account required. Do not proceed automatically.
+
+- Channel: GeekWire Startup List
+  - Type: startup_directory
+  - Candidate URL: `https://www.geekwire.com/submit-startup/`
+  - Target URL: `https://pngtostl.net/?utm_source=geekwire&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit_startup`
+  - Status: manual_required
+  - Evidence: Browser preflight returned Cloudflare block page titled `Attention Required! | Cloudflare` with `Sorry, you have been blocked`.
+  - Next follow-up date: none
+  - Notes: Do not bypass Cloudflare. Lower fit than maker/dev channels.
+
+- Channel: YourStory Companies
+  - Type: startup_directory
+  - Candidate URL: `https://docs.google.com/forms/d/e/1FAIpQLSetnejE9KBrZoqrnqR3Ts4Pd3eN3MjB-honhmImL59HPu14Eg/viewform`
+  - Target URL: `https://pngtostl.net/?utm_source=yourstory&utm_medium=listing&utm_campaign=launch_v1&utm_content=companies_form`
+  - Status: manual_required
+  - Evidence: Google Form redirected to Google Forms sign-in page before the form was accessible.
+  - Next follow-up date: none
+  - Notes: Requires owner Google login; not submitted.
+
+- Channel: 1000.tools
+  - Type: directory
+  - Candidate URL: `https://1000.tools/`
+  - Target URL: `https://pngtostl.net/?utm_source=1000_tools&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit_tool`
+  - Status: needs_approval
+  - Evidence: Initial submit flow accepted Tool URL and email, but clicking `Next` routed to Stripe subscription checkout: `$1.00` due today, then `$5.99` per month starting next month.
+  - Next follow-up date: none
+  - Notes: Stopped at payment page and did not enter payment details. Treat as paid subscription listing unless owner explicitly approves.
+
+- Channel: FinancesOnline
+  - Type: software_directory
+  - Candidate URL: `https://financesonline.com/add-product/`
+  - Target URL: `https://pngtostl.net/?utm_source=financesonline&utm_medium=listing&utm_campaign=launch_v1&utm_content=add_product`
+  - Status: needs_approval
+  - Evidence: Add-product form exists but includes hidden `g-recaptcha-response`, a required monthly advertising budget field, required consent for processing information for the purpose of sharing an accurate offer of their services, and B2B/SaaS sales-lead positioning.
+  - Next follow-up date: none
+  - Notes: Not a clean free listing route; stopped before filling fields.
