@@ -55,6 +55,60 @@
     return source.filter((_, index) => index % stride === 0);
   }
 
+  function renderSolidHeightmap(canvas, triangles, box, ctx, w, h) {
+    const columns = 240;
+    const rows = 240;
+    const heights = new Float32Array(columns * rows);
+    const seen = new Uint8Array(columns * rows);
+    const xSpan = Math.max(box.maxX - box.minX, 0.001);
+    const zSpan = Math.max(box.maxZ - box.minZ, 0.001);
+    const ySpan = Math.max(box.maxY - box.minY, 0.001);
+
+    triangles.forEach((tri) => tri.forEach((point) => {
+      const heightSignal = (point.y - box.minY) / ySpan;
+      if (heightSignal < 0.035) return;
+      const x = Math.max(0, Math.min(columns - 1, Math.round(((point.x - box.minX) / xSpan) * (columns - 1))));
+      const y = Math.max(0, Math.min(rows - 1, Math.round(((point.z - box.minZ) / zSpan) * (rows - 1))));
+      const index = y * columns + x;
+      heights[index] = Math.max(heights[index], heightSignal);
+      seen[index] = 1;
+    }));
+
+    const scale = Math.min(w * 0.78 / columns, h * 0.78 / rows);
+    const cell = Math.max(1.2, scale * 2.35);
+    const offsetX = (w - columns * scale) / 2;
+    const offsetY = (h - rows * scale) / 2;
+
+    ctx.save();
+    ctx.shadowColor = 'rgba(15, 31, 48, .18)';
+    ctx.shadowBlur = 18;
+    ctx.shadowOffsetY = 10;
+    ctx.fillStyle = 'rgba(19, 73, 111, .22)';
+    for (let row = 0; row < rows; row += 1) {
+      for (let column = 0; column < columns; column += 1) {
+        const index = row * columns + column;
+        if (!seen[index]) continue;
+        const x = offsetX + column * scale;
+        const y = offsetY + row * scale;
+        ctx.fillRect(x, y, cell, cell);
+      }
+    }
+    ctx.restore();
+
+    for (let row = 0; row < rows; row += 1) {
+      for (let column = 0; column < columns; column += 1) {
+        const index = row * columns + column;
+        if (!seen[index]) continue;
+        const h0 = heights[index];
+        const right = column + 1 < columns ? heights[index + 1] : h0;
+        const down = row + 1 < rows ? heights[index + columns] : h0;
+        const light = Math.max(31, Math.min(86, 82 - h0 * 54 - (h0 - right) * 18 - (h0 - down) * 12));
+        ctx.fillStyle = `hsl(202 62% ${light}%)`;
+        ctx.fillRect(offsetX + column * scale, offsetY + row * scale, cell, cell);
+      }
+    }
+  }
+
   function render(canvas, triangles, angle) {
     const ctx = canvas.getContext('2d');
     const rect = canvas.getBoundingClientRect();
@@ -73,6 +127,11 @@
 
     if (!triangles.length) return;
     const box = bounds(triangles);
+    if (canvas.dataset.previewMode !== 'wireframe' && Math.abs(angle) < 0.001) {
+      renderSolidHeightmap(canvas, triangles, box, ctx, w, h);
+      return;
+    }
+
     const displayTriangles = previewTriangles(triangles, box);
     const cx = (box.minX + box.maxX) / 2;
     const cy = (box.minY + box.maxY) / 2;
