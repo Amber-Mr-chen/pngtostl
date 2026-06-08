@@ -286,13 +286,54 @@ function buildSketchContentMask(samples: ImageSample[][], options: ConvertOption
   const rows = samples.length;
   const columns = samples[0]?.length ?? 0;
   const seed = samples.map((row) => row.map((sample) => sample.darkness >= options.threshold));
+  const horizontalRuns = Array.from({ length: rows }, () => Array.from({ length: columns }, () => 0));
+  const verticalRuns = Array.from({ length: rows }, () => Array.from({ length: columns }, () => 0));
+
+  for (let y = 0; y < rows; y += 1) {
+    let x = 0;
+    while (x < columns) {
+      if (!seed[y][x]) {
+        x += 1;
+        continue;
+      }
+      const start = x;
+      while (x < columns && seed[y][x]) x += 1;
+      const length = x - start;
+      for (let xx = start; xx < x; xx += 1) horizontalRuns[y][xx] = length;
+    }
+  }
+
+  for (let x = 0; x < columns; x += 1) {
+    let y = 0;
+    while (y < rows) {
+      if (!seed[y][x]) {
+        y += 1;
+        continue;
+      }
+      const start = y;
+      while (y < rows && seed[y][x]) y += 1;
+      const length = y - start;
+      for (let yy = start; yy < y; yy += 1) verticalRuns[yy][x] = length;
+    }
+  }
+
+  const gridSuppressed = seed.map((row, y) =>
+    row.map((active, x) => {
+      if (!active) return false;
+      const sample = samples[y][x];
+      const longHorizontal = horizontalRuns[y][x] > Math.max(20, columns * 0.16);
+      const longVertical = verticalRuns[y][x] > Math.max(18, rows * 0.16);
+      const weakStraightLine = (longHorizontal || longVertical) && sample.darkness < 0.78;
+      return !weakStraightLine;
+    }),
+  );
   const visited = Array.from({ length: rows }, () => Array.from({ length: columns }, () => false));
   const kept = Array.from({ length: rows }, () => Array.from({ length: columns }, () => false));
   const minComponentArea = Math.max(10, Math.round(rows * columns * 0.00035));
 
   for (let y = 0; y < rows; y += 1) {
     for (let x = 0; x < columns; x += 1) {
-      if (!seed[y][x] || visited[y][x]) continue;
+      if (!gridSuppressed[y][x] || visited[y][x]) continue;
       const stack: Array<[number, number]> = [[x, y]];
       const component: Array<[number, number]> = [];
       visited[y][x] = true;
@@ -302,7 +343,7 @@ function buildSketchContentMask(samples: ImageSample[][], options: ConvertOption
         component.push([cx, cy]);
         for (let yy = Math.max(0, cy - 1); yy <= Math.min(rows - 1, cy + 1); yy += 1) {
           for (let xx = Math.max(0, cx - 1); xx <= Math.min(columns - 1, cx + 1); xx += 1) {
-            if (!seed[yy][xx] || visited[yy][xx]) continue;
+            if (!gridSuppressed[yy][xx] || visited[yy][xx]) continue;
             visited[yy][xx] = true;
             stack.push([xx, yy]);
           }
