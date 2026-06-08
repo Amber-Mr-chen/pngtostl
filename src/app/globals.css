@@ -1202,7 +1202,7 @@ a {
 .previewStage { min-height: 430px; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: #f8fafc; display: grid; grid-template-rows: minmax(320px, 1fr) auto; }
 .previewStage canvas { width: 100%; height: 100%; min-height: 320px; display: block; }
 .previewStage [data-converter-message] { min-height: 92px; display: grid; place-items: center; border-top: 1px solid var(--line); background: rgba(255,255,255,.84); color: var(--muted); text-align: center; padding: 16px; line-height: 1.5; white-space: pre-line; }
-.resultMetrics { display: none; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.resultMetrics { display: none; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
 .resultMetrics > div, .outputFacts > div { border: 1px solid var(--line); border-radius: 14px; background: #fff; padding: 12px; }
 .resultMetrics span, .outputFacts span { display: block; color: var(--muted); font-size: 0.78rem; font-weight: 750; }
 .resultMetrics strong, .outputFacts strong { display: block; margin-top: 4px; }
@@ -2454,11 +2454,14 @@ box-shadow: inset 0 0 0 1px rgba(7,17,31,0.08), 0 16px 22px rgba(7,17,31,0.1);
   z-index: 4;
   top: 12px;
   right: 12px;
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: min(92%, 430px);
   gap: 4px;
   padding: 4px;
   border-radius: 10px;
-  background: rgba(255,255,255,0.86);
+  background: rgba(255,255,255,0.9);
   box-shadow: 0 0 0 1px rgba(7,17,31,0.08), 0 10px 24px rgba(7,17,31,0.08);
   backdrop-filter: blur(10px);
 }
@@ -2472,6 +2475,7 @@ box-shadow: inset 0 0 0 1px rgba(7,17,31,0.08), 0 16px 22px rgba(7,17,31,0.1);
   font-size: 0.74rem;
   font-weight: 560;
 }
+.viewportToolbar span.active,
 .viewportToolbar span:first-child {
   background: #07111f;
   color: #fff;
@@ -2509,6 +2513,7 @@ box-shadow: inset 0 0 0 1px rgba(7,17,31,0.08), 0 16px 22px rgba(7,17,31,0.1);
   .toolHero,
   .converterWorkspace form { grid-template-columns: 1fr; }
   .compactTrust { align-self: auto; }
+  .resultMetrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
   .toolHero h1 { font-size: clamp(2.25rem, 13vw, 3.6rem); }

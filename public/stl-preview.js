@@ -226,6 +226,14 @@
     mesh.scale.x = -1;
     scene.add(mesh);
 
+    const edgeLines = new THREE.LineSegments(
+      new THREE.EdgesGeometry(geometry, 28),
+      new THREE.LineBasicMaterial({ color: 0x6f7780, transparent: true, opacity: 0.16 })
+    );
+    edgeLines.scale.x = -1;
+    edgeLines.visible = false;
+    scene.add(edgeLines);
+
     const platformSize = Math.max(size.x, size.z, radius * 1.6) * 1.28;
     const platform = new THREE.Mesh(
       new THREE.BoxGeometry(platformSize, Math.max(radius * 0.035, 0.08), platformSize * 0.72),
@@ -279,15 +287,22 @@
     const fitOrthographicCamera = () => {
       const next = canvas.getBoundingClientRect();
       const nextAspect = Math.max(1, next.width) / Math.max(1, next.height);
-      const halfHeight = radius * 1.08;
+      const halfHeight = radius * 1.0;
       camera.left = -halfHeight * nextAspect;
       camera.right = halfHeight * nextAspect;
       camera.top = halfHeight;
       camera.bottom = -halfHeight;
       camera.updateProjectionMatrix();
     };
+    const setView = (view) => {
+      if (view === 'top') camera.position.set(0, cameraDistance, 0.001);
+      else if (view === 'front') camera.position.set(0, radius * 0.36, -cameraDistance);
+      else camera.position.set(radius * 0.38, radius * 0.86, -cameraDistance);
+      camera.lookAt(0, 0, 0);
+      controls?.update?.();
+    };
     fitOrthographicCamera();
-    camera.position.set(radius * 0.28, radius * 0.82, -cameraDistance);
+    camera.position.set(radius * 0.38, radius * 0.86, -cameraDistance);
     camera.lookAt(0, 0, 0);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -297,20 +312,22 @@
     controls.target.set(0, 0, 0);
 
     function applyMode() {
-      const wireframe = canvas.dataset.previewMode === 'wireframe';
+      const mode = canvas.dataset.previewMode || 'solid';
+      const wireframe = mode === 'wireframe';
       material.wireframe = wireframe;
-      material.color.setHex(wireframe ? 0x1d3445 : 0xc9ced3);
-      material.roughness = wireframe ? 0.72 : 0.82;
+      edgeLines.visible = mode === 'edges';
+      material.color.setHex(wireframe ? 0x1d3445 : 0xaeb5bc);
+      material.roughness = wireframe ? 0.72 : 0.88;
       material.needsUpdate = true;
     }
 
     canvas.dataset.previewRenderer = 'webgl';
     canvas.dataset.previewReady = '1';
     canvas._pngtostlApplyMode = applyMode;
+    canvas._pngtostlSetView = setView;
     canvas._pngtostlResetView = () => {
       controls.reset();
-      camera.position.set(radius * 0.28, radius * 0.82, -cameraDistance);
-      camera.lookAt(0, 0, 0);
+      setView('iso');
     };
     applyMode();
 
@@ -342,7 +359,11 @@
           if (!target) return;
           const label = target.textContent.trim().toLowerCase();
           if (label.includes('solid')) canvas.dataset.previewMode = 'solid';
+          if (label.includes('edges')) canvas.dataset.previewMode = 'edges';
           if (label.includes('wireframe')) canvas.dataset.previewMode = 'wireframe';
+          if (label.includes('front') && typeof canvas._pngtostlSetView === 'function') canvas._pngtostlSetView('front');
+          if (label.includes('iso') && typeof canvas._pngtostlSetView === 'function') canvas._pngtostlSetView('iso');
+          if (label.includes('top') && typeof canvas._pngtostlSetView === 'function') canvas._pngtostlSetView('top');
           if (label.includes('reset') && typeof canvas._pngtostlResetView === 'function') canvas._pngtostlResetView();
           if (typeof canvas._pngtostlApplyMode === 'function') canvas._pngtostlApplyMode();
           toolbar.querySelectorAll('span').forEach((item) => item.classList.toggle('active', item === target && !label.includes('reset')));

@@ -336,8 +336,12 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
 
           <div className="previewStage">
             <div className="viewportToolbar" aria-label="Preview viewport controls">
-              <span>Solid</span>
+              <span className="active">Solid</span>
+              <span>Edges</span>
               <span>Wireframe</span>
+              <span>Front</span>
+              <span>Iso</span>
+              <span>Top</span>
               <span>Reset view</span>
             </div>
             <canvas data-stl-preview="true" aria-label="Generated STL preview" />

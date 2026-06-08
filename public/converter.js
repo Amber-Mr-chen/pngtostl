@@ -96,6 +96,16 @@
       syncRange(input);
     }
 
+    function formatNumber(value) {
+      const number = Number(value);
+      return Number.isFinite(number) ? number.toLocaleString('en-US') : String(value || 'n/a');
+    }
+
+    function formatFileSize(bytes) {
+      const size = Number(bytes) || 0;
+      return size >= 1024 * 1024 ? (size / 1024 / 1024).toFixed(1) + ' MB' : Math.round(size / 1024) + ' KB';
+    }
+
     function setMetrics(items) {
       if (!metrics) return;
       if (!items || !items.length) {
@@ -354,10 +364,15 @@
         setText(status, 'STL ready');
         trackBoth('converter_generate_success', 'pngtostl_generate_success', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
         trackSamplePreset('sample_preset_generate_success', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
+        const widthMm = Math.round(Number(widthInput ? widthInput.value : 0) || 0);
+        const reliefMm = Number(depthInput ? depthInput.value : 0) || 0;
         setMetrics([
-          { label: 'Triangles', value: triangleCount },
-          { label: 'File size', value: Math.round(blob.size / 1024) + ' KB' },
+          { label: 'Triangles', value: formatNumber(triangleCount) },
+          { label: 'File size', value: formatFileSize(blob.size) },
           { label: 'Coverage', value: occupiedRatio ? Math.round(Number(occupiedRatio) * 100) + '%' : 'n/a' },
+          { label: 'Size', value: widthMm ? widthMm + ' mm wide' : 'n/a' },
+          { label: 'Relief depth', value: reliefMm ? reliefMm.toFixed(1) + ' mm' : 'n/a' },
+          { label: 'Mesh check', value: 'Printable STL' },
         ]);
         setText(
           message,
