@@ -21,6 +21,7 @@
     const detailInput = form.querySelector('input[name="detail"]');
     const invertInput = form.querySelector('input[name="invert"]');
     const hasSamplePreset = form.dataset.samplePreset === 'true';
+    let lastFileSignature = '';
 
     function setText(el, text) {
       if (el) el.textContent = text;
@@ -113,9 +114,10 @@
     function syncFile() {
       const file = fileInput && fileInput.files && fileInput.files[0];
       if (!file) {
+        lastFileSignature = '';
         setText(status, 'Waiting for image');
         setText(message, emptyMessage());
-        setButtonState('Upload an image first', true);
+        setButtonState('Choose an image first', true);
         if (downloadLink) {
           downloadLink.style.display = 'none';
           downloadLink.removeAttribute('href');
@@ -123,8 +125,11 @@
         setMetrics([]);
         return;
       }
-      setText(status, 'File selected');
-      setButtonState('Generate STL', false);
+      const signature = [file.name, file.size, file.lastModified || 0].join(':');
+      if (signature === lastFileSignature && button && !button.disabled) return;
+      lastFileSignature = signature;
+      setText(status, 'Image selected');
+      setButtonState('Generate STL now', false);
       if (downloadLink) {
         downloadLink.style.display = 'none';
         downloadLink.removeAttribute('href');
@@ -134,7 +139,7 @@
         const ctx = previewCanvas.getContext('2d');
         if (ctx) ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
       }
-      setText(message, file.name + ' selected.\nTune the basic settings, then generate a previewable STL.');
+      setText(message, file.name + ' selected.\nClick “Generate STL now” to create the preview and download. You can adjust settings first if needed.');
       trackBoth('converter_upload_selected', 'pngtostl_upload_selected', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       trackSamplePreset('sample_preset_upload_selected', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       setMetrics([]);
@@ -182,7 +187,7 @@
       if (!file) {
         setText(status, 'Waiting for image');
         setText(message, 'Upload an image before generating an STL.');
-        setButtonState('Upload an image first', true);
+        setButtonState('Choose an image first', true);
         return;
       }
 
@@ -282,14 +287,22 @@
         });
       } finally {
         const hasFile = fileInput && fileInput.files && fileInput.files[0];
-        setButtonState(hasFile ? 'Generate STL' : 'Upload an image first', !hasFile);
+        setButtonState(hasFile ? 'Generate STL now' : 'Choose an image first', !hasFile);
       }
     }
 
     fileInput && fileInput.addEventListener('change', syncFile);
+    fileInput && fileInput.addEventListener('input', syncFile);
     form.addEventListener('submit', generateStl);
     button && button.addEventListener('click', generateStl);
     syncFile();
+    if (fileInput) {
+      setInterval(() => {
+        const file = fileInput.files && fileInput.files[0];
+        const signature = file ? [file.name, file.size, file.lastModified || 0].join(':') : '';
+        if (signature !== lastFileSignature) syncFile();
+      }, 500);
+    }
   }
 
   function bootAll() {

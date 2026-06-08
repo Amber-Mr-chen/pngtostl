@@ -271,6 +271,10 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
             </ul>
           </div>
 
+          <button data-generate-stl="true" className="btnPrimary converterGenerateButton" type="button" disabled={!canConvert}>
+            Choose an image, then generate STL
+          </button>
+
           {canConvert && !hasHidden(converter!, "mode") ? (
             <label className="converterField">
               <span>Output mode</span>
@@ -310,9 +314,6 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
             </div>
           </details>
 
-          <button data-generate-stl="true" className="btnPrimary" type="button" disabled={!canConvert}>
-            Upload an image first
-          </button>
         </section>
 
         <section className="resultWorkspace" aria-label="STL preview and download">

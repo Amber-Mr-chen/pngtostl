@@ -211,7 +211,7 @@ export function ToolPage({ tool, loadedSample }: { tool: ToolConfig; loadedSampl
             <p>{tool.description}</p>
             <p>{tool.promise}</p>
             <div className="heroActions">
-              <a className="btnPrimary" href="#converter">Start converting</a>
+              <a className="btnPrimary" href="#converter">Go to upload area</a>
               <a className="btnSecondary" href="#how-it-works">How it works</a>
             </div>
           </div>
