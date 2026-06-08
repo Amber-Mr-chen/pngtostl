@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  icons: {
+    icon: "/favicon.ico",
+  },
   openGraph: {
     type: "website",
     url: "https://pngtostl.net",

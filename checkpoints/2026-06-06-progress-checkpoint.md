@@ -7,7 +7,27 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-08 11:38 CST:
+Latest update — 2026-06-08 11:52 CST:
+
+- Owner reported the browser/site icon disappeared.
+- Root cause investigation:
+  - Public favicon files still existed and returned 200: `/favicon.ico`, `/favicon-32x32.png`, `/icon-192.png`, `/site.webmanifest`.
+  - Production HTML had no `rel="icon"` entry because earlier AITDK mitigation removed `metadata.icons` and `manifest` links.
+  - Browser only saw `/favicon.ico` as a preloaded/body image, not as a tab favicon link.
+- Minimal fix:
+  - Restored only `metadata.icons.icon = "/favicon.ico"` in `src/app/layout.tsx`.
+  - Did not restore `site.webmanifest`, apple touch icon, or 192/512 icon links, keeping AITDK scan surface smaller.
+- Verification after deploy:
+  - Production HTML now includes `<link rel="icon" href="/favicon.ico"/>`.
+  - `manifest_link` remains false.
+  - `/favicon.ico` returns 200 `image/vnd.microsoft.icon`.
+  - Browser resource list shows favicon loaded from `https://pngtostl.net/favicon.ico`.
+  - DOM image missing-alt list remains empty and logo image has `alt="PNGtoSTL logo"`.
+  - `npm run lint` passed with the existing non-blocking direct-img warning for the tiny favicon logo.
+  - `npm run build`, `npm run cf:build`, `npm run cf:deploy` passed.
+- Cloudflare Worker version: `1634014a-029e-46a2-a1bc-2973d502db16`.
+
+Previous update — 2026-06-08 11:38 CST:
 
 - Owner requested the homepage hero function/upload panel stretch farther right and align with the `View all examples` button below.
 - Added a desktop-only final CSS override:
