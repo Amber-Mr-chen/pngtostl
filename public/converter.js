@@ -161,9 +161,36 @@
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
             const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
             let transparent = 0;
-            for (let i = 3; i < data.length; i += 4) if (data[i] < 245) transparent += 1;
+            let borderR = 0, borderG = 0, borderB = 0, borderCount = 0;
+            for (let y = 0; y < canvas.height; y += 1) {
+              for (let x = 0; x < canvas.width; x += 1) {
+                const i = (y * canvas.width + x) * 4;
+                if (data[i + 3] < 245) transparent += 1;
+                if (x < 3 || y < 3 || x >= canvas.width - 3 || y >= canvas.height - 3) {
+                  borderR += data[i]; borderG += data[i + 1]; borderB += data[i + 2]; borderCount += 1;
+                }
+              }
+            }
+            const pixels = Math.max(1, data.length / 4);
+            const avgBorder = { r: borderR / Math.max(1, borderCount), g: borderG / Math.max(1, borderCount), b: borderB / Math.max(1, borderCount) };
+            const borderLuma = (avgBorder.r * 0.2126 + avgBorder.g * 0.7152 + avgBorder.b * 0.0722) / 255;
+            let subjectLike = 0;
+            for (let i = 0; i < data.length; i += 4) {
+              const dr = data[i] - avgBorder.r;
+              const dg = data[i + 1] - avgBorder.g;
+              const db = data[i + 2] - avgBorder.b;
+              const distance = Math.sqrt(dr * dr + dg * dg + db * db);
+              if (distance > 42) subjectLike += 1;
+            }
             URL.revokeObjectURL(objectUrl);
-            resolve({ hasTransparency: transparent / Math.max(1, data.length / 4) > 0.08 });
+            const transparentRatio = transparent / pixels;
+            const subjectRatio = subjectLike / pixels;
+            resolve({
+              hasTransparency: transparentRatio > 0.08,
+              removableBackground: transparentRatio <= 0.08 && borderLuma > 0.78 && subjectRatio > 0.04 && subjectRatio < 0.82,
+              subjectRatio,
+              background: avgBorder
+            });
           } catch (_) {
             URL.revokeObjectURL(objectUrl);
             resolve({ hasTransparency: false });
@@ -177,7 +204,7 @@
       });
     }
 
-    function normalizeImageFile(file) {
+    function normalizeImageFile(file, imageInfo) {
       const supportedInput = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/bmp', 'image/svg+xml'].includes(file.type);
       if (!supportedInput) return Promise.reject(new Error('Unsupported image format. Use PNG, JPG, WebP, GIF, BMP, or SVG.'));
       return new Promise((resolve, reject) => {
@@ -195,6 +222,20 @@
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            if (imageInfo && imageInfo.removableBackground && imageInfo.background) {
+              const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+              const data = frame.data;
+              const bg = imageInfo.background;
+              for (let i = 0; i < data.length; i += 4) {
+                const dr = data[i] - bg.r;
+                const dg = data[i + 1] - bg.g;
+                const db = data[i + 2] - bg.b;
+                const distance = Math.sqrt(dr * dr + dg * dg + db * db);
+                if (distance < 30) data[i + 3] = 0;
+                else if (distance < 58) data[i + 3] = Math.round(((distance - 30) / 28) * 255);
+              }
+              ctx.putImageData(frame, 0, 0);
+            }
             URL.revokeObjectURL(objectUrl);
             canvas.toBlob((blob) => {
               if (!blob) {
@@ -229,18 +270,19 @@
 
       setButtonState('Generating STL...', true);
       const imageInfo = await inspectImageFile(file);
-      if (modeInput && selectedMode() === 'relief' && imageInfo.hasTransparency) {
+      const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;
+      if (modeInput && selectedMode() === 'relief' && shouldCutoutSubject) {
         modeInput.value = 'logo';
-        setText(message, 'Transparent background detected. Using logo/cutout relief so the subject does not become a full square plate...');
+        setText(message, (imageInfo.hasTransparency ? 'Transparent background detected.' : 'Light background detected and removed.') + ' Using logo/cutout relief so the subject does not become a full square plate...');
       }
       trackBoth('converter_generate_clicked', 'pngtostl_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024), auto_mode: selectedMode() });
       trackSamplePreset('sample_preset_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       setText(status, 'Processing');
-      if (!imageInfo.hasTransparency) setText(message, 'Generating a fast preview STL at detail level ' + (detailInput ? detailInput.value : '96') + '...');
+      if (!shouldCutoutSubject) setText(message, 'Generating a fast preview STL at detail level ' + (detailInput ? detailInput.value : '96') + '...');
 
       let normalizedFile;
       try {
-        normalizedFile = await normalizeImageFile(file);
+        normalizedFile = await normalizeImageFile(file, imageInfo);
       } catch (error) {
         setText(status, 'Needs fix');
         setText(message, error && error.message ? error.message : 'Use a PNG, JPG, WebP, GIF, BMP, or SVG image.');
