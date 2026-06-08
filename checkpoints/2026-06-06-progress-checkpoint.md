@@ -7,7 +7,29 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-08 10:20 CST:
+Latest update — 2026-06-08 10:35 CST:
+
+- Owner clarified they did not intentionally use browser translation, but AITDK Images still showed the missing-alt asset as `https://fonts.gstatic.com/s/i/productlogos/translate/v14/24px.svg`.
+- Verified this URL is not in the project source or production HTML:
+  - Search for `fonts.gstatic`, `productlogos/translate`, `translate/v14`, `translate.googleapis`, and `Google Translate` found no live app source references.
+  - Production raw HTML does not contain the translate icon URL.
+  - Browser runtime in the agent environment does not load the translate icon resource.
+- Conclusion: the missing-alt image is injected by the local browser/Chrome translation environment or a related extension/component, not by the site app code.
+- Added site-level anti-translation hints to prevent Chrome from injecting translation UI into the page during audits:
+  - `<html lang="en" translate="no">`
+  - `<meta name="google" content="notranslate" />`
+- Rebuilt and deployed.
+- Verification after deploy:
+  - Production HTML has `translate="no"` on `<html>`.
+  - Production HTML has Google `notranslate` meta.
+  - Production HTML still has 13 `<img>` elements and 0 missing/empty alt.
+  - Production HTML still has no icon links and no manifest link.
+  - Production HTML does not contain the translate icon URL.
+  - `npm run lint` passed with the existing non-blocking direct-img warning for the tiny logo.
+  - `npm run build`, `npm run cf:build`, `npm run cf:deploy` passed.
+- Cloudflare Worker version: `ea6d0c56-0da5-4158-9dde-83319dfa66ac`.
+
+Previous update — 2026-06-08 10:20 CST:
 
 - Continued deep AITDK alt warning investigation after owner reported the warning still remained.
 - Additional browser resource audit showed AITDK may be counting icon-style resources beyond normal DOM images:

@@ -51,8 +51,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" translate="no">
       <head>
+        <meta name="google" content="notranslate" />
         <script src="https://analytics.ahrefs.com/analytics.js" data-key="pe/qASRBRNEqjq6mKdRPEw" async />
         <script async src="https://plausible.shipsolo.io/js/pa-hH9PJovRN2vjpuGZf0nY3.js" />
         <script
