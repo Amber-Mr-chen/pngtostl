@@ -286,18 +286,55 @@ function buildSketchContentMask(samples: ImageSample[][], options: ConvertOption
   const rows = samples.length;
   const columns = samples[0]?.length ?? 0;
   const seed = samples.map((row) => row.map((sample) => sample.darkness >= options.threshold));
+  const visited = Array.from({ length: rows }, () => Array.from({ length: columns }, () => false));
+  const kept = Array.from({ length: rows }, () => Array.from({ length: columns }, () => false));
+  const minComponentArea = Math.max(10, Math.round(rows * columns * 0.00035));
 
-  return seed.map((row, y) =>
-    row.map((active, x) => {
-      if (!active) return false;
-      let neighbors = 0;
-      for (let yy = Math.max(0, y - 1); yy <= Math.min(rows - 1, y + 1); yy += 1) {
-        for (let xx = Math.max(0, x - 1); xx <= Math.min(columns - 1, x + 1); xx += 1) {
-          if (xx === x && yy === y) continue;
-          if (seed[yy][xx]) neighbors += 1;
+  for (let y = 0; y < rows; y += 1) {
+    for (let x = 0; x < columns; x += 1) {
+      if (!seed[y][x] || visited[y][x]) continue;
+      const stack: Array<[number, number]> = [[x, y]];
+      const component: Array<[number, number]> = [];
+      visited[y][x] = true;
+
+      while (stack.length) {
+        const [cx, cy] = stack.pop()!;
+        component.push([cx, cy]);
+        for (let yy = Math.max(0, cy - 1); yy <= Math.min(rows - 1, cy + 1); yy += 1) {
+          for (let xx = Math.max(0, cx - 1); xx <= Math.min(columns - 1, cx + 1); xx += 1) {
+            if (!seed[yy][xx] || visited[yy][xx]) continue;
+            visited[yy][xx] = true;
+            stack.push([xx, yy]);
+          }
         }
       }
-      return neighbors >= 2;
+
+      if (component.length >= minComponentArea) {
+        for (const [cx, cy] of component) kept[cy][cx] = true;
+      }
+    }
+  }
+
+  return kept.map((row, y) =>
+    row.map((active, x) => {
+      if (active) return true;
+      for (let yy = Math.max(0, y - 1); yy <= Math.min(rows - 1, y + 1); yy += 1) {
+        for (let xx = Math.max(0, x - 1); xx <= Math.min(columns - 1, x + 1); xx += 1) {
+          if (kept[yy][xx]) return true;
+        }
+      }
+      return false;
+    }),
+  );
+}
+
+function applySketchContentMask(samples: ImageSample[][], contentMask: boolean[][] | undefined, options: ConvertOptions) {
+  if (options.mode !== "sketch" || !contentMask) return samples;
+  return samples.map((row, y) =>
+    row.map((sample, x) => {
+      if (!contentMask[y]?.[x]) return { ...sample, luma: 1, darkness: 0 };
+      const darkness = Math.max(sample.darkness, 0.42);
+      return { ...sample, luma: 1 - darkness, darkness };
     }),
   );
 }
@@ -431,10 +468,11 @@ export async function pngToStl(file: File, options: ConvertOptions): Promise<{ s
     samples.push(row);
   }
 
-  const preparedSamples = preprocessLineArtSamples(samples, options);
+  const lineArtSamples = preprocessLineArtSamples(samples, options);
+  const sketchContentMask = buildSketchContentMask(lineArtSamples, options);
+  const preparedSamples = applySketchContentMask(lineArtSamples, sketchContentMask, options);
   const { heights, occupiedRatio } = buildHeightGrid(preparedSamples, options);
   const geometryMask = buildGeometryMask(preparedSamples, heights, options);
-  const sketchContentMask = buildSketchContentMask(preparedSamples, options);
   const mesh = options.mode === "sketch" ? cropSketchPlateToContent(heights, sketchContentMask) : cropToMaskBounds(heights, geometryMask);
   const meshRows = mesh.heights.length;
   const meshColumns = mesh.heights[0]?.length ?? 0;
