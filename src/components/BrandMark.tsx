@@ -1,15 +1,15 @@
-import Image from "next/image";
 import Link from "next/link";
 
 export function BrandMark() {
   return (
     <Link href="/" className="brandMark" aria-label="PNGtoSTL home">
-      <Image
+      <img
         className="brandMarkIcon"
-        src="/icon-192.png"
+        src="/favicon.ico"
         alt="PNGtoSTL logo"
         width={27}
         height={27}
+        decoding="async"
       />
       PNGtoSTL
     </Link>

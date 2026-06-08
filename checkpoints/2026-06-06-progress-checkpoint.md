@@ -7,7 +7,30 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-08 10:04 CST:
+Latest update — 2026-06-08 10:20 CST:
+
+- Continued deep AITDK alt warning investigation after owner reported the warning still remained.
+- Additional browser resource audit showed AITDK may be counting icon-style resources beyond normal DOM images:
+  - `favicon.ico` loaded by the browser.
+  - `/icon-192.png` loaded from PWA manifest before the change.
+  - Static icon/apple-touch-icon links existed in `<head>` before the final metadata change.
+- Mitigations applied:
+  - Removed `manifest: "/site.webmanifest"` from Next metadata to stop browser manifest icon loading.
+  - Changed the visible brand logo image to use `/favicon.ico` directly with `alt="PNGtoSTL logo"`, so the same favicon resource exists as a real DOM image with alt.
+  - Removed explicit metadata `icons` links (`favicon.ico`, 16x16, 32x32, apple-touch-icon`) to avoid AITDK treating icon links as missing-alt images.
+- Verification after final deploy:
+  - Production raw HTML has no `rel="manifest"` link.
+  - Production raw HTML has no explicit `rel="icon"` / `apple-touch-icon` links.
+  - Production raw HTML has 13 `<img>` elements and 0 missing/empty alt.
+  - Production raw HTML includes `<img class="brandMarkIcon" src="/favicon.ico" alt="PNGtoSTL logo" ...>`.
+  - Browser DOM has `iconLinks: 0`, `manifest: false`, `imgCount: 13`, `missing: []`.
+  - Browser may still auto-request `/favicon.ico`; this is browser behavior and not a page `<link>`.
+  - `npm run lint` passed with one non-blocking warning for using a direct `<img>` for the tiny favicon logo.
+  - `npm run build`, `npm run cf:build`, `npm run cf:deploy` passed.
+- Cloudflare Worker version: `e5f9be34-6d27-4a04-a96f-817682c6af62`.
+- If AITDK still reports `1 images missing alt text` after this, the next required evidence is AITDK → Images list screenshot, because source HTML and runtime DOM no longer contain any missing-alt image or icon link.
+
+Previous update — 2026-06-08 10:04 CST:
 
 - Deep follow-up for persistent AITDK `Image Alt Text Check: 1 images missing alt text` after multiple normal `<img>` checks passed.
 - Full production inventory before the final fix showed:
