@@ -62,9 +62,9 @@ Some candidates below have since been attempted after owner approval. Treat each
   - Candidate URL: `https://devhunt.org/submit` (legacy URL now returns 404); current visible entry is the header link `Submit your Dev Tool` on `https://devhunt.org/`.
   - Target URL: `https://pngtostl.net/?utm_source=devhunt&utm_medium=listing&utm_campaign=launch_v1&utm_content=submit_form`
   - Suggested content: Use directory title option 2 and the short directory description from `ops/coldstart-assets-utm-plan.md`.
-  - Status: manual_required
-  - Evidence: Browser preflight on 2026-06-07: `/submit` rendered a 404 page; clicking the visible `Submit your Dev Tool` nav entry opened a login page requiring GitHub or Google. Page says Dev Hunt uses GitHub/Google provider to filter bots and fakes.
-  - Notes: Requires owner account/login before field-level preflight. Do not create/login an account or proceed automatically.
+  - Status: needs_approval
+  - Evidence: Browser preflight on 2026-06-07 showed GitHub/Google login. Owner-assisted login on 2026-06-08 reached the product form, but the required Launch week dropdown showed only paid weeks at `$49`; no free/skip/launch-later option was visible in the owner screenshot.
+  - Notes: Do not submit without explicit payment approval. Current recommendation: skip because `$49` is not justified at this cold-start stage.
 
 - Channel: Launching Next
   - Type: directory
