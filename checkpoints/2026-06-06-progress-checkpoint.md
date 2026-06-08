@@ -7,7 +7,25 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-08 11:04 CST:
+Latest update — 2026-06-08 11:22 CST:
+
+- Owner confirmed AITDK turned yellow again after translation support was restored, so the remaining issue is tied to Google Translate UI injection.
+- Added a narrowly-scoped compatibility script in `src/app/layout.tsx`:
+  - Keeps page translation enabled.
+  - Watches only injected images whose `src` contains `fonts.gstatic.com/s/i/productlogos/translate/`.
+  - Adds `alt="Google Translate icon"` and `title="Google Translate icon"` to those images when Chrome/Translate injects them.
+  - Uses `MutationObserver` so it also catches icons injected after AITDK has opened.
+- Verification after deploy:
+  - No `translate="no"` attribute.
+  - No `google notranslate` meta.
+  - Existing page images have 0 missing/empty alt.
+  - Simulated injected image `https://fonts.gstatic.com/s/i/productlogos/translate/v14/24px.svg` was automatically labeled with `alt="Google Translate icon"` and `title="Google Translate icon"`.
+  - After simulation, missing-alt list remained empty.
+  - `npm run lint` passed with the existing non-blocking direct-img warning for the tiny favicon logo.
+  - `npm run build`, `npm run cf:build`, `npm run cf:deploy` passed.
+- Cloudflare Worker version: `04ddd372-18c8-4e06-b68e-7eaf6b68446f`.
+
+Previous update — 2026-06-08 11:04 CST:
 
 - Owner reported that removing translation support was unacceptable and the dark utility banner/footer still looked irregular.
 - Reverted the anti-translation hints added for AITDK:

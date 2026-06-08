@@ -56,6 +56,39 @@ export default function RootLayout({
         <script src="https://analytics.ahrefs.com/analytics.js" data-key="pe/qASRBRNEqjq6mKdRPEw" async />
         <script async src="https://plausible.shipsolo.io/js/pa-hH9PJovRN2vjpuGZf0nY3.js" />
         <script
+          id="pngtostl-translate-icon-alt"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(){
+                var translateIconPattern = 'fonts.gstatic.com/s/i/productlogos/translate/';
+                function labelTranslateIcons(root){
+                  var scope = root && root.querySelectorAll ? root : document;
+                  scope.querySelectorAll('img[src*="' + translateIconPattern + '"]').forEach(function(img){
+                    if (!img.getAttribute('alt')) img.setAttribute('alt', 'Google Translate icon');
+                    if (!img.getAttribute('title')) img.setAttribute('title', 'Google Translate icon');
+                  });
+                }
+                labelTranslateIcons(document);
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', function(){ labelTranslateIcons(document); }, { once: true });
+                }
+                new MutationObserver(function(mutations){
+                  mutations.forEach(function(mutation){
+                    mutation.addedNodes.forEach(function(node){
+                      if (node.nodeType !== 1) return;
+                      if (node.matches && node.matches('img[src*="' + translateIconPattern + '"]')) {
+                        if (!node.getAttribute('alt')) node.setAttribute('alt', 'Google Translate icon');
+                        if (!node.getAttribute('title')) node.setAttribute('title', 'Google Translate icon');
+                      }
+                      labelTranslateIcons(node);
+                    });
+                  });
+                }).observe(document.documentElement, { childList: true, subtree: true });
+              })();
+            `,
+          }}
+        />
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               window.plausible = window.plausible || function(){
