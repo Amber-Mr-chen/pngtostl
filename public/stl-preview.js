@@ -67,10 +67,10 @@
     const cy = (box.minY + box.maxY) / 2;
     const cz = (box.minZ + box.maxZ) / 2;
     const span = Math.max(box.maxX - box.minX, box.maxY - box.minY, box.maxZ - box.minZ, 1);
-    const scale = Math.min(w, h) * 0.72 / span;
+    const scale = Math.min(w, h) * 0.82 / span;
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
-    const tilt = -0.72;
+    const tilt = -1.42;
     const cosT = Math.cos(tilt);
     const sinT = Math.sin(tilt);
 
@@ -111,7 +111,7 @@
       if (!canvas || !blob) return;
       blob.arrayBuffer().then((buffer) => {
         const triangles = readTriangles(buffer);
-        let angle = 0.75;
+        let angle = 0;
         let raf = 0;
         const draw = () => render(canvas, triangles, angle);
         draw();
