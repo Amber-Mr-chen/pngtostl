@@ -7,7 +7,26 @@ Branch: `main`
 
 ## Current status
 
-Latest update — 2026-06-08 10:49 CST:
+Latest update — 2026-06-08 11:04 CST:
+
+- Owner reported that removing translation support was unacceptable and the dark utility banner/footer still looked irregular.
+- Reverted the anti-translation hints added for AITDK:
+  - Removed `translate="no"` from `<html>`.
+  - Removed `<meta name="google" content="notranslate" />`.
+  - Production verification now shows no `translate` attribute and no Google `notranslate` meta.
+- Reworked the dark `utilityBand` and footer layout:
+  - Dark guide banner now uses a stable left heading column and a right two-column guide button grid.
+  - Banner heading width increased so it wraps as a compact phrase block, not one word per line.
+  - Footer links are arranged as a 4-column grid on desktop, 2-column on tablet, and 1-column on mobile.
+  - Footer intro keeps a stable readable text column.
+- Verification after deploy:
+  - `npm run lint` passed with the existing non-blocking direct-img warning for the tiny favicon logo.
+  - `npm run build`, `npm run cf:build`, `npm run cf:deploy` passed.
+  - Production browser geometry: no horizontal overflow; utility grid `430px 662px`; utility links grid `325px 325px`; footer grid `420px 678px`; footer nav grid has 4 columns.
+  - Visual check confirmed the banner headline is no longer one-word-per-line, guide buttons are an orderly 2x3 grid, and footer links are orderly without overlap.
+- Cloudflare Worker version: `fabac552-3c3b-4206-b443-cab881000ad9`.
+
+Previous update — 2026-06-08 10:49 CST:
 
 - Fixed homepage footer English layout issue reported by owner after the AITDK cleanup.
 - Root cause: `.siteFooter` used `grid-template-columns: minmax(0, 1fr) auto`; the many footer links in the auto column consumed most of the row width and squeezed the left English paragraph into one-word-per-line wrapping. Chinese appeared less broken because it can wrap character-by-character.
