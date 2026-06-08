@@ -19,6 +19,7 @@
     const thresholdInput = form.querySelector('input[name="threshold"]');
     const smoothingInput = form.querySelector('input[name="smoothing"]');
     const detailInput = form.querySelector('input[name="detail"]');
+    const qualityInput = form.querySelector('select[name="quality"]');
     const invertInput = form.querySelector('input[name="invert"]');
     const hasSamplePreset = form.dataset.samplePreset === 'true';
     let lastFileSignature = '';
@@ -65,6 +66,13 @@
 
     function selectedMode() {
       return modeInput ? modeInput.value : form.dataset.mode || 'icon';
+    }
+
+    function qualityDetail() {
+      const value = qualityInput ? qualityInput.value : 'fast';
+      if (value === 'high') return 320;
+      if (value === 'standard') return 256;
+      return detailInput ? Number(detailInput.value) || 128 : 128;
     }
 
     function formatRangeValue(input) {
@@ -273,12 +281,13 @@
       const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;
       if (modeInput && selectedMode() === 'relief' && shouldCutoutSubject) {
         modeInput.value = 'logo';
+        if (qualityInput && qualityInput.value === 'fast') qualityInput.value = 'standard';
         setText(message, (imageInfo.hasTransparency ? 'Transparent background detected.' : 'Light background detected and removed.') + ' Using logo/cutout relief so the subject does not become a full square plate...');
       }
       trackBoth('converter_generate_clicked', 'pngtostl_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024), auto_mode: selectedMode() });
       trackSamplePreset('sample_preset_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       setText(status, 'Processing');
-      if (!shouldCutoutSubject) setText(message, 'Generating a fast preview STL at detail level ' + (detailInput ? detailInput.value : '96') + '...');
+      if (!shouldCutoutSubject) setText(message, 'Generating a fast preview STL at detail level ' + qualityDetail() + '...');
 
       let normalizedFile;
       try {
@@ -300,7 +309,7 @@
       formData.set('baseMm', baseInput ? baseInput.value : (form.dataset.minThicknessMm || '1'));
       formData.set('threshold', String((Number(thresholdInput ? thresholdInput.value : 55) / 100).toFixed(2)));
       formData.set('smoothing', String((Number(smoothingInput ? smoothingInput.value : 25) / 100).toFixed(2)));
-      formData.set('detail', detailInput ? detailInput.value : '96');
+      formData.set('detail', String(qualityDetail()));
       formData.set('invert', String(invertInput ? invertInput.checked : selectedMode() === 'lithophane'));
       formData.set('minThicknessMm', form.dataset.minThicknessMm || '0.8');
       formData.set('maxThicknessMm', form.dataset.maxThicknessMm || (depthInput ? depthInput.value : '3.2'));

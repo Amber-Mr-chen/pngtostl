@@ -297,6 +297,15 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
           <details className="advancedSettings">
             <summary>Advanced print settings</summary>
             <div>
+              <label className="converterField">
+                <span>Quality preset</span>
+                <select name="quality" defaultValue="fast">
+                  <option value="fast">Fast preview · 128</option>
+                  <option value="standard">Standard · 256</option>
+                  <option value="high">High detail · 320</option>
+                </select>
+                <small>Use Standard or High for character art, stickers, and logo cutouts with small details.</small>
+              </label>
               {!converter || !hasHidden(converter, "base") ? (
                 <RangeField name="baseMm" label="Base thickness" value={`${baseMm.toFixed(1)} mm`} min="0.4" max="4" step="0.2" help="Adds printable support under generated geometry when this mode needs it." />
               ) : null}
