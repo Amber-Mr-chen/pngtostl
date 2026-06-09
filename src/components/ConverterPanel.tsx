@@ -309,18 +309,18 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
             <div className="qualitySegments">
               <label>
                 <input type="radio" name="quality" value="fast" defaultChecked />
-                <span>Fast</span>
-                <small>128 detail</small>
+                <span>Quick</span>
+                <small>128 mesh</small>
               </label>
               <label>
                 <input type="radio" name="quality" value="standard" />
                 <span>Standard</span>
-                <small>256 detail</small>
+                <small>256 mesh</small>
               </label>
               <label>
                 <input type="radio" name="quality" value="high" />
-                <span>High detail</span>
-                <small>320 detail</small>
+                <span>Detailed</span>
+                <small>320 mesh</small>
               </label>
             </div>
           </div>

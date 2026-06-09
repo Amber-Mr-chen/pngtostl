@@ -4014,7 +4014,7 @@ html body .infoPage .sampleCard h2 {
 
 .secondaryHomeHero,
 .workflowProductBand,
-.capabilityGrid {
+.proofStrip {
   display: none;
 }
 
@@ -4190,4 +4190,36 @@ html body .infoPage .sampleCard h2 {
 .primaryConverterDock .converterControls,
 .primaryConverterDock .resultWorkspace { border-radius: 24px; }
 .primaryConverterDock .previewStage { min-height: 440px; }
+.primaryConverterDock .trustNotes,
+.primaryConverterDock .diagnosisFacts,
+.primaryConverterDock .generationStepper,
+.primaryConverterDock .resultMetrics,
+.primaryConverterDock .downloadButton,
+.primaryConverterDock .outputFacts,
+.primaryConverterDock .outputLimit {
+  display: none !important;
+}
+.primaryConverterDock .imageDiagnosis {
+  padding: 12px 14px;
+  border-radius: 16px;
+  border-color: rgba(245, 158, 11, 0.28) !important;
+  background: #fffaf0 !important;
+  box-shadow: none;
+}
+.primaryConverterDock .imageDiagnosis p {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+.primaryConverterDock .previewStage [data-converter-message] {
+  min-height: 54px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+.primaryConverterDock .viewportToolbar span:nth-child(n+4) {
+  display: none;
+}
+.primaryConverterDock .converterGenerateButton {
+  margin-top: 0;
+}
 

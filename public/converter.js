@@ -212,8 +212,8 @@
       setText(diagnosisComplexity, copy('Complexity: ', '复杂度：') + Math.round((Number(info.edgeRatio) || 0) * 100) + '% · ' + copy('shape ', '形状 ') + Math.round((Number(info.boundaryRatio) || 0) * 100) + '% · ' + copy('parts ', '部件 ') + (Number(info.componentCount) || 0));
       if (modeInput && selectedMode() === 'extrude') {
         if (classification.level === 'good') setButtonState(copy('Generate clean STL now', '生成干净 STL'), false);
-        if (classification.level === 'warn') setButtonState(copy('Generate anyway or switch mode', '继续生成或切换模式'), false);
-        if (classification.level === 'bad') setButtonState(copy('Switch mode before generating', '先切换模式再生成'), false);
+        if (classification.level === 'warn') setButtonState(copy('Generate or adjust image', '生成或调整图片'), false);
+        if (classification.level === 'bad') setButtonState(copy('Try another image or mode', '换图或切换模式'), false);
       }
     }
 
@@ -278,7 +278,7 @@
       try {
         const info = await inspectImageFile(file);
         updateDiagnosis(info);
-        setText(message, file.name + copy(' selected.\nReview the image check, then generate the recommended STL workflow.', ' 已选择。\n请先查看图片检查结果，再生成推荐的 STL 工作流。'));
+        setText(message, file.name + copy(' selected.\nCheck the recommendation, then generate the STL preview.', ' 已选择。\n查看推荐结果后生成 STL 预览。'));
       } catch (_) {
         setText(diagnosisTitle, copy('Image check unavailable', '图片检查暂不可用'));
         setText(diagnosisMessage, copy('You can still generate, but use simple transparent logos or icons for the cleanest STL output.', '仍可继续生成，但简单透明标志或图标的 STL 效果最干净。'));
@@ -471,9 +471,9 @@
       const classification = classifyImage(imageInfo);
       if (selectedMode() === 'extrude' && classification.level === 'bad') {
         setText(status, copy('Needs simpler image', '需要更简单的图片'));
-        setText(message, classification.message + copy('\nClean extrude is paused for this input. Use a simpler transparent logo/icon, or manually switch to Photo raised surface or Backlit photo panel.', '\n这张图已暂停干净挤压。请换更简单的透明标志/图标，或手动切换到照片浮雕面板/照片透光面板。'));
+        setText(message, classification.message + copy('\nFor this image, try a simpler logo/icon or use a photo panel workflow.', '\n这张图建议换成更简单的标志/图标，或使用照片面板工作流。'));
         trackBoth('converter_generate_blocked', 'pngtostl_generate_blocked', { reason: 'image_not_fit_for_clean_extrude' });
-        setButtonState(copy('Use raised-surface mode or simpler image', '改用浮雕模式或更简单图片'), false);
+        setButtonState(copy('Try another image or mode', '换图或切换模式'), false);
         return;
       }
       if (modeInput && selectedMode() === 'extrude' && classification.level === 'warn') {
