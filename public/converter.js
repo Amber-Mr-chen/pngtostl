@@ -202,26 +202,14 @@
             const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
             let transparent = 0;
             let borderR = 0, borderG = 0, borderB = 0, borderCount = 0;
-            let brightLowSat = 0, darkLine = 0, grayish = 0;
-            const lumaGrid = [];
             for (let y = 0; y < canvas.height; y += 1) {
-              const lumaRow = [];
               for (let x = 0; x < canvas.width; x += 1) {
                 const i = (y * canvas.width + x) * 4;
                 if (data[i + 3] < 245) transparent += 1;
-                const maxChannel = Math.max(data[i], data[i + 1], data[i + 2]);
-                const minChannel = Math.min(data[i], data[i + 1], data[i + 2]);
-                const saturation = (maxChannel - minChannel) / 255;
-                const luma = (data[i] * 0.2126 + data[i + 1] * 0.7152 + data[i + 2] * 0.0722) / 255;
-                lumaRow.push(luma);
-                if (luma > 0.72 && saturation < 0.16) brightLowSat += 1;
-                if (luma < 0.62 && saturation < 0.22) darkLine += 1;
-                if (saturation < 0.2) grayish += 1;
                 if (x < 3 || y < 3 || x >= canvas.width - 3 || y >= canvas.height - 3) {
                   borderR += data[i]; borderG += data[i + 1]; borderB += data[i + 2]; borderCount += 1;
                 }
               }
-              lumaGrid.push(lumaRow);
             }
             const pixels = Math.max(1, data.length / 4);
             const avgBorder = { r: borderR / Math.max(1, borderCount), g: borderG / Math.max(1, borderCount), b: borderB / Math.max(1, borderCount) };
@@ -237,23 +225,9 @@
             URL.revokeObjectURL(objectUrl);
             const transparentRatio = transparent / pixels;
             const subjectRatio = subjectLike / pixels;
-            let transitions = 0;
-            for (let y = 0; y < canvas.height; y += 1) {
-              for (let x = 1; x < canvas.width; x += 1) {
-                if (Math.abs(lumaGrid[y][x] - lumaGrid[y][x - 1]) > 0.08) transitions += 1;
-              }
-            }
-            for (let x = 0; x < canvas.width; x += 1) {
-              for (let y = 1; y < canvas.height; y += 1) {
-                if (Math.abs(lumaGrid[y][x] - lumaGrid[y - 1][x]) > 0.08) transitions += 1;
-              }
-            }
-            const transitionRatio = transitions / Math.max(1, canvas.width * (canvas.height - 1) + canvas.height * (canvas.width - 1));
-            const probableSketch = transparentRatio < 0.08 && brightLowSat / pixels > 0.46 && grayish / pixels > 0.64 && darkLine / pixels > 0.025 && darkLine / pixels < 0.42 && transitionRatio > 0.045;
             resolve({
               hasTransparency: transparentRatio > 0.08,
-              removableBackground: !probableSketch && transparentRatio <= 0.08 && borderLuma > 0.78 && subjectRatio > 0.04 && subjectRatio < 0.82,
-              probableSketch,
+              removableBackground: transparentRatio <= 0.08 && borderLuma > 0.78 && subjectRatio > 0.04 && subjectRatio < 0.82,
               subjectRatio,
               background: avgBorder
             });
@@ -268,16 +242,6 @@
         };
         image.src = objectUrl;
       });
-    }
-
-    function setSketchWorkflowDefaults() {
-      if (modeInput) modeInput.value = 'sketch';
-      if (depthInput) { depthInput.value = '2.2'; syncRange(depthInput); }
-      if (baseInput) { baseInput.value = '1.1'; syncRange(baseInput); }
-      if (thresholdInput) { thresholdInput.value = '54'; syncRange(thresholdInput); }
-      if (smoothingInput) { smoothingInput.value = '52'; syncRange(smoothingInput); }
-      if (detailInput) { detailInput.value = '180'; syncRange(detailInput); }
-      if (qualityInput && qualityInput.value === 'fast') qualityInput.value = 'standard';
     }
 
     function normalizeImageFile(file, imageInfo) {
@@ -346,11 +310,7 @@
 
       setButtonState('Generating STL...', true);
       const imageInfo = await inspectImageFile(file);
-      if (modeInput && selectedMode() === 'extrude' && imageInfo.probableSketch) {
-        setSketchWorkflowDefaults();
-        setText(message, 'Hand-drawn line art / graph-paper sketch detected. Switching to Sketch line relief so the drawing lines are preserved instead of becoming a solid silhouette...');
-      }
-      const shouldCutoutSubject = !imageInfo.probableSketch && (imageInfo.hasTransparency || imageInfo.removableBackground);
+      const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;
       if (modeInput && selectedMode() === 'relief' && shouldCutoutSubject) {
         modeInput.value = 'logo';
         if (qualityInput && qualityInput.value === 'fast') qualityInput.value = 'standard';
@@ -359,7 +319,7 @@
       trackBoth('converter_generate_clicked', 'pngtostl_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024), auto_mode: selectedMode() });
       trackSamplePreset('sample_preset_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       setText(status, 'Processing');
-      if (!shouldCutoutSubject && !imageInfo.probableSketch) setText(message, 'Generating a fast preview STL at detail level ' + qualityDetail() + '...');
+      if (!shouldCutoutSubject) setText(message, 'Generating a fast preview STL at detail level ' + qualityDetail() + '...');
 
       let normalizedFile;
       try {
