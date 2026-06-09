@@ -320,7 +320,7 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
               <label>
                 <input type="radio" name="quality" value="high" />
                 <span>Detailed</span>
-                <small>320 mesh</small>
+                <small>352 mesh</small>
               </label>
             </div>
           </div>
@@ -358,7 +358,7 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
                 <RangeField name="threshold" label="Edge threshold" value={`${threshold}%`} min="5" max="95" step="1" help="Higher values keep only darker, clearer lines." />
               ) : null}
               <RangeField name="smoothing" label="Smoothing" value={`${smoothing}%`} min="0" max="100" step="5" help="Softens jagged pixel edges before STL export." />
-              <RangeField name="detail" label="Detail level" value={detail} min="48" max="320" step="4" help="Higher detail keeps more image shape. Large files take longer." />
+              <RangeField name="detail" label="Detail level" value={detail} min="48" max="352" step="4" help="Higher detail keeps more image shape. Large files take longer." />
               {!converter || !hasHidden(converter, "invert") ? (
                 <label className="checkField">
                   <input type="checkbox" name="invert" defaultChecked={Boolean(converter?.invert)} />

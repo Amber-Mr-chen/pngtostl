@@ -16,7 +16,7 @@ export type ConvertOptions = {
 };
 
 const DEFAULT_DETAIL = 96;
-const MAX_DETAIL = 320;
+const MAX_DETAIL = 352;
 
 type Vec3 = [number, number, number];
 
@@ -81,6 +81,24 @@ function samplePixel(data: Uint8Array | Uint8ClampedArray | Uint16Array, width: 
   const compositeB = b * alpha + (1 - alpha);
   const luma = clamp(0.2126 * compositeR + 0.7152 * compositeG + 0.0722 * compositeB, 0, 1);
   return { luma, alpha, darkness: 1 - luma };
+}
+
+function mixSample(a: ImageSample, b: ImageSample, amount: number): ImageSample {
+  const luma = a.luma * (1 - amount) + b.luma * amount;
+  const alpha = a.alpha * (1 - amount) + b.alpha * amount;
+  return { luma, alpha, darkness: 1 - luma };
+}
+
+function samplePixelBilinear(data: Uint8Array | Uint8ClampedArray | Uint16Array, width: number, height: number, channels: number, x: number, y: number): ImageSample {
+  const x0 = Math.max(0, Math.min(width - 1, Math.floor(x)));
+  const y0 = Math.max(0, Math.min(height - 1, Math.floor(y)));
+  const x1 = Math.max(0, Math.min(width - 1, x0 + 1));
+  const y1 = Math.max(0, Math.min(height - 1, y0 + 1));
+  const tx = x - x0;
+  const ty = y - y0;
+  const top = mixSample(samplePixel(data, width, channels, x0, y0), samplePixel(data, width, channels, x1, y0), tx);
+  const bottom = mixSample(samplePixel(data, width, channels, x0, y1), samplePixel(data, width, channels, x1, y1), tx);
+  return mixSample(top, bottom, ty);
 }
 
 function smoothGrid(grid: number[][], amount: number) {
@@ -600,9 +618,9 @@ async function sampleImageGrid(file: File, options: ConvertOptions) {
   for (let y = 0; y < rows; y += 1) {
     const row: ImageSample[] = [];
     for (let x = 0; x < columns; x += 1) {
-      const sx = Math.min(sourceWidth - 1, Math.round((x / Math.max(1, columns - 1)) * (sourceWidth - 1)));
-      const sy = Math.min(sourceHeight - 1, Math.round((y / Math.max(1, rows - 1)) * (sourceHeight - 1)));
-      row.push(samplePixel(decoded.data, sourceWidth, channels, sx, sy));
+      const sx = Math.min(sourceWidth - 1, (x / Math.max(1, columns - 1)) * (sourceWidth - 1));
+      const sy = Math.min(sourceHeight - 1, (y / Math.max(1, rows - 1)) * (sourceHeight - 1));
+      row.push(samplePixelBilinear(decoded.data, sourceWidth, sourceHeight, channels, sx, sy));
     }
     samples.push(row);
   }
@@ -655,9 +673,9 @@ export async function pngToStl(file: File, options: ConvertOptions): Promise<{ s
   for (let y = 0; y < rows; y += 1) {
     const row: ImageSample[] = [];
     for (let x = 0; x < columns; x += 1) {
-      const sx = Math.min(sourceWidth - 1, Math.round((x / Math.max(1, columns - 1)) * (sourceWidth - 1)));
-      const sy = Math.min(sourceHeight - 1, Math.round((y / Math.max(1, rows - 1)) * (sourceHeight - 1)));
-      row.push(samplePixel(decoded.data, sourceWidth, channels, sx, sy));
+      const sx = Math.min(sourceWidth - 1, (x / Math.max(1, columns - 1)) * (sourceWidth - 1));
+      const sy = Math.min(sourceHeight - 1, (y / Math.max(1, rows - 1)) * (sourceHeight - 1));
+      row.push(samplePixelBilinear(decoded.data, sourceWidth, sourceHeight, channels, sx, sy));
     }
     samples.push(row);
   }

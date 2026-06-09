@@ -65,6 +65,40 @@ const capabilityCards = [
   },
 ];
 
+const storyPoints = [
+  "Turn flat artwork into raised STL geometry for signs, badges, panels, and maker labels.",
+  "Route complex images to relief/photo workflows instead of pretending every image becomes a perfect full 3D object.",
+  "Preview the mesh before downloading so print issues are visible early.",
+];
+
+const advancedFeatures = [
+  { title: "Smart workflow routing", body: "Detects logos, transparent subjects, tonal photos, sketches, and depth-map inputs before choosing a safer path." },
+  { title: "Higher-detail relief mesh", body: "Detailed mode keeps more shape information with smoother sampling for complex artwork and photo-style panels." },
+  { title: "Browser 3D preview", body: "Inspect solid, edges, and wireframe views in the page before downloading the STL file." },
+  { title: "Print-scale controls", body: "Set output width, relief depth, base thickness, smoothing, and threshold when a print needs tuning." },
+  { title: "Format-friendly upload", body: "Start from PNG, JPG, WebP, GIF, or BMP and normalize the image for STL generation." },
+  { title: "Maker-safe expectations", body: "Clear guidance separates reliable relief outputs from unrealistic one-click full 3D reconstruction claims." },
+];
+
+const modelShowcase = [
+  { title: "Logo badge", image: "/samples/logo-badge-premium-v4-preview.png", body: "Crisp raised mark for labels and signs." },
+  { title: "Photo relief panel", image: "/samples/lithophane-panel-premium-v4-preview.png", body: "Tonal surface for backlit or display panels." },
+  { title: "Depth surface", image: "/samples/heightmap-surface-premium-v4-preview.png", body: "Terrain-style grayscale height output." },
+];
+
+const pricingPlans = [
+  { name: "Free", price: "$0", tag: "Start", features: ["Image check", "STL preview", "Manual download", "Core workflows"] },
+  { name: "Maker", price: "$10", tag: "Planned", featured: true, features: ["Higher-detail exports", "Batch queue", "Saved settings", "Priority processing"] },
+  { name: "Studio", price: "$21", tag: "Planned", features: ["Team workflow", "API access", "Commercial review", "Volume jobs"] },
+];
+
+const homeFaqs = [
+  { q: "Can any image become a clean STL?", a: "No. Clean STL works best for logos, icons, stickers, and simple high-contrast art. Complex images are routed to relief or photo-panel workflows." },
+  { q: "Is this the same as AI full 3D reconstruction?", a: "No. PNGtoSTL focuses on printable relief, badge, lithophane, and height-map STL outputs from 2D images." },
+  { q: "Why preview before download?", a: "The preview helps catch low contrast, blocky details, oversized meshes, or square plates before you open a slicer." },
+  { q: "Which files can I upload?", a: "PNG, JPG, JPEG, WebP, GIF, and BMP are supported through the browser upload flow." },
+];
+
 const primaryTools = ["logo-to-stl", "png-to-stl", "heightmap-to-stl", "lithophane-generator"];
 
 const proofSamples = [
@@ -260,6 +294,113 @@ export default function HomePage() {
         ))}
       </section>
 
+      <section className="landingStory" aria-labelledby="story-title">
+        <div className="storyVisual" aria-hidden="true">
+          <Image src="/samples/logo-badge-premium-v4-preview.png" alt="" width={520} height={390} loading="lazy" />
+        </div>
+        <div className="storyCopy">
+          <p className="homeKicker">What image-to-STL means here</p>
+          <h2 id="story-title">A practical 2D image to printable STL workflow.</h2>
+          <p>PNGtoSTL is built for reliable relief-style outputs: raised badges, photo panels, depth surfaces, and simple printable plates. It keeps the promise honest while still feeling like a modern image-to-3D product.</p>
+          <div className="storyList">
+            {storyPoints.map((point) => <span key={point}>{point}</span>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="whyChooseBand" aria-labelledby="why-title">
+        <div className="sectionIntro compact centerIntro">
+          <p className="homeKicker">Why choose PNGtoSTL</p>
+          <h2 id="why-title">Cleaner routing, clearer previews, fewer failed prints.</h2>
+          <p>Instead of treating every upload the same, the converter checks image fit first and guides users toward the workflow most likely to produce a usable STL.</p>
+        </div>
+      </section>
+
+      <section className="timelineSteps" aria-labelledby="timeline-title">
+        <div className="sectionIntro compact centerIntro">
+          <p className="homeKicker">How it works</p>
+          <h2 id="timeline-title">From image upload to STL download in four steps.</h2>
+        </div>
+        <div className="timelineGrid">
+          {conversionSteps.map((item) => (
+            <article key={item.step}>
+              <b>{item.step}</b>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="advancedFeatureSection" aria-labelledby="advanced-title">
+        <div className="sectionIntro compact centerIntro">
+          <p className="homeKicker">Converter features</p>
+          <h2 id="advanced-title">Advanced controls without a CAD learning curve.</h2>
+        </div>
+        <div className="advancedFeatureGrid">
+          {advancedFeatures.map((feature, index) => (
+            <article key={feature.title}>
+              <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <h3>{feature.title}</h3>
+              <p>{feature.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="modelShowcase" aria-labelledby="showcase-title">
+        <div className="sectionIntro compact centerIntro">
+          <p className="homeKicker">Generated STL showcase</p>
+          <h2 id="showcase-title">Real output types the site can reproduce.</h2>
+        </div>
+        <div className="modelCards">
+          {modelShowcase.map((item) => (
+            <article key={item.title}>
+              <Image src={item.image} alt={`${item.title} STL preview`} width={360} height={260} loading="lazy" />
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="pricingShowcase" aria-labelledby="pricing-title">
+        <div className="sectionIntro compact centerIntro">
+          <p className="homeKicker">Pricing path</p>
+          <h2 id="pricing-title">Start free, scale when batch work matters.</h2>
+          <p>Current generation is free while commercial batch/API plans are being prepared. Pricing cards set expectations without blocking the upload flow.</p>
+        </div>
+        <div className="pricingCards">
+          {pricingPlans.map((plan) => (
+            <article key={plan.name} className={plan.featured ? "featuredPrice" : undefined}>
+              <span>{plan.tag}</span>
+              <h3>{plan.name}</h3>
+              <strong>{plan.price}</strong>
+              <ul>
+                {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
+              </ul>
+              <Link href={plan.name === "Free" ? "#converter" : "/pricing"}> {plan.name === "Free" ? "Start free" : "View plan"}</Link>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="homeFaqSection" aria-labelledby="home-faq-title">
+        <div className="sectionIntro compact centerIntro">
+          <p className="homeKicker">FAQ</p>
+          <h2 id="home-faq-title">Common image-to-STL questions.</h2>
+        </div>
+        <div className="homeFaqGrid">
+          {homeFaqs.map((item) => (
+            <article key={item.q}>
+              <h3>{item.q}</h3>
+              <p>{item.a}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+
       <section className="proofStrip" id="examples" aria-label="Example outputs with source and mesh evidence">
         <div className="proofIntro">
           <div>
@@ -365,6 +506,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="finalCta" aria-labelledby="final-cta-title">
+        <p className="homeKicker">Ready to test your image?</p>
+        <h2 id="final-cta-title">Upload once, see the best STL path before you print.</h2>
+        <div className="heroActions">
+          <Link className="btnPrimary" href="#converter">Start converting</Link>
+          <Link className="btnSecondary" href="/samples">Browse examples</Link>
+        </div>
+      </section>
+
       <footer className="siteFooter homeFooter">
         <div>
           <strong>PNGtoSTL</strong>
@@ -394,8 +544,8 @@ export default function HomePage() {
         </nav>
       </footer>
     </main>
-    <script src="/stl-preview.js?v=webgl-final-20260608a" defer></script>
-    <script src="/converter.js?v=benchmark-ui-20260609a" defer></script>
+    <script src="/stl-preview.js?v=detail-352-bilinear-20260609" defer></script>
+    <script src="/converter.js?v=landing-saas-20260609" defer></script>
     </>
   );
 }

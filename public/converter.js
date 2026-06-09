@@ -110,7 +110,7 @@
 
     function qualityDetail() {
       const value = selectedQuality();
-      if (value === 'high') return 320;
+      if (value === 'high') return 352;
       if (value === 'standard') return 256;
       return detailInput ? Number(detailInput.value) || 128 : 128;
     }
@@ -472,14 +472,14 @@
       const autoRouteComplexImage = modeInput && selectedMode() === 'extrude' && classification.level === 'bad';
       if (autoRouteComplexImage) {
         modeInput.value = 'relief';
-        if (selectedQuality() === 'fast') setQualityValue('standard');
+        if (selectedQuality() !== 'high') setQualityValue('high');
         setText(status, copy('Using safer workflow', '使用更稳的工作流'));
         setText(message, classification.message + copy('\nAutomatically using photo raised surface mode for this preview...', '\n已自动改用照片浮雕面板生成预览……'));
         trackBoth('converter_auto_routed_complex_image', 'pngtostl_auto_routed_complex_image', { reason: 'image_not_fit_for_clean_extrude' });
       }
       if (modeInput && selectedMode() === 'extrude' && classification.level === 'warn') {
         modeInput.value = 'relief';
-        if (selectedQuality() === 'fast') setQualityValue('standard');
+        if (selectedQuality() !== 'high') setQualityValue('high');
         setText(message, classification.message + copy('\nAutomatically using photo raised surface mode instead of clean extrude...', '\n已自动改用照片浮雕面板，不再使用干净挤压……'));
       }
       const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;

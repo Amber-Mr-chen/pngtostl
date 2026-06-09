@@ -54,8 +54,8 @@
   }
 
   function renderSolidHeightmap(canvas, triangles, box, ctx, w, h) {
-    const columns = 320;
-    const rows = 320;
+    const columns = 420;
+    const rows = 420;
     const heights = new Float32Array(columns * rows);
     const seen = new Uint8Array(columns * rows);
     const xSpan = Math.max(box.maxX - box.minX, 0.001);
