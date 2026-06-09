@@ -297,7 +297,7 @@ export default function HomePage() {
       </footer>
     </main>
     <script src="/stl-preview.js?v=webgl-final-20260608a" defer></script>
-    <script src="/converter.js?v=diagnostic-router-20260609a" defer></script>
+    <script src="/converter.js?v=diagnostic-router-20260609b" defer></script>
     </>
   );
 }

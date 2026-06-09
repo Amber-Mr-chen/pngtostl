@@ -149,15 +149,18 @@
     function classifyImage(info) {
       const subjectRatio = Number(info && info.subjectRatio) || 0;
       const edgeRatio = Number(info && info.edgeRatio) || 0;
+      const boundaryRatio = Number(info && info.boundaryRatio) || 0;
+      const componentCount = Number(info && info.componentCount) || 0;
       const lumaSpread = Number(info && info.lumaSpread) || 0;
       const hasTransparency = Boolean(info && info.hasTransparency);
       const removableBackground = Boolean(info && info.removableBackground);
       const simpleCoverage = subjectRatio > 0.03 && subjectRatio < 0.72;
-      const simpleEdges = edgeRatio < 0.34;
+      const simpleEdges = edgeRatio < 0.34 && boundaryRatio < 0.24 && componentCount <= 3;
+      const complexCutout = boundaryRatio > 0.24 || componentCount > 3;
       const logoFit = (hasTransparency || removableBackground) && simpleCoverage && simpleEdges;
-      const silhouetteFit = !hasTransparency && removableBackground && simpleCoverage;
+      const silhouetteFit = !hasTransparency && removableBackground && simpleCoverage && simpleEdges;
       const photoLike = !hasTransparency && lumaSpread > 0.25 && edgeRatio > 0.28;
-      const tooComplex = edgeRatio > 0.42 || subjectRatio > 0.86;
+      const tooComplex = edgeRatio > 0.42 || subjectRatio > 0.86 || complexCutout;
       if (logoFit || silhouetteFit) return { level: 'good', title: 'Good fit for clean logo/icon STL', message: hasTransparency ? 'Transparency detected. Clean extrude or logo relief is the safest workflow.' : 'Light background with a clear subject detected. Clean extrude can work after background removal.' };
       if (photoLike) return { level: 'warn', title: 'Better as lithophane or photo relief', message: 'This looks more like a photo/tonal image than a flat logo. Use lithophane or photo relief instead of clean extrude.' };
       if (tooComplex) return { level: 'bad', title: 'Not ideal for clean STL extrusion', message: 'This image appears too complex/noisy for a clean cutout. Use a simpler logo/icon or switch to relief/lithophane before generating.' };
@@ -174,7 +177,7 @@
       setText(diagnosisMessage, classification.message);
       setText(diagnosisAlpha, 'Transparency: ' + (info.hasTransparency ? 'yes' : info.removableBackground ? 'background removable' : 'no'));
       setText(diagnosisSubject, 'Subject coverage: ' + Math.round((Number(info.subjectRatio) || 0) * 100) + '%');
-      setText(diagnosisComplexity, 'Complexity: ' + Math.round((Number(info.edgeRatio) || 0) * 100) + '%');
+      setText(diagnosisComplexity, 'Complexity: ' + Math.round((Number(info.edgeRatio) || 0) * 100) + '% · shape ' + Math.round((Number(info.boundaryRatio) || 0) * 100) + '% · parts ' + (Number(info.componentCount) || 0));
       if (modeInput && selectedMode() === 'extrude') {
         if (classification.level === 'good') setButtonState('Generate clean STL now', false);
         if (classification.level === 'warn') setButtonState('Generate anyway or switch mode', false);
@@ -289,6 +292,7 @@
             let edgeChanges = 0;
             let edgeSamples = 0;
             const lumas = new Float32Array(pixels);
+            const mask = new Uint8Array(pixels);
             for (let i = 0, p = 0; i < data.length; i += 4, p += 1) {
               const luma = (data[i] * 0.2126 + data[i + 1] * 0.7152 + data[i + 2] * 0.0722) / 255;
               lumas[p] = luma;
@@ -298,7 +302,10 @@
               const dg = data[i + 1] - avgBorder.g;
               const db = data[i + 2] - avgBorder.b;
               const distance = Math.sqrt(dr * dr + dg * dg + db * db);
-              if (distance > 42) subjectLike += 1;
+              if (distance > 42) {
+                subjectLike += 1;
+                mask[p] = 1;
+              }
             }
             for (let y = 1; y < canvas.height; y += 1) {
               for (let x = 1; x < canvas.width; x += 1) {
@@ -306,6 +313,32 @@
                 const diff = Math.max(Math.abs(lumas[p] - lumas[p - 1]), Math.abs(lumas[p] - lumas[p - canvas.width]));
                 if (diff > 0.18) edgeChanges += 1;
                 edgeSamples += 1;
+              }
+            }
+            let boundaryPixels = 0;
+            const seen = new Uint8Array(pixels);
+            const queue = [];
+            let componentCount = 0;
+            for (let y = 1; y < canvas.height - 1; y += 1) {
+              for (let x = 1; x < canvas.width - 1; x += 1) {
+                const start = y * canvas.width + x;
+                if (!mask[start]) continue;
+                if (!mask[start - 1] || !mask[start + 1] || !mask[start - canvas.width] || !mask[start + canvas.width]) boundaryPixels += 1;
+                if (seen[start]) continue;
+                componentCount += 1;
+                if (componentCount > 12) continue;
+                seen[start] = 1;
+                queue.length = 0;
+                queue.push(start);
+                for (let qi = 0; qi < queue.length; qi += 1) {
+                  const p = queue[qi];
+                  const neighbors = [p - 1, p + 1, p - canvas.width, p + canvas.width];
+                  for (const next of neighbors) {
+                    if (next < 0 || next >= pixels || seen[next] || !mask[next]) continue;
+                    seen[next] = 1;
+                    queue.push(next);
+                  }
+                }
               }
             }
             URL.revokeObjectURL(objectUrl);
@@ -318,6 +351,8 @@
               removableBackground: transparentRatio <= 0.08 && borderLuma > 0.78 && subjectRatio > 0.04 && subjectRatio < 0.82,
               subjectRatio,
               edgeRatio: edgeChanges / Math.max(1, edgeSamples),
+              boundaryRatio: boundaryPixels / Math.max(1, subjectLike),
+              componentCount,
               lumaSpread,
               background: avgBorder
             });
