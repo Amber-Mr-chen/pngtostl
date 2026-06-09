@@ -6,6 +6,7 @@
     root.dataset.converterBooted = '1';
 
     const fileInput = form.querySelector('input[name="file"]');
+    const fileNameLabel = form.querySelector('[data-file-name="true"]');
     const button = form.querySelector('[data-generate-stl="true"]');
     const downloadLink = form.querySelector('[data-download-stl="true"]');
     const status = form.querySelector('[data-converter-status]');
@@ -41,6 +42,11 @@
     const isZh = /^zh\b/i.test(pageLang);
     function copy(en, zh) {
       return isZh ? zh : en;
+    }
+
+    function setFileNameLabel(file) {
+      if (!fileNameLabel) return;
+      fileNameLabel.textContent = file ? file.name : copy('No file selected', '未选择文件');
     }
 
     function presetPayload() {
@@ -258,6 +264,7 @@
     async function syncFile() {
       const file = fileInput && fileInput.files && fileInput.files[0];
       if (!file) {
+        setFileNameLabel(null);
         lastFileSignature = '';
         setText(status, copy('Waiting for image', '等待上传图片'));
         setText(message, emptyMessage());
@@ -271,6 +278,7 @@
         resetDiagnosis();
         return;
       }
+      setFileNameLabel(file);
       const signature = [file.name, file.size, file.lastModified || 0].join(':');
       if (signature === lastFileSignature && button && !button.disabled) return;
       lastFileSignature = signature;

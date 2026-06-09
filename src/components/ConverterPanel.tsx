@@ -279,7 +279,11 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
               <strong>{tool.uploadLabel}</strong>
               <p>Drop an image here or choose a file. Supported: {tool.supported}</p>
             </div>
-            <input type="file" name="file" accept={accept} disabled={!canConvert} />
+            <label className="customFileInput">
+              <input type="file" name="file" accept={accept} disabled={!canConvert} />
+              <span className="customFileButton">Choose file</span>
+              <span className="customFileName" data-file-name="true">No file selected</span>
+            </label>
             <small>{converter?.helper ?? tool.promise}</small>
             <ul className="trustNotes" aria-label="Processing notes">
               <li>STL output is single-material geometry, not color.</li>
