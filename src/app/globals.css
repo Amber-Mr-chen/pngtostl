@@ -4193,8 +4193,6 @@ html body .infoPage .sampleCard h2 {
 .primaryConverterDock .trustNotes,
 .primaryConverterDock .diagnosisFacts,
 .primaryConverterDock .generationStepper,
-.primaryConverterDock .resultMetrics,
-.primaryConverterDock .downloadButton,
 .primaryConverterDock .outputFacts,
 .primaryConverterDock .outputLimit {
   display: none !important;

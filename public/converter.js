@@ -37,7 +37,8 @@
       if (el) el.textContent = text;
     }
 
-    const isZh = /^zh\b/i.test((navigator.language || '') || (document.documentElement.lang || '')) || document.documentElement.lang === 'zh-CN';
+    const pageLang = (document.documentElement.lang || '').trim() || (navigator.language || '').trim();
+    const isZh = /^zh\b/i.test(pageLang);
     function copy(en, zh) {
       return isZh ? zh : en;
     }
@@ -238,6 +239,14 @@
       if (!button) return;
       button.disabled = Boolean(disabled);
       button.textContent = label;
+    }
+
+    function markPreviewFailed(reason) {
+      if (!previewCanvas) return;
+      previewCanvas.dataset.previewReady = '0';
+      previewCanvas.dataset.previewRenderer = 'none';
+      previewCanvas.dataset.previewError = reason || 'conversion_failed';
+      if (previewEmptyState) previewEmptyState.hidden = false;
     }
 
     function emptyMessage() {
@@ -474,21 +483,23 @@
       }
 
       setButtonState(copy('Generating STL...', '正在生成 STL……'), true);
+      setText(status, copy('Checking image', '检查图片中'));
+      setText(message, copy('Reading the image and choosing a safe STL workflow...', '正在读取图片并选择稳定的 STL 工作流……'));
       const imageInfo = await inspectImageFile(file);
       updateDiagnosis(imageInfo);
       const classification = classifyImage(imageInfo);
       const autoRouteComplexImage = modeInput && selectedMode() === 'extrude' && classification.level === 'bad';
       if (autoRouteComplexImage) {
         modeInput.value = 'relief';
-        if (selectedQuality() !== 'high') setQualityValue('high');
+        setQualityValue('standard');
         setRangeValue(smoothingInput, 90);
         setText(status, copy('Using smooth relief workflow', '使用平滑浮雕工作流'));
-        setText(message, classification.message + copy('\nAutomatically using smooth photo relief mode to suppress noisy texture...', '\n已自动改用平滑照片浮雕，减少杂乱纹理……'));
+        setText(message, classification.message + copy('\nAutomatically using Standard 256 smooth relief for a stable preview. Detailed 352 is still available after the preview works.', '\n已自动使用 Standard 256 平滑浮雕，先保证稳定预览。预览正常后仍可手动尝试 Detailed 352。'));
         trackBoth('converter_auto_routed_complex_image', 'pngtostl_auto_routed_complex_image', { reason: 'image_not_fit_for_clean_extrude' });
       }
       if (modeInput && selectedMode() === 'extrude' && classification.level === 'warn') {
         modeInput.value = 'relief';
-        if (selectedQuality() !== 'high') setQualityValue('high');
+        if (selectedQuality() === 'fast') setQualityValue('standard');
         setRangeValue(smoothingInput, 80);
         setText(message, classification.message + copy('\nAutomatically using smoother photo relief mode instead of clean extrude...', '\n已自动改用更平滑的照片浮雕面板，不再使用干净挤压……'));
       }
@@ -546,6 +557,7 @@
           try { body = await response.json(); } catch (_) {}
           setText(status, copy('Needs fix', '需要修正'));
           setText(message, body.message || copy('Conversion failed.', '转换失败。'));
+          markPreviewFailed('api_' + response.status);
           trackBoth('converter_generate_error', 'pngtostl_generate_error', { reason: body.message || 'response_not_ok', status: response.status });
           trackSamplePreset('sample_preset_generate_error', { reason: body.message || 'response_not_ok', status: response.status });
           return;
@@ -598,6 +610,7 @@
       } catch (error) {
         setText(status, copy('Needs fix', '需要修正'));
         setText(message, copy('Conversion failed. Please try another image or lower the detail level.', '转换失败。请换一张图片，或降低细节级别后重试。'));
+        markPreviewFailed(error && error.name === 'AbortError' ? 'timeout' : 'network_or_runtime_error');
         trackBoth('converter_generate_error', 'pngtostl_generate_error', {
           reason: error && error.name === 'AbortError' ? 'timeout' : 'network_or_runtime_error',
           message: error && error.message ? error.message : 'Conversion failed'
