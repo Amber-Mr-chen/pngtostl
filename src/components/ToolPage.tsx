@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Script from "next/script";
 import { BrandMark } from "@/components/BrandMark";
 import { ConverterPanel } from "@/components/ConverterPanel";
 import { ImageAnalyzer } from "@/components/ImageAnalyzer";
@@ -330,8 +331,8 @@ export function ToolPage({ tool, loadedSample }: { tool: ToolConfig; loadedSampl
       </main>
       <SiteFooter />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-      <script src="/stl-preview.js?v=webgl-final-20260608a" defer />
-      <script src="/converter.js?v=benchmark-ui-20260609a" defer />
+      <Script id="pngtostl-stl-preview" src="/stl-preview.js?v=light-preview-20260609" strategy="afterInteractive" />
+      <Script id="pngtostl-converter" src="/converter.js?v=generate-stability-20260609" strategy="afterInteractive" />
     </>
   );
 }

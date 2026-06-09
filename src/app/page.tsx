@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
 import { BrandMark } from "@/components/BrandMark";
 import { TrackedLink } from "@/components/TrackedLink";
 import { ConverterPanel } from "@/components/ConverterPanel";
@@ -544,8 +545,8 @@ export default function HomePage() {
         </nav>
       </footer>
     </main>
-    <script src="/stl-preview.js?v=light-preview-20260609" defer></script>
-    <script src="/converter.js?v=generate-stability-20260609" defer></script>
+    <Script id="pngtostl-stl-preview" src="/stl-preview.js?v=light-preview-20260609" strategy="afterInteractive" />
+    <Script id="pngtostl-converter" src="/converter.js?v=generate-stability-20260609" strategy="afterInteractive" />
     </>
   );
 }

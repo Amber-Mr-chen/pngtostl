@@ -251,7 +251,7 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
         data-min-thickness-mm={converter?.minThicknessMm ?? 0.8}
         data-max-thickness-mm={converter?.maxThicknessMm ?? 3.2}
         data-empty-message={converter?.preview ?? "Upload an image to generate STL geometry. STL files do not preserve color."}
-        action="javascript:void(0)"
+        action="#converter"
       >
         <section className="converterControls" aria-label="Upload and STL settings">
           {loadedSample ? (
