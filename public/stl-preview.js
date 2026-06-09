@@ -54,8 +54,8 @@
   }
 
   function renderSolidHeightmap(canvas, triangles, box, ctx, w, h) {
-    const columns = 240;
-    const rows = 240;
+    const columns = 320;
+    const rows = 320;
     const heights = new Float32Array(columns * rows);
     const seen = new Uint8Array(columns * rows);
     const xSpan = Math.max(box.maxX - box.minX, 0.001);
@@ -63,7 +63,7 @@
     const ySpan = Math.max(box.maxY - box.minY, 0.001);
     triangles.forEach((tri) => tri.forEach((point) => {
       const heightSignal = (point.y - box.minY) / ySpan;
-      if (heightSignal < 0.035) return;
+      if (heightSignal < 0.018) return;
       const x = Math.max(0, Math.min(columns - 1, Math.round(((point.x - box.minX) / xSpan) * (columns - 1))));
       const y = Math.max(0, Math.min(rows - 1, Math.round(((point.z - box.minZ) / zSpan) * (rows - 1))));
       const index = y * columns + x;
@@ -75,10 +75,10 @@
     const offsetX = (w - columns * scale) / 2;
     const offsetY = (h - rows * scale) / 2;
     ctx.save();
-    ctx.shadowColor = 'rgba(15, 31, 48, .18)';
-    ctx.shadowBlur = 18;
-    ctx.shadowOffsetY = 10;
-    ctx.fillStyle = 'rgba(19, 73, 111, .22)';
+    ctx.shadowColor = 'rgba(15, 31, 48, .26)';
+    ctx.shadowBlur = 16;
+    ctx.shadowOffsetY = 8;
+    ctx.fillStyle = 'rgba(17, 51, 80, .28)';
     for (let row = 0; row < rows; row += 1) {
       for (let column = 0; column < columns; column += 1) {
         const index = row * columns + column;
@@ -93,9 +93,14 @@
         const h0 = heights[index];
         const right = column + 1 < columns ? heights[index + 1] : h0;
         const down = row + 1 < rows ? heights[index + columns] : h0;
-        const light = Math.max(31, Math.min(86, 82 - h0 * 54 - (h0 - right) * 18 - (h0 - down) * 12));
-        ctx.fillStyle = `hsl(202 62% ${light}%)`;
+        const gradient = Math.max(Math.abs(h0 - right), Math.abs(h0 - down));
+        const light = Math.max(18, Math.min(82, 78 - h0 * 62 - (h0 - right) * 32 - (h0 - down) * 24));
+        ctx.fillStyle = `hsl(205 58% ${light}%)`;
         ctx.fillRect(offsetX + column * scale, offsetY + row * scale, cell, cell);
+        if (gradient > 0.045) {
+          ctx.fillStyle = 'rgba(7, 20, 36, .38)';
+          ctx.fillRect(offsetX + column * scale, offsetY + row * scale, Math.max(1, cell * 0.72), Math.max(1, cell * 0.72));
+        }
       }
     }
   }
@@ -215,8 +220,8 @@
     geometry.boundingBox.getSize(size);
 
     const material = new THREE.MeshStandardMaterial({
-      color: 0xaeb5bc,
-      roughness: 0.88,
+      color: 0x8f98a2,
+      roughness: 0.78,
       metalness: 0,
       side: THREE.DoubleSide,
     });
@@ -226,12 +231,20 @@
     mesh.scale.x = -1;
     scene.add(mesh);
 
+    const edgeMaterial = new THREE.LineBasicMaterial({
+      color: 0x0f172a,
+      transparent: true,
+      opacity: 0.68,
+      depthTest: false,
+      depthWrite: false,
+    });
     const edgeLines = new THREE.LineSegments(
-      new THREE.EdgesGeometry(geometry, 28),
-      new THREE.LineBasicMaterial({ color: 0x6f7780, transparent: true, opacity: 0.16 })
+      new THREE.EdgesGeometry(geometry, 12),
+      edgeMaterial
     );
     edgeLines.scale.x = -1;
     edgeLines.visible = false;
+    edgeLines.renderOrder = 4;
     scene.add(edgeLines);
 
     const platformSize = Math.max(size.x, size.z, radius * 1.6) * 1.28;
@@ -271,15 +284,15 @@
     grid.material.transparent = true;
     scene.add(grid);
 
-    const fill = new THREE.HemisphereLight(0xffffff, 0x9aa1a8, 1.55);
+    const fill = new THREE.HemisphereLight(0xffffff, 0x6b7280, 1.05);
     scene.add(fill);
-    const key = new THREE.DirectionalLight(0xffffff, 2.45);
+    const key = new THREE.DirectionalLight(0xffffff, 3.1);
     key.position.set(-radius * 1.4, radius * 2.2, -radius * 2.8);
     key.castShadow = true;
     key.shadow.mapSize.width = 1024;
     key.shadow.mapSize.height = 1024;
     scene.add(key);
-    const soft = new THREE.DirectionalLight(0xffffff, 0.7);
+    const soft = new THREE.DirectionalLight(0xffffff, 0.42);
     soft.position.set(radius * 1.8, radius * 0.9, radius * 1.3);
     scene.add(soft);
 
@@ -315,9 +328,11 @@
       const mode = canvas.dataset.previewMode || 'solid';
       const wireframe = mode === 'wireframe';
       material.wireframe = wireframe;
-      edgeLines.visible = mode === 'edges';
-      material.color.setHex(wireframe ? 0x1d3445 : 0xaeb5bc);
-      material.roughness = wireframe ? 0.72 : 0.88;
+      edgeLines.visible = mode === 'edges' || mode === 'solid';
+      edgeMaterial.opacity = mode === 'edges' ? 0.82 : 0.62;
+      edgeMaterial.needsUpdate = true;
+      material.color.setHex(wireframe ? 0x1d3445 : 0x8f98a2);
+      material.roughness = wireframe ? 0.68 : 0.78;
       material.needsUpdate = true;
     }
 
