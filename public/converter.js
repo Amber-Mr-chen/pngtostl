@@ -129,6 +129,14 @@
       if (output) output.textContent = formatRangeValue(input);
     }
 
+    function setRangeValue(input, value) {
+      if (!input) return;
+      input.value = String(value);
+      syncRange(input);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
     function bindRange(input) {
       if (!input) return;
       input.addEventListener('input', () => syncRange(input));
@@ -473,14 +481,16 @@
       if (autoRouteComplexImage) {
         modeInput.value = 'relief';
         if (selectedQuality() !== 'high') setQualityValue('high');
-        setText(status, copy('Using safer workflow', '使用更稳的工作流'));
-        setText(message, classification.message + copy('\nAutomatically using photo raised surface mode for this preview...', '\n已自动改用照片浮雕面板生成预览……'));
+        setRangeValue(smoothingInput, 65);
+        setText(status, copy('Using smooth relief workflow', '使用平滑浮雕工作流'));
+        setText(message, classification.message + copy('\nAutomatically using smooth photo relief mode to suppress noisy texture...', '\n已自动改用平滑照片浮雕，减少杂乱纹理……'));
         trackBoth('converter_auto_routed_complex_image', 'pngtostl_auto_routed_complex_image', { reason: 'image_not_fit_for_clean_extrude' });
       }
       if (modeInput && selectedMode() === 'extrude' && classification.level === 'warn') {
         modeInput.value = 'relief';
         if (selectedQuality() !== 'high') setQualityValue('high');
-        setText(message, classification.message + copy('\nAutomatically using photo raised surface mode instead of clean extrude...', '\n已自动改用照片浮雕面板，不再使用干净挤压……'));
+        setRangeValue(smoothingInput, 58);
+        setText(message, classification.message + copy('\nAutomatically using smoother photo relief mode instead of clean extrude...', '\n已自动改用更平滑的照片浮雕面板，不再使用干净挤压……'));
       }
       const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;
       if (modeInput && selectedMode() === 'relief' && shouldCutoutSubject && !autoRouteComplexImage) {

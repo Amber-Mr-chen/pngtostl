@@ -545,7 +545,7 @@ export default function HomePage() {
       </footer>
     </main>
     <script src="/stl-preview.js?v=light-preview-20260609" defer></script>
-    <script src="/converter.js?v=landing-saas-20260609" defer></script>
+    <script src="/converter.js?v=smooth-relief-20260609" defer></script>
     </>
   );
 }

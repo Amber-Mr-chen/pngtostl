@@ -120,6 +120,64 @@ function smoothGrid(grid: number[][], amount: number) {
   );
 }
 
+function localGridMean(grid: number[][], x: number, y: number, radius: number) {
+  const rows = grid.length;
+  const columns = grid[0]?.length ?? 0;
+  let sum = 0;
+  let count = 0;
+  for (let yy = Math.max(0, y - radius); yy <= Math.min(rows - 1, y + radius); yy += 1) {
+    for (let xx = Math.max(0, x - radius); xx <= Math.min(columns - 1, x + radius); xx += 1) {
+      sum += grid[yy][xx];
+      count += 1;
+    }
+  }
+  return count ? sum / count : grid[y]?.[x] ?? 0;
+}
+
+function smoothReliefGrid(grid: number[][], amount: number) {
+  const strength = clamp(amount, 0, 1);
+  if (strength <= 0.01) return grid;
+
+  let result = grid;
+  const iterations = 1 + Math.round(strength * 2);
+  for (let index = 0; index < iterations; index += 1) {
+    result = smoothGrid(result, 0.22 + strength * 0.22);
+  }
+
+  let min = Number.POSITIVE_INFINITY;
+  let max = Number.NEGATIVE_INFINITY;
+  for (const row of result) {
+    for (const value of row) {
+      min = Math.min(min, value);
+      max = Math.max(max, value);
+    }
+  }
+  const heightRange = Math.max(max - min, 0.001);
+  const noiseLimit = heightRange * (0.03 + strength * 0.07);
+  const noiseBlend = 0.42 + strength * 0.42;
+  const edgeBlend = strength * 0.16;
+
+  const denoised = result.map((row, y) =>
+    row.map((value, x) => {
+      const mean = localGridMean(result, x, y, 2);
+      const delta = value - mean;
+      const blend = Math.abs(delta) < noiseLimit ? noiseBlend : edgeBlend;
+      return value * (1 - blend) + mean * blend;
+    }),
+  );
+
+  const floorCutoff = min + heightRange * (0.06 + strength * 0.1);
+  const floorBlend = 0.62 + strength * 0.28;
+  const flattened = denoised.map((row) =>
+    row.map((value) => {
+      if (value <= floorCutoff) return value * (1 - floorBlend) + min * floorBlend;
+      return value;
+    }),
+  );
+
+  return smoothGrid(flattened, strength * 0.18);
+}
+
 function percentile(values: number[], ratio: number) {
   if (!values.length) return 1;
   const sorted = [...values].sort((a, b) => a - b);
@@ -230,8 +288,19 @@ function buildHeightGrid(samples: ImageSample[][], options: ConvertOptions) {
     raw.push(row);
   }
 
+  const smoothingAmount =
+    options.mode === "extrude"
+      ? 0
+      : options.mode === "icon" || options.mode === "logo"
+        ? options.smoothing
+        : options.mode === "sketch"
+          ? Math.min(0.72, options.smoothing + 0.18)
+          : options.mode === "relief"
+            ? Math.max(0.42, options.smoothing)
+            : options.smoothing * 0.5;
+
   return {
-    heights: smoothGrid(raw, options.mode === "extrude" ? 0 : options.mode === "icon" || options.mode === "logo" ? options.smoothing : options.mode === "sketch" ? Math.min(0.72, options.smoothing + 0.18) : options.smoothing * 0.5),
+    heights: options.mode === "relief" ? smoothReliefGrid(raw, smoothingAmount) : smoothGrid(raw, smoothingAmount),
     occupiedRatio: rows * columns ? occupied / (rows * columns) : 0,
   };
 }
