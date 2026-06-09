@@ -17,8 +17,8 @@ const samples = [
   },
   {
     id: "photo",
-    label: "Lithophane",
-    title: "Backlit photo lithophane",
+    label: "Photo Panel",
+    title: "Backlit photo panel",
     href: "/lithophane-generator",
     sourceLabel: "Portrait-style photo",
     previewLabel: "Thin backlit panel",
@@ -30,8 +30,8 @@ const samples = [
   },
   {
     id: "heightmap",
-    label: "Heightmap",
-    title: "Heightmap surface",
+    label: "Depth Map",
+    title: "Depth Map surface",
     href: "/heightmap-to-stl",
     sourceLabel: "Grayscale height map",
     previewLabel: "Terrain-like STL surface",

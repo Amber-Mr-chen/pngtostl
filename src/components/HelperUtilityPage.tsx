@@ -7,8 +7,8 @@ import { getSampleWorkflow, helperPages, sampleWorkflowSlug, tools } from "@/lib
 const helperNav = [
   { href: "/image-to-stl", label: "Image to STL" },
   { href: "/logo-to-stl", label: "Logo to STL" },
-  { href: "/lithophane-generator", label: "Lithophane" },
-  { href: "/heightmap-to-stl", label: "Heightmap" },
+  { href: "/lithophane-generator", label: "Photo Panel" },
+  { href: "/heightmap-to-stl", label: "Depth Map" },
   { href: "/samples", label: "Examples" },
 ];
 

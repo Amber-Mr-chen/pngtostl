@@ -9,8 +9,8 @@ import { helperPages, sampleWorkflows, type SampleWorkflow, type ToolConfig } fr
 const primaryNav = [
   { href: "/image-to-stl", label: "Image to STL" },
   { href: "/logo-to-stl", label: "Logo to STL" },
-  { href: "/lithophane-generator", label: "Lithophane" },
-  { href: "/heightmap-to-stl", label: "Heightmap" },
+  { href: "/lithophane-generator", label: "Photo Panel" },
+  { href: "/heightmap-to-stl", label: "Depth Map" },
   { href: "/faq", label: "Guides" },
 ];
 
@@ -159,11 +159,11 @@ function SiteFooter() {
         <Link href="/jpeg-to-stl">JPEG to STL</Link>
         <Link href="/pic-to-stl">Pic to STL</Link>
         <Link href="/logo-to-stl">Logo to STL</Link>
-        <Link href="/lithophane-generator">Lithophane</Link>
-        <Link href="/heightmap-to-stl">Heightmap</Link>
+        <Link href="/lithophane-generator">Photo Panel</Link>
+        <Link href="/heightmap-to-stl">Depth Map</Link>
         <Link href="/how-to-turn-logo-into-stl">Logo guide</Link>
-        <Link href="/lithophane-image-guide">Lithophane guide</Link>
-        <Link href="/heightmap-to-stl-terrain-guide">Heightmap guide</Link>
+        <Link href="/lithophane-image-guide">Photo Panel guide</Link>
+        <Link href="/heightmap-to-stl-terrain-guide">Depth Map guide</Link>
         <Link href="/samples">Examples</Link>
         <Link href="/faq">FAQ</Link>
         <Link href="/privacy">Privacy</Link>
@@ -300,8 +300,8 @@ export function ToolPage({ tool, loadedSample }: { tool: ToolConfig; loadedSampl
                 </Link>
               ))}
               <Link className="pill" href="/logo-to-stl">Logo to STL</Link>
-              <Link className="pill" href="/lithophane-generator">Lithophane</Link>
-              <Link className="pill" href="/heightmap-to-stl">Heightmap</Link>
+              <Link className="pill" href="/lithophane-generator">Photo Panel</Link>
+              <Link className="pill" href="/heightmap-to-stl">Depth Map</Link>
             </div>
           </div>
           <div className="shell">

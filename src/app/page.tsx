@@ -20,7 +20,7 @@ const qualityModes = [
   {
     name: "Print Review",
     cost: "Planned",
-    detail: "Commercial users can request batch/API review for repeat logo, lithophane, or heightmap workflows before a public paid plan launches.",
+    detail: "Commercial users can request batch/API review for repeat logo, backlit photo panel, or depth-map workflows before a public paid plan launches.",
   },
 ];
 
@@ -33,7 +33,7 @@ const conversionSteps = [
   {
     step: "2",
     title: "Route the workflow",
-    body: "Simple logos stay in clean STL mode; photos, sketches, and noisy images are routed to relief, lithophane, or heightmap paths.",
+    body: "Simple logos stay in clean STL mode; photos, sketches, and noisy images are routed to raised-surface, backlit-panel, or depth-map paths.",
   },
   {
     step: "3",
@@ -56,7 +56,7 @@ const capabilityCards = [
   {
     icon: "▧",
     title: "Multi-workflow output",
-    body: "Clean STL, logo relief, photo relief, lithophane, and heightmap paths share one upload station.",
+    body: "Clean STL, logo badge, photo panel, raised-surface, and depth-map paths share one upload station.",
   },
   {
     icon: "◉",
@@ -77,8 +77,8 @@ const pricingCards = [
     eyebrow: "Public tool",
     price: "$0",
     suffix: "/single file",
-    body: "For checking and converting one logo, icon, lithophane, or heightmap at a time.",
-    features: ["No signup core converter", "Fast / Pro / Ultra local detail", "STL preview and download", "Input-fit warnings"],
+    body: "For checking and converting one logo, icon, backlit photo panel, or grayscale depth map at a time.",
+    features: ["No signup core converter", "Fast / Standard / High detail", "STL preview and download", "Input-fit warnings"],
     href: "#converter",
     cta: "Start free",
   },
@@ -119,7 +119,7 @@ const proofSamples = [
     previewImage: "/samples/logo-badge-premium-v4-preview.png",
   },
   {
-    label: "Photo lithophane",
+    label: "Backlit photo panel",
     input: "portrait-style image",
     output: "0.8–3.2 mm panel",
     metric: "65,532 triangles",
@@ -129,7 +129,7 @@ const proofSamples = [
     previewImage: "/samples/lithophane-panel-premium-v4-preview.png",
   },
   {
-    label: "Heightmap surface",
+    label: "Depth-map surface",
     input: "grayscale PNG",
     output: "terrain-like relief",
     metric: "65,532 triangles",
@@ -144,7 +144,7 @@ const categories = [
   {
     eyebrow: "01",
     title: "Reliable STL workflows",
-    description: "Start with inputs this site can handle well: transparent logos, icons, simple silhouettes, heightmaps, and lithophanes.",
+    description: "Start with inputs this site can handle well: transparent logos, icons, simple silhouettes, grayscale depth maps, and backlit photo panels.",
     slugs: ["logo-to-stl", "png-to-stl", "heightmap-to-stl", "lithophane-generator"],
     example: "relief" as const,
   },
@@ -186,8 +186,8 @@ export default function HomePage() {
           <Link href="/logo-to-stl">Logo to STL</Link>
           <Link href="/png-to-stl">Icon to STL</Link>
           <Link href="/image-to-stl">Image Check</Link>
-          <Link href="/lithophane-generator">Lithophane</Link>
-          <Link href="/heightmap-to-stl">Heightmap</Link>
+          <Link href="/lithophane-generator">Photo Panel</Link>
+          <Link href="/heightmap-to-stl">Depth Map</Link>
           <Link href="/pricing">Pricing</Link>
           <Link href="/developers">API</Link>
           <Link href="/faq">Guides</Link>
@@ -203,7 +203,7 @@ export default function HomePage() {
           <p className="homeKicker">Logo, icon, and simple shape to STL</p>
           <h1>Convert clean logos and simple images into printable STL models.</h1>
           <p>
-            Built for transparent PNGs, icons, stickers, flat logos, and simple silhouettes. Photos, pencil sketches, and grid-paper drawings are routed to safer relief or lithophane workflows instead of being overpromised.
+            Built for transparent PNGs, icons, stickers, flat logos, and simple silhouettes. Photos, pencil sketches, and grid-paper drawings are routed to safer raised-surface or backlit-panel workflows instead of being overpromised.
           </p>
           <div className="fitChecklist" aria-label="What works best">
             <span>Best: transparent logo</span>
@@ -278,7 +278,7 @@ export default function HomePage() {
         <div className="sectionIntro compact">
           <p className="homeKicker">Product workflow</p>
           <h2 id="workflow-product-title">A converter flow inspired by AI 3D tools, without overpromising reconstruction.</h2>
-          <p>Use the same page pattern users expect from modern image-to-3D sites: quality choices, upload guidance, preview, and pricing entry — but keep the promise focused on reliable STL relief workflows.</p>
+          <p>Use the same page pattern users expect from modern image-to-3D sites: quality choices, upload guidance, preview, and pricing entry — but keep the promise focused on reliable STL panel workflows.</p>
         </div>
         <div className="qualityCards" aria-label="Available quality paths">
           {qualityModes.map((mode) => (
@@ -453,7 +453,7 @@ export default function HomePage() {
       <footer className="siteFooter homeFooter">
         <div>
           <strong>PNGtoSTL</strong>
-          <p>Image-to-STL tools for makers who need reliefs, logo badges, lithophanes, and heightmaps without opening CAD first.</p>
+          <p>Image-to-STL tools for makers who need raised panels, logo badges, backlit photo panels, and depth maps without opening CAD first.</p>
           <p><Link href="mailto:support@pngtostl.net">support@pngtostl.net</Link></p>
         </div>
         <nav aria-label="Footer">
@@ -463,11 +463,11 @@ export default function HomePage() {
           <Link href="/jpeg-to-stl">JPEG to STL</Link>
           <Link href="/pic-to-stl">Pic to STL</Link>
           <Link href="/logo-to-stl">Logo to STL</Link>
-          <Link href="/lithophane-generator">Lithophane</Link>
-          <Link href="/heightmap-to-stl">Heightmap</Link>
+          <Link href="/lithophane-generator">Photo Panel</Link>
+          <Link href="/heightmap-to-stl">Depth Map</Link>
           <Link href="/how-to-turn-logo-into-stl">Logo guide</Link>
-          <Link href="/lithophane-image-guide">Lithophane guide</Link>
-          <Link href="/heightmap-to-stl-terrain-guide">Heightmap guide</Link>
+          <Link href="/lithophane-image-guide">Photo Panel guide</Link>
+          <Link href="/heightmap-to-stl-terrain-guide">Depth Map guide</Link>
           <Link href="/samples">Examples</Link>
           <Link href="/pricing">Pricing</Link>
           <Link href="/developers">API</Link>

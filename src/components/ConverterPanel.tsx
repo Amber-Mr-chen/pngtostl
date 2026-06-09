@@ -15,13 +15,13 @@ const defaultModeBySlug: Record<string, NonNullable<ToolConfig["converter"]>["mo
 };
 
 const modeLabels = {
-  icon: "Icon / emoji relief",
-  logo: "Transparent logo relief",
+  icon: "Icon / emoji raised surface",
+  logo: "Transparent logo badge",
   extrude: "Clean solid extrude",
-  sketch: "Experimental sketch relief",
-  relief: "Photo-style relief",
-  heightmap: "Heightmap terrain",
-  lithophane: "Lithophane",
+  sketch: "Experimental sketch raised surface",
+  relief: "Photo raised surface",
+  heightmap: "Depth-map terrain",
+  lithophane: "Backlit photo panel",
 };
 
 const toolPresets: Record<string, Partial<NonNullable<ToolConfig["converter"]>>> = {
@@ -48,7 +48,7 @@ const toolPresets: Record<string, Partial<NonNullable<ToolConfig["converter"]>>>
     smoothing: 0,
     detail: 256,
     helper: "Best for transparent logos, icons, stickers, and simple silhouettes. The image check will warn when a photo, sketch, or noisy background is a poor fit for clean extrude.",
-    preview: "Upload an image to diagnose whether clean extrude, relief, lithophane, or heightmap is the safer path.",
+    preview: "Upload an image to diagnose whether clean extrude, raised-surface panel, backlit photo panel, or grayscale depth map is the safer path.",
     filename: "clean-image-extrude.stl",
   },
   "convert-image-to-stl": {
@@ -100,7 +100,7 @@ const toolPresets: Record<string, Partial<NonNullable<ToolConfig["converter"]>>>
     smoothing: 10,
     detail: 180,
     hiddenControls: ["mode", "threshold"],
-    helper: "Heightmap preset maps grayscale brightness into terrain or surface height.",
+    helper: "Depth Map preset maps grayscale brightness into terrain or surface height.",
     preview: "Upload a grayscale PNG heightmap to generate a terrain-style STL surface.",
     filename: "heightmap-surface.stl",
   },
@@ -116,8 +116,8 @@ const toolPresets: Record<string, Partial<NonNullable<ToolConfig["converter"]>>>
     minThicknessMm: 0.8,
     maxThicknessMm: 3.2,
     hiddenControls: ["threshold", "base"],
-    helper: "Lithophane preset maps brightness to thickness for backlit photo panels.",
-    preview: "Upload a photo to generate a lithophane STL with thin light areas and thick dark areas.",
+    helper: "Backlit photo panel preset maps brightness to thickness for light-box prints.",
+    preview: "Upload a photo to generate an STL panel with thin light areas and thick dark areas.",
     filename: "lithophane-panel.stl",
   },
   "photo-to-lithophane": {
@@ -132,8 +132,8 @@ const toolPresets: Record<string, Partial<NonNullable<ToolConfig["converter"]>>>
     minThicknessMm: 0.8,
     maxThicknessMm: 3.4,
     hiddenControls: ["threshold", "base"],
-    helper: "Photo lithophane preset favors portraits and backlit panels.",
-    preview: "Upload a portrait or photo to generate a backlit lithophane STL.",
+    helper: "Photo panel preset favors portraits and backlit displays.",
+    preview: "Upload a portrait or photo to generate a backlit STL panel.",
     filename: "photo-lithophane.stl",
   },
   "2d-image-to-3d-model": {
@@ -199,7 +199,7 @@ function fallbackConverter(tool: ToolConfig): NonNullable<ToolConfig["converter"
     minThicknessMm: 0.8,
     maxThicknessMm: 3.2,
     hiddenControls: mode === "lithophane" ? ["threshold", "base"] : mode === "heightmap" ? ["threshold"] : [],
-    helper: mode === "lithophane" ? "Lithophane maps brightness to material thickness for backlit prints." : "Tune the output for a printable raised relief.",
+    helper: mode === "lithophane" ? "Backlit photo panel mode maps brightness to material thickness." : "Tune the output for a printable raised surface.",
     preview: "Upload an image to generate STL geometry. STL files do not preserve color.",
     filename: `pngtostl-${mode}.stl`,
   };
@@ -306,7 +306,7 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
               <span>Quality</span>
               <b>0 credits · local preview</b>
             </div>
-            <div className="qualitySegments">
+            <div className="qualitySegments" translate="no">
               <label>
                 <input type="radio" name="quality" value="fast" defaultChecked />
                 <span>Fast</span>
@@ -314,12 +314,12 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
               </label>
               <label>
                 <input type="radio" name="quality" value="standard" />
-                <span>Pro</span>
+                <span>Standard</span>
                 <small>256 detail</small>
               </label>
               <label>
                 <input type="radio" name="quality" value="high" />
-                <span>Ultra</span>
+                <span>High detail</span>
                 <small>320 detail</small>
               </label>
             </div>
@@ -337,7 +337,7 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
                   <option key={value} value={value}>{label}</option>
                 ))}
               </select>
-              <small>Choose clean extrude for logos/icons, relief for tonal images, lithophane for photos, or heightmap for grayscale depth maps.</small>
+              <small>Choose clean extrude for logos/icons, raised-surface panels for tonal images, backlit photo panels for photos, or grayscale depth maps.</small>
             </label>
           ) : null}
 

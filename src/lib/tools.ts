@@ -66,7 +66,7 @@ export const tools: ToolConfig[] = [
     limit: "This tool creates front-facing relief STL geometry. STL files do not preserve PNG colors or textures.",
     related: [
       { label: "Image to STL", href: "/image-to-stl" },
-      { label: "Lithophane Generator", href: "/lithophane-generator" },
+      { label: "Backlit Photo Panel", href: "/lithophane-generator" },
       { label: "Image Contrast Guide", href: "/image-contrast-guide" },
     ],
     faq: [
@@ -81,7 +81,7 @@ export const tools: ToolConfig[] = [
     navLabel: "Image Check",
     eyebrow: "Guided image router",
     title: "Image to STL Suitability Check",
-    description: "Upload PNG, JPG, WebP, GIF, or BMP, then get a safer recommendation: clean logo/icon extrude, heightmap, lithophane, or relief.",
+    description: "Upload PNG, JPG, WebP, GIF, or BMP, then get a safer recommendation: clean logo/icon extrude, depth map, backlit photo panel, or raised surface.",
     promise: "Start here when you are unsure whether the source image is simple enough for clean STL extrusion.",
     primaryCta: "Check Image",
     secondaryCta: "Choose STL Mode",
@@ -97,7 +97,7 @@ export const tools: ToolConfig[] = [
     outputFacts: [
       { label: "Format", value: "Image -> STL" },
       { label: "Best for", value: "Logos, icons, high contrast art" },
-      { label: "Output", value: "Relief STL" },
+      { label: "Output", value: "Raised STL panel" },
     ],
     limit: "The universal converter creates printable STL workflows from one image; it does not reconstruct a full 3D object from a single photo.",
     related: [
@@ -108,8 +108,8 @@ export const tools: ToolConfig[] = [
     ],
     faq: [
       { q: "What images work best?", a: "Simple, high-contrast images with clear subjects usually produce cleaner relief or lithophane output." },
-      { q: "Which mode should I choose?", a: "Use relief for icons and simple art, logo for badges, lithophane for backlit photos, and heightmap for grayscale depth maps." },
-      { q: "Can every photo become a model?", a: "No. A single image can become a relief, lithophane, or heightmap-style STL, but not a full reconstructed 3D object." },
+      { q: "Which mode should I choose?", a: "Use raised-surface mode for icons and simple art, logo mode for badges, backlit photo panel mode for photos, and depth-map mode for grayscale depth maps." },
+      { q: "Can every photo become a model?", a: "No. A single image can become a raised surface, backlit photo panel, or depth-map-style STL, but not a full reconstructed 3D object." },
       { q: "Do colors appear in the STL?", a: "No. STL is single-material geometry. Brightness, contrast, and transparency influence shape, not color output." },
     ],
   },
@@ -133,7 +133,7 @@ export const tools: ToolConfig[] = [
     pains: ["Explains what to fix before converting.", "Avoids blind uploads to generic converters.", "Keeps beginners focused on printable output."],
     outputFacts: [
       { label: "Workflow", value: "Guided" },
-      { label: "Output", value: "STL relief" },
+      { label: "Output", value: "Raised STL panel" },
       { label: "Focus", value: "3D printing" },
     ],
     limit: "This guided page does not create a full 3D object from a single photo.",
@@ -149,44 +149,44 @@ export const tools: ToolConfig[] = [
   },
   {
     slug: "lithophane-generator",
-    navLabel: "Lithophane",
+    navLabel: "Photo Panel",
     eyebrow: "Photo light panel tool",
-    title: "Lithophane Generator",
-    description: "Create 3D printable lithophane STL files from photos, set safe thickness ranges, preview backlit detail, and download a panel ready for slicer checks.",
+    title: "Backlit Photo Panel Generator",
+    description: "Create 3D printable backlit STL panels from photos, set safe thickness ranges, preview backlit detail, and download a panel ready for slicer checks.",
     promise: "Set thickness, invert the image, preview backlit detail, and download the result.",
-    primaryCta: "Make Lithophane",
+    primaryCta: "Make Photo Panel",
     secondaryCta: "Download STL",
-    uploadLabel: "Upload your lithophane photo",
+    uploadLabel: "Upload your photo panel image",
     supported: "PNG, JPG, WebP, GIF, BMP; high contrast recommended",
     controls: [
       { label: "Min thickness", value: "0.8 mm", helper: "Thin areas transmit more light." },
       { label: "Max thickness", value: "3.2 mm", helper: "Thick areas block more light." },
-      { label: "Invert image", value: "On", helper: "Usually needed for lithophanes." },
+      { label: "Invert image", value: "On", helper: "Usually needed for backlit panels." },
     ],
-    steps: ["Upload your photo.", "Set thickness and inversion.", "Download the lithophane STL."],
-    pains: ["Clear settings for photo prints.", "Easier than CAD for lithophanes.", "Explains print setup before download."],
+    steps: ["Upload your photo.", "Set thickness and inversion.", "Download the backlit STL panel."],
+    pains: ["Clear settings for photo prints.", "Easier than CAD for photo panels.", "Explains print setup before download."],
     outputFacts: [
-      { label: "Type", value: "Lithophane STL" },
+      { label: "Type", value: "Backlit STL panel" },
       { label: "Use", value: "Backlit photo print" },
       { label: "Mode", value: "Relief thickness" },
     ],
-    limit: "Lithophane results depend on image contrast, thickness, and print settings.",
+    limit: "Backlit photo panel results depend on image contrast, thickness, and print settings.",
     related: [
-      { label: "Photo to Lithophane", href: "/photo-to-lithophane" },
-      { label: "Best Lithophane Settings", href: "/best-lithophane-settings" },
+      { label: "Photo to Backlit Panel", href: "/photo-to-lithophane" },
+      { label: "Best Photo Panel Settings", href: "/best-lithophane-settings" },
       { label: "3D Print Photo", href: "/3d-print-photo" },
       { label: "Print Settings", href: "/print-settings-checker" },
     ],
     faq: [
-      { q: "Should lithophanes be inverted?", a: "Often yes, because thickness controls how much light passes through." },
-      { q: "What makes a good lithophane photo?", a: "Photos with clear subjects and balanced contrast usually work best." },
+      { q: "Should backlit panels be inverted?", a: "Often yes, because thickness controls how much light passes through." },
+      { q: "What makes a good photo panel?", a: "Photos with clear subjects and balanced contrast usually work best." },
     ],
   },
   {
     slug: "photo-to-lithophane",
     navLabel: "Photo Lithophane",
     eyebrow: "Photo-specific lithophane path",
-    title: "Photo to Lithophane",
+    title: "Photo to Backlit Panel",
     description: "Turn a portrait or photo into a lithophane-style STL for backlit 3D printing with contrast checks, panel sizing, and thickness guidance.",
     promise: "Preview photo contrast, set thickness, and prepare a lithophane STL.",
     primaryCta: "Upload Photo",
@@ -202,12 +202,12 @@ export const tools: ToolConfig[] = [
     pains: ["Safer than promising photo-to-3D reconstruction.", "Focuses on a real 3D printing use case.", "Helps users avoid poor photo choices."],
     outputFacts: [
       { label: "Input", value: "Photo" },
-      { label: "Output", value: "Lithophane STL" },
+      { label: "Output", value: "Backlit STL panel" },
       { label: "Best for", value: "Backlit prints" },
     ],
     limit: "This creates a lithophane panel, not a full 3D object model.",
     related: [
-      { label: "Lithophane Generator", href: "/lithophane-generator" },
+      { label: "Backlit Photo Panel", href: "/lithophane-generator" },
       { label: "3D Print Photo", href: "/3d-print-photo" },
       { label: "Image Contrast Guide", href: "/image-contrast-guide" },
     ],
@@ -241,8 +241,8 @@ export const tools: ToolConfig[] = [
     ],
     limit: "These are general print suggestions, not guaranteed printer settings.",
     related: [
-      { label: "Lithophane Generator", href: "/lithophane-generator" },
-      { label: "Photo to Lithophane", href: "/photo-to-lithophane" },
+      { label: "Backlit Photo Panel", href: "/lithophane-generator" },
+      { label: "Photo to Backlit Panel", href: "/photo-to-lithophane" },
       { label: "Print Settings Checker", href: "/print-settings-checker" },
     ],
     faq: [
@@ -277,7 +277,7 @@ export const tools: ToolConfig[] = [
     related: [
       { label: "Image to STL", href: "/image-to-stl" },
       { label: "JPEG to STL", href: "/jpeg-to-stl" },
-      { label: "Photo to Lithophane", href: "/photo-to-lithophane" },
+      { label: "Photo to Backlit Panel", href: "/photo-to-lithophane" },
       { label: "Contrast Guide", href: "/image-contrast-guide" },
     ],
     faq: [
@@ -314,7 +314,7 @@ export const tools: ToolConfig[] = [
     related: [
       { label: "JPG to STL", href: "/jpg-to-stl" },
       { label: "Image to STL", href: "/image-to-stl" },
-      { label: "Photo to Lithophane", href: "/photo-to-lithophane" },
+      { label: "Photo to Backlit Panel", href: "/photo-to-lithophane" },
     ],
     faq: [
       { q: "Is JPEG different from JPG here?", a: "No. JPEG and JPG are treated as the same image family; this page exists because users search both terms." },
@@ -449,7 +449,7 @@ export const tools: ToolConfig[] = [
     limit: "This page creates relief-style models from 2D images, not full 3D reconstructed objects.",
     related: [
       { label: "Image to STL", href: "/image-to-stl" },
-      { label: "Photo to Lithophane", href: "/photo-to-lithophane" },
+      { label: "Photo to Backlit Panel", href: "/photo-to-lithophane" },
       { label: "FAQ", href: "/faq" },
     ],
     faq: [
@@ -577,7 +577,7 @@ export const helperPages: HelperPage[] = [
     ],
     faqs: [
       { q: "What kind of photo is best for a lithophane?", a: "A clear subject, balanced contrast, and simple background usually produce the most readable backlit print." },
-      { q: "Should lithophanes be inverted?", a: "Often yes, because thickness controls brightness. The generator presets use lithophane-oriented inversion as a starting point." },
+      { q: "Should backlit panels be inverted?", a: "Often yes, because thickness controls brightness. The generator presets use lithophane-oriented inversion as a starting point." },
     ],
   },
   {
@@ -607,7 +607,7 @@ export const helperPages: HelperPage[] = [
   },
   {
     slug: "best-lithophane-settings",
-    title: "Best Lithophane Settings for 3D Printing",
+    title: "Best Photo Panel Settings for 3D Printing",
     description: "Choose safe lithophane thickness, image inversion, panel size, layer height, and test-print settings before downloading a photo-to-STL lithophane.",
     cta: "Open lithophane generator",
     href: "/lithophane-generator?sample=portrait-lithophane-night-light&utm_source=seo_helper&utm_medium=internal&utm_campaign=best_lithophane_settings",

@@ -17,8 +17,8 @@ const filters: Array<{ key: FilterKey; label: string }> = [
   { key: "all", label: "All examples" },
   { key: "relief", label: "Relief" },
   { key: "logo", label: "Logo badge" },
-  { key: "lithophane", label: "Lithophane" },
-  { key: "heightmap", label: "Heightmap" },
+  { key: "lithophane", label: "Photo Panel" },
+  { key: "heightmap", label: "Depth Map" },
 ];
 
 export function SampleGalleryFilter({ samples }: { samples: SampleWorkflow[] }) {
