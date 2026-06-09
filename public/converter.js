@@ -195,7 +195,7 @@
       const tooComplex = edgeRatio > 0.42 || subjectRatio > 0.86 || complexCutout;
       if (logoFit || silhouetteFit) return { level: 'good', title: copy('Good fit for clean logo/icon STL', '适合生成干净的标志/图标 STL'), message: hasTransparency ? copy('Transparency detected. Clean extrude or logo badge mode is the safest workflow.', '检测到透明背景，干净挤压或标志徽章模式最稳。') : copy('Light background with a clear subject detected. Clean extrude can work after background removal.', '检测到浅色背景和清晰主体，移除背景后可尝试干净挤压。') };
       if (photoLike) return { level: 'warn', title: copy('Better as backlit panel or raised surface', '更适合照片面板或浮雕面板'), message: copy('This looks more like a photo/tonal image than a flat logo. Use backlit photo panel or photo raised surface mode instead of clean extrude.', '这更像照片或明暗图，不像扁平标志。建议用照片面板或浮雕面板，不要直接干净挤压。') };
-      if (tooComplex) return { level: 'bad', title: copy('Not ideal for clean STL extrusion', '不适合直接生成干净挤压 STL'), message: copy('This image appears too complex/noisy for a clean cutout. Use a simpler logo/icon or switch to raised-surface or backlit-panel mode before generating.', '这张图对干净轮廓来说太复杂或噪点太多。请换更简单的标志/图标，或改用浮雕面板/照片面板模式。') };
+      if (tooComplex) return { level: 'bad', title: copy('Recommended: raised photo panel', '推荐：浮雕/照片面板'), message: copy('This image has rich detail, so a clean logo cutout is not the best path. The converter can route it to a raised-surface preview instead.', '这张图细节较多，不适合按简单标志切边；转换器会优先用浮雕面板方式生成预览。') };
       return { level: 'warn', title: copy('Usable, but check the preview carefully', '可以尝试，但需要仔细检查预览'), message: copy('The image may work, but clean extrude is safest with transparent logos, icons, and simple silhouettes.', '这张图可能可用，但干净挤压最适合透明标志、图标和简单轮廓。') };
     }
 
@@ -212,8 +212,8 @@
       setText(diagnosisComplexity, copy('Complexity: ', '复杂度：') + Math.round((Number(info.edgeRatio) || 0) * 100) + '% · ' + copy('shape ', '形状 ') + Math.round((Number(info.boundaryRatio) || 0) * 100) + '% · ' + copy('parts ', '部件 ') + (Number(info.componentCount) || 0));
       if (modeInput && selectedMode() === 'extrude') {
         if (classification.level === 'good') setButtonState(copy('Generate clean STL now', '生成干净 STL'), false);
-        if (classification.level === 'warn') setButtonState(copy('Generate or adjust image', '生成或调整图片'), false);
-        if (classification.level === 'bad') setButtonState(copy('Try another image or mode', '换图或切换模式'), false);
+        if (classification.level === 'warn') setButtonState(copy('Generate photo panel preview', '生成照片面板预览'), false);
+        if (classification.level === 'bad') setButtonState(copy('Generate safer STL preview', '生成安全 STL 预览'), false);
       }
     }
 
@@ -469,12 +469,13 @@
       const imageInfo = await inspectImageFile(file);
       updateDiagnosis(imageInfo);
       const classification = classifyImage(imageInfo);
-      if (selectedMode() === 'extrude' && classification.level === 'bad') {
-        setText(status, copy('Needs simpler image', '需要更简单的图片'));
-        setText(message, classification.message + copy('\nFor this image, try a simpler logo/icon or use a photo panel workflow.', '\n这张图建议换成更简单的标志/图标，或使用照片面板工作流。'));
-        trackBoth('converter_generate_blocked', 'pngtostl_generate_blocked', { reason: 'image_not_fit_for_clean_extrude' });
-        setButtonState(copy('Try another image or mode', '换图或切换模式'), false);
-        return;
+      const autoRouteComplexImage = modeInput && selectedMode() === 'extrude' && classification.level === 'bad';
+      if (autoRouteComplexImage) {
+        modeInput.value = 'relief';
+        if (selectedQuality() === 'fast') setQualityValue('standard');
+        setText(status, copy('Using safer workflow', '使用更稳的工作流'));
+        setText(message, classification.message + copy('\nAutomatically using photo raised surface mode for this preview...', '\n已自动改用照片浮雕面板生成预览……'));
+        trackBoth('converter_auto_routed_complex_image', 'pngtostl_auto_routed_complex_image', { reason: 'image_not_fit_for_clean_extrude' });
       }
       if (modeInput && selectedMode() === 'extrude' && classification.level === 'warn') {
         modeInput.value = 'relief';
@@ -482,7 +483,7 @@
         setText(message, classification.message + copy('\nAutomatically using photo raised surface mode instead of clean extrude...', '\n已自动改用照片浮雕面板，不再使用干净挤压……'));
       }
       const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;
-      if (modeInput && selectedMode() === 'relief' && shouldCutoutSubject) {
+      if (modeInput && selectedMode() === 'relief' && shouldCutoutSubject && !autoRouteComplexImage) {
         modeInput.value = 'logo';
         if (selectedQuality() === 'fast') setQualityValue('standard');
         setText(message, (imageInfo.hasTransparency ? copy('Transparent background detected.', '检测到透明背景。') : copy('Light background detected and removed.', '检测到浅色背景并已移除。')) + copy(' Using logo badge mode so the subject does not become a full square plate...', ' 已使用标志徽章模式，避免主体变成整块方形板……'));
