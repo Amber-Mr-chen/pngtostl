@@ -322,8 +322,8 @@ export function ToolPage({ tool, loadedSample }: { tool: ToolConfig; loadedSampl
       </main>
       <SiteFooter />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-      <script src="/stl-preview.js?v=p0-generate-fix-20260609a" defer />
-      <script src="/converter.js?v=p0-generate-fix-20260609b" defer />
+      <script src="/stl-preview.js?v=strong-preview-20260609a" defer />
+      <script src="/converter.js?v=auto-workflow-20260609a" defer />
     </>
   );
 }
