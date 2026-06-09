@@ -10,7 +10,8 @@
     const downloadLink = form.querySelector('[data-download-stl="true"]');
     const status = form.querySelector('[data-converter-status]');
     const message = form.querySelector('[data-converter-message]');
-    const previewCanvas = form.querySelector('[data-stl-preview="true"]');
+    const previewCanvas = root.querySelector('[data-stl-preview]');
+    const previewEmptyState = root.querySelector('[data-preview-empty-state]');
     const metrics = form.querySelector('[data-result-metrics="true"]');
     const cleanPreviewPanel = form.querySelector('[data-clean-preview-panel="true"]');
     const cleanPreviewImage = form.querySelector('[data-clean-preview-image="true"]');
@@ -27,7 +28,7 @@
     const thresholdInput = form.querySelector('input[name="threshold"]');
     const smoothingInput = form.querySelector('input[name="smoothing"]');
     const detailInput = form.querySelector('input[name="detail"]');
-    const qualityInput = form.querySelector('select[name="quality"]');
+    const qualityInputs = Array.from(form.querySelectorAll('input[name="quality"], select[name="quality"]'));
     const invertInput = form.querySelector('input[name="invert"]');
     const hasSamplePreset = form.dataset.samplePreset === 'true';
     let lastFileSignature = '';
@@ -76,8 +77,22 @@
       return modeInput ? modeInput.value : form.dataset.mode || 'icon';
     }
 
+    function selectedQuality() {
+      const checked = qualityInputs.find((input) => input.type === 'radio' && input.checked);
+      if (checked) return checked.value;
+      const select = qualityInputs.find((input) => input.tagName === 'SELECT');
+      return select ? select.value : 'fast';
+    }
+
+    function setQualityValue(value) {
+      qualityInputs.forEach((input) => {
+        if (input.type === 'radio') input.checked = input.value === value;
+        else input.value = value;
+      });
+    }
+
     function qualityDetail() {
-      const value = qualityInput ? qualityInput.value : 'fast';
+      const value = selectedQuality();
       if (value === 'high') return 320;
       if (value === 'standard') return 256;
       return detailInput ? Number(detailInput.value) || 128 : 128;
@@ -446,13 +461,13 @@
       }
       if (modeInput && selectedMode() === 'extrude' && classification.level === 'warn') {
         modeInput.value = 'relief';
-        if (qualityInput && qualityInput.value === 'fast') qualityInput.value = 'standard';
+        if (selectedQuality() === 'fast') setQualityValue('standard');
         setText(message, classification.message + '\nAutomatically using photo-style relief instead of clean extrude...');
       }
       const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;
       if (modeInput && selectedMode() === 'relief' && shouldCutoutSubject) {
         modeInput.value = 'logo';
-        if (qualityInput && qualityInput.value === 'fast') qualityInput.value = 'standard';
+        if (selectedQuality() === 'fast') setQualityValue('standard');
         setText(message, (imageInfo.hasTransparency ? 'Transparent background detected.' : 'Light background detected and removed.') + ' Using logo/cutout relief so the subject does not become a full square plate...');
       }
       trackBoth('converter_generate_clicked', 'pngtostl_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024), auto_mode: selectedMode() });
@@ -531,6 +546,7 @@
         if (previewCanvas && window.PNGTOSTLPreview && typeof window.PNGTOSTLPreview.mount === 'function') {
           window.PNGTOSTLPreview.mount(previewCanvas, blob);
         }
+        if (previewEmptyState) previewEmptyState.hidden = true;
         setText(status, 'STL ready');
         trackBoth('converter_generate_success', 'pngtostl_generate_success', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
         trackSamplePreset('sample_preset_generate_success', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });

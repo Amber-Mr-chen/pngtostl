@@ -9,6 +9,8 @@ const defaultModeBySlug: Record<string, NonNullable<ToolConfig["converter"]>["mo
   "lithophane-generator": "lithophane",
   "photo-to-lithophane": "lithophane",
   "jpg-to-stl": "relief",
+  "jpeg-to-stl": "relief",
+  "pic-to-stl": "extrude",
   "2d-image-to-3d-model": "relief",
 };
 
@@ -186,7 +188,7 @@ function fallbackConverter(tool: ToolConfig): NonNullable<ToolConfig["converter"
   if (!mode) return null;
   return {
     mode,
-    accept: tool.slug === "jpg-to-stl" ? "image/jpeg,image/png" : tool.slug.includes("photo") || tool.slug === "image-to-stl" ? "image/png,image/jpeg,image/webp,image/gif,image/bmp" : "image/png",
+    accept: ["jpg-to-stl", "jpeg-to-stl", "pic-to-stl"].includes(tool.slug) ? "image/jpeg,image/png,image/webp,image/gif,image/bmp" : tool.slug.includes("photo") || tool.slug === "image-to-stl" ? "image/png,image/jpeg,image/webp,image/gif,image/bmp" : "image/png",
     widthMm: mode === "lithophane" ? 100 : mode === "heightmap" ? 120 : 90,
     depth: mode === "lithophane" ? 3.2 : mode === "logo" ? 2.2 : mode === "heightmap" ? 5 : 1.8,
     baseMm: mode === "lithophane" ? 0.8 : 1,
@@ -259,6 +261,19 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
               <small>{loadedSample.recommendedPreset}</small>
             </div>
           ) : null}
+          <div className="converterPanelTitle">
+            <div>
+              <span className="smallMuted">Upload image</span>
+              <strong>Choose input mode</strong>
+            </div>
+            <span className="creditPill">Free preview</span>
+          </div>
+
+          <div className="uploadModeTabs" role="tablist" aria-label="Image upload mode">
+            <button type="button" className="active" role="tab" aria-selected="true">Single image</button>
+            <button type="button" role="tab" aria-selected="false" disabled>Multi image <span>Planned</span></button>
+          </div>
+
           <div className="uploadDropzone">
             <div>
               <strong>{tool.uploadLabel}</strong>
@@ -283,6 +298,30 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
               <span data-diagnosis-alpha="true">Transparency: waiting</span>
               <span data-diagnosis-subject="true">Subject coverage: waiting</span>
               <span data-diagnosis-complexity="true">Complexity: waiting</span>
+            </div>
+          </div>
+
+          <div className="qualityChooser" aria-label="Quality preset">
+            <div className="qualityHeader">
+              <span>Quality</span>
+              <b>0 credits · local preview</b>
+            </div>
+            <div className="qualitySegments">
+              <label>
+                <input type="radio" name="quality" value="fast" defaultChecked />
+                <span>Fast</span>
+                <small>128 detail</small>
+              </label>
+              <label>
+                <input type="radio" name="quality" value="standard" />
+                <span>Pro</span>
+                <small>256 detail</small>
+              </label>
+              <label>
+                <input type="radio" name="quality" value="high" />
+                <span>Ultra</span>
+                <small>320 detail</small>
+              </label>
             </div>
           </div>
 
@@ -312,15 +351,6 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
           <details className="advancedSettings">
             <summary>Advanced print settings</summary>
             <div>
-              <label className="converterField">
-                <span>Quality preset</span>
-                <select name="quality" defaultValue="fast">
-                  <option value="fast">Fast preview · 128</option>
-                  <option value="standard">Standard · 256</option>
-                  <option value="high">High detail · 320</option>
-                </select>
-                <small>Use Standard or High for character art, stickers, and logo cutouts with small details.</small>
-              </label>
               {!converter || !hasHidden(converter, "base") ? (
                 <RangeField name="baseMm" label="Base thickness" value={`${baseMm.toFixed(1)} mm`} min="0.4" max="4" step="0.2" help="Adds printable support under generated geometry when this mode needs it." />
               ) : null}
@@ -358,6 +388,11 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
               <span>Iso</span>
               <span>Top</span>
               <span>Reset view</span>
+            </div>
+            <div className="previewEmptyState" data-preview-empty-state="true">
+              <span aria-hidden="true">▧</span>
+              <strong>Ready to generate</strong>
+              <p>Upload an image, choose quality, then preview the STL here before downloading.</p>
             </div>
             <canvas data-stl-preview="true" aria-label="Generated STL preview" />
             <div data-converter-message>
