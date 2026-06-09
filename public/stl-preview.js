@@ -47,7 +47,7 @@
     const minRaisedY = box.minY + Math.max(0.03, (box.maxY - box.minY) * 0.02);
     const raised = triangles.filter((tri) => tri.some((p) => p.y > minRaisedY));
     const source = raised.length ? raised : triangles;
-    const maxPreviewTriangles = 22000;
+    const maxPreviewTriangles = 30000;
     if (source.length <= maxPreviewTriangles) return source;
     const stride = Math.ceil(source.length / maxPreviewTriangles);
     return source.filter((_, index) => index % stride === 0);
@@ -75,10 +75,10 @@
     const offsetX = (w - columns * scale) / 2;
     const offsetY = (h - rows * scale) / 2;
     ctx.save();
-    ctx.shadowColor = 'rgba(15, 31, 48, .26)';
-    ctx.shadowBlur = 16;
-    ctx.shadowOffsetY = 8;
-    ctx.fillStyle = 'rgba(17, 51, 80, .28)';
+    ctx.shadowColor = 'rgba(15, 31, 48, .16)';
+    ctx.shadowBlur = 12;
+    ctx.shadowOffsetY = 6;
+    ctx.fillStyle = 'rgba(96, 118, 139, .22)';
     for (let row = 0; row < rows; row += 1) {
       for (let column = 0; column < columns; column += 1) {
         const index = row * columns + column;
@@ -94,11 +94,11 @@
         const right = column + 1 < columns ? heights[index + 1] : h0;
         const down = row + 1 < rows ? heights[index + columns] : h0;
         const gradient = Math.max(Math.abs(h0 - right), Math.abs(h0 - down));
-        const light = Math.max(18, Math.min(82, 78 - h0 * 62 - (h0 - right) * 32 - (h0 - down) * 24));
-        ctx.fillStyle = `hsl(205 58% ${light}%)`;
+        const light = Math.max(48, Math.min(90, 88 - h0 * 34 - (h0 - right) * 22 - (h0 - down) * 18));
+        ctx.fillStyle = `hsl(210 28% ${light}%)`;
         ctx.fillRect(offsetX + column * scale, offsetY + row * scale, cell, cell);
         if (gradient > 0.045) {
-          ctx.fillStyle = 'rgba(7, 20, 36, .38)';
+          ctx.fillStyle = 'rgba(38, 57, 77, .24)';
           ctx.fillRect(offsetX + column * scale, offsetY + row * scale, Math.max(1, cell * 0.72), Math.max(1, cell * 0.72));
         }
       }
@@ -154,13 +154,13 @@
       return { pts, z: (pts[0].z + pts[1].z + pts[2].z) / 3, heightSignal: (avgY - box.minY) / heightSpan };
     }).sort((a, b) => a.z - b.z);
     projected.forEach(({ pts, heightSignal }) => {
-      const shade = Math.max(24, Math.min(92, 92 - heightSignal * 68));
+      const shade = Math.max(52, Math.min(94, 92 - heightSignal * 36));
       ctx.beginPath();
       ctx.moveTo(pts[0].x, pts[0].y);
       ctx.lineTo(pts[1].x, pts[1].y);
       ctx.lineTo(pts[2].x, pts[2].y);
       ctx.closePath();
-      const fill = `hsl(204 56% ${shade}%)`;
+      const fill = `hsl(210 30% ${shade}%)`;
       ctx.fillStyle = fill;
       ctx.fill();
       ctx.strokeStyle = canvas.dataset.previewMode === 'wireframe' ? 'rgba(10,22,38,.22)' : fill;
@@ -191,18 +191,18 @@
     const container = document.createElement('div');
     container.className = 'webglStlPreview';
     container.setAttribute('aria-label', 'Interactive STL preview');
-    container.style.cssText = 'position:absolute;inset:0;border-radius:inherit;overflow:hidden;background:#f1f3f5;';
+    container.style.cssText = 'position:absolute;inset:0;border-radius:inherit;overflow:hidden;background:#f6f8fb;';
     canvas.style.visibility = 'hidden';
     parent.style.position = 'relative';
     parent.querySelectorAll('.webglStlPreview').forEach((node) => node.remove());
     parent.insertBefore(container, canvas.nextSibling);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf1f3f5);
+    scene.background = new THREE.Color(0xf6f8fb);
     const aspect = Math.max(1, rect.width) / Math.max(1, rect.height);
     const camera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0.1, 5000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 3));
     renderer.setSize(rect.width, rect.height);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.shadowMap.enabled = true;
@@ -220,8 +220,8 @@
     geometry.boundingBox.getSize(size);
 
     const material = new THREE.MeshStandardMaterial({
-      color: 0x8f98a2,
-      roughness: 0.78,
+      color: 0xcbd5e1,
+      roughness: 0.7,
       metalness: 0,
       side: THREE.DoubleSide,
     });
@@ -232,14 +232,14 @@
     scene.add(mesh);
 
     const edgeMaterial = new THREE.LineBasicMaterial({
-      color: 0x0f172a,
+      color: 0x334155,
       transparent: true,
-      opacity: 0.68,
-      depthTest: false,
+      opacity: 0.2,
+      depthTest: true,
       depthWrite: false,
     });
     const edgeLines = new THREE.LineSegments(
-      new THREE.EdgesGeometry(geometry, 12),
+      new THREE.EdgesGeometry(geometry, 28),
       edgeMaterial
     );
     edgeLines.scale.x = -1;
@@ -250,7 +250,7 @@
     const platformSize = Math.max(size.x, size.z, radius * 1.6) * 1.28;
     const platform = new THREE.Mesh(
       new THREE.BoxGeometry(platformSize, Math.max(radius * 0.035, 0.08), platformSize * 0.72),
-      new THREE.MeshStandardMaterial({ color: 0xd4d9de, roughness: 0.86, metalness: 0 })
+      new THREE.MeshStandardMaterial({ color: 0xe3e7ec, roughness: 0.82, metalness: 0 })
     );
     platform.position.y = -Math.max(size.y * 0.62, radius * 0.16);
     platform.receiveShadow = true;
@@ -284,15 +284,15 @@
     grid.material.transparent = true;
     scene.add(grid);
 
-    const fill = new THREE.HemisphereLight(0xffffff, 0x6b7280, 1.05);
+    const fill = new THREE.HemisphereLight(0xffffff, 0x9aa5b1, 1.24);
     scene.add(fill);
-    const key = new THREE.DirectionalLight(0xffffff, 3.1);
+    const key = new THREE.DirectionalLight(0xffffff, 2.7);
     key.position.set(-radius * 1.4, radius * 2.2, -radius * 2.8);
     key.castShadow = true;
     key.shadow.mapSize.width = 1024;
     key.shadow.mapSize.height = 1024;
     scene.add(key);
-    const soft = new THREE.DirectionalLight(0xffffff, 0.42);
+    const soft = new THREE.DirectionalLight(0xffffff, 0.76);
     soft.position.set(radius * 1.8, radius * 0.9, radius * 1.3);
     scene.add(soft);
 
@@ -329,10 +329,11 @@
       const wireframe = mode === 'wireframe';
       material.wireframe = wireframe;
       edgeLines.visible = mode === 'edges' || mode === 'solid';
-      edgeMaterial.opacity = mode === 'edges' ? 0.82 : 0.62;
+      edgeMaterial.depthTest = mode !== 'edges';
+      edgeMaterial.opacity = mode === 'edges' ? 0.58 : 0.24;
       edgeMaterial.needsUpdate = true;
-      material.color.setHex(wireframe ? 0x1d3445 : 0x8f98a2);
-      material.roughness = wireframe ? 0.68 : 0.78;
+      material.color.setHex(wireframe ? 0x475569 : 0xcbd5e1);
+      material.roughness = wireframe ? 0.7 : 0.7;
       material.needsUpdate = true;
     }
 

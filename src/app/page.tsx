@@ -544,7 +544,7 @@ export default function HomePage() {
         </nav>
       </footer>
     </main>
-    <script src="/stl-preview.js?v=detail-352-bilinear-20260609" defer></script>
+    <script src="/stl-preview.js?v=light-preview-20260609" defer></script>
     <script src="/converter.js?v=landing-saas-20260609" defer></script>
     </>
   );
