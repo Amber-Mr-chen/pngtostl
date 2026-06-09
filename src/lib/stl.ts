@@ -1,4 +1,3 @@
-import earcut from "earcut";
 import { decode, encode } from "fast-png";
 
 export type StlMode = "icon" | "relief" | "sketch" | "extrude" | "heightmap" | "logo" | "lithophane";
@@ -518,133 +517,6 @@ function addQuad(triangles: Vec3[][], a: Vec3, b: Vec3, c: Vec3, d: Vec3) {
   triangles.push([a, b, c], [a, c, d]);
 }
 
-type Point2 = [number, number];
-
-function polygonArea(points: Point2[]) {
-  let area = 0;
-  for (let i = 0; i < points.length; i += 1) {
-    const [x1, y1] = points[i];
-    const [x2, y2] = points[(i + 1) % points.length];
-    area += x1 * y2 - x2 * y1;
-  }
-  return area / 2;
-}
-
-function pointLineDistance(point: Point2, start: Point2, end: Point2) {
-  const [px, py] = point;
-  const [x1, y1] = start;
-  const [x2, y2] = end;
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  if (!dx && !dy) return Math.hypot(px - x1, py - y1);
-  const t = clamp(((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy), 0, 1);
-  return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
-}
-
-function simplifyOpenPolyline(points: Point2[], epsilon: number): Point2[] {
-  if (points.length <= 2) return points;
-  let maxDistance = 0;
-  let index = 0;
-  for (let i = 1; i < points.length - 1; i += 1) {
-    const distance = pointLineDistance(points[i], points[0], points[points.length - 1]);
-    if (distance > maxDistance) {
-      index = i;
-      maxDistance = distance;
-    }
-  }
-  if (maxDistance <= epsilon) return [points[0], points[points.length - 1]];
-  const left = simplifyOpenPolyline(points.slice(0, index + 1), epsilon);
-  const right = simplifyOpenPolyline(points.slice(index), epsilon);
-  return left.slice(0, -1).concat(right);
-}
-
-function simplifyClosedPolygon(points: Point2[], epsilon: number) {
-  if (points.length <= 4) return points;
-  const closed = [...points, points[0]];
-  const simplified = simplifyOpenPolyline(closed, epsilon).slice(0, -1);
-  return simplified.length >= 3 ? simplified : points;
-}
-
-function extractMaskLoops(mask: boolean[][]) {
-  const rows = mask.length;
-  const columns = mask[0]?.length ?? 0;
-  const edges = new Map<string, Point2>();
-  const addEdge = (a: Point2, b: Point2) => edges.set(`${a[0]},${a[1]}`, b);
-  const active = (x: number, y: number) => Boolean(mask[y]?.[x]);
-
-  for (let y = 0; y < rows; y += 1) {
-    for (let x = 0; x < columns; x += 1) {
-      if (!active(x, y)) continue;
-      if (!active(x, y - 1)) addEdge([x, y], [x + 1, y]);
-      if (!active(x + 1, y)) addEdge([x + 1, y], [x + 1, y + 1]);
-      if (!active(x, y + 1)) addEdge([x + 1, y + 1], [x, y + 1]);
-      if (!active(x - 1, y)) addEdge([x, y + 1], [x, y]);
-    }
-  }
-
-  const loops: Point2[][] = [];
-  while (edges.size) {
-    const [startKey, firstEnd] = edges.entries().next().value as [string, Point2];
-    const [sx, sy] = startKey.split(",").map(Number);
-    const start: Point2 = [sx, sy];
-    const loop: Point2[] = [start];
-    edges.delete(startKey);
-    let current = firstEnd;
-    let guard = 0;
-    while (`${current[0]},${current[1]}` !== startKey && guard < rows * columns * 8) {
-      loop.push(current);
-      const key = `${current[0]},${current[1]}`;
-      const next = edges.get(key);
-      edges.delete(key);
-      if (!next) break;
-      current = next;
-      guard += 1;
-    }
-    if (loop.length >= 4) loops.push(loop);
-  }
-
-  return loops;
-}
-
-function buildContourExtrudeTriangles(heights: number[][], widthMm: number, heightMm: number, mask?: boolean[][]) {
-  if (!mask) return undefined;
-  const rows = mask.length;
-  const columns = mask[0]?.length ?? 0;
-  if (rows < 2 || columns < 2) return undefined;
-  const loops = extractMaskLoops(mask)
-    .map((loop) => simplifyClosedPolygon(loop, Math.max(0.7, Math.min(columns, rows) * 0.004)))
-    .filter((loop) => Math.abs(polygonArea(loop)) >= 4 && loop.length >= 3)
-    .sort((a, b) => Math.abs(polygonArea(b)) - Math.abs(polygonArea(a)));
-  if (!loops.length) return undefined;
-
-  const cellX = widthMm / columns;
-  const cellZ = heightMm / rows;
-  const topY = Math.max(...heights.flat());
-  const bottomY = 0;
-  const triangles: Vec3[][] = [];
-  const toVec = (point: Point2, y: number): Vec3 => [point[0] * cellX, y, heightMm - point[1] * cellZ];
-
-  for (const loop of loops) {
-    const coords: number[] = [];
-    for (const [x, y] of loop) coords.push(x * cellX, y * cellZ);
-    const indices = earcut(coords);
-    for (let i = 0; i < indices.length; i += 3) {
-      const a = loop[indices[i]];
-      const b = loop[indices[i + 1]];
-      const c = loop[indices[i + 2]];
-      triangles.push([toVec(a, topY), toVec(b, topY), toVec(c, topY)]);
-      triangles.push([toVec(c, bottomY), toVec(b, bottomY), toVec(a, bottomY)]);
-    }
-    for (let i = 0; i < loop.length; i += 1) {
-      const a = loop[i];
-      const b = loop[(i + 1) % loop.length];
-      addQuad(triangles, toVec(a, bottomY), toVec(b, bottomY), toVec(b, topY), toVec(a, topY));
-    }
-  }
-
-  return triangles.length ? triangles : undefined;
-}
-
 function buildReliefTriangles(heights: number[][], widthMm: number, heightMm: number, mask?: boolean[][]) {
   const rows = heights.length;
   const columns = heights[0]?.length ?? 0;
@@ -800,7 +672,7 @@ export async function pngToStl(file: File, options: ConvertOptions): Promise<{ s
   const meshRows = mesh.heights.length;
   const meshColumns = mesh.heights[0]?.length ?? 0;
   const outputHeightMm = (mesh.mask || options.mode === "sketch") && meshRows > 1 && meshColumns > 1 ? widthMm * ((meshRows - 1) / (meshColumns - 1)) : heightMm;
-  const triangles = options.mode === "extrude" ? buildContourExtrudeTriangles(mesh.heights, widthMm, outputHeightMm, mesh.mask) ?? buildReliefTriangles(mesh.heights, widthMm, outputHeightMm, mesh.mask) : buildReliefTriangles(mesh.heights, widthMm, outputHeightMm, mesh.mask);
+  const triangles = buildReliefTriangles(mesh.heights, widthMm, outputHeightMm, mesh.mask);
   const stl = encodeBinaryStl(triangles, `pngtostl ${options.mode} ${sourceWidth}x${sourceHeight}`);
 
   return {
