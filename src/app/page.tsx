@@ -49,20 +49,59 @@ const conversionSteps = [
 
 const capabilityCards = [
   {
-    title: "Built-in 3D viewer",
-    body: "Preview generated STL geometry directly on the page instead of downloading blind.",
+    icon: "◇",
+    title: "Image-fit analysis",
+    body: "Reads transparency, subject coverage, edge complexity, and cutout shape before generating.",
   },
   {
-    title: "Input-fit warnings",
-    body: "Complex cutouts, noisy photos, and sketch-like sources are blocked from misleading clean extrusion.",
+    icon: "▧",
+    title: "Multi-workflow output",
+    body: "Clean STL, logo relief, photo relief, lithophane, and heightmap paths share one upload station.",
   },
   {
-    title: "Multiple output paths",
-    body: "Use clean logo extrusion, photo lithophane, grayscale heightmap, or relief presets from one upload entry.",
+    icon: "◉",
+    title: "Print-aware preview",
+    body: "Inspect the generated STL with solid, edges, wireframe, top, front, and reset controls before download.",
+  },
+];
+
+const converterModeTabs = [
+  { label: "Image to STL", href: "#converter", active: true, icon: "▧" },
+  { label: "Text to 3D", href: "/contact", active: false, icon: "T" },
+  { label: "Batch/API", href: "/developers", active: false, icon: "↗" },
+];
+
+const pricingCards = [
+  {
+    name: "Free",
+    eyebrow: "Public tool",
+    price: "$0",
+    suffix: "/single file",
+    body: "For checking and converting one logo, icon, lithophane, or heightmap at a time.",
+    features: ["No signup core converter", "Fast / Pro / Ultra local detail", "STL preview and download", "Input-fit warnings"],
+    href: "#converter",
+    cta: "Start free",
   },
   {
-    title: "Commercial path without lock-in",
-    body: "The public converter stays no-signup. Batch/API demand is captured separately before paid plans are introduced.",
+    name: "Maker",
+    eyebrow: "Planned",
+    price: "$9",
+    suffix: "/month",
+    body: "For repeat makers who want saved presets, larger files, and better batch workflow support.",
+    features: ["Saved conversion presets", "Batch upload queue", "Priority generation limits", "Project history"],
+    href: "/pricing",
+    cta: "View roadmap",
+    featured: true,
+  },
+  {
+    name: "API",
+    eyebrow: "Commercial",
+    price: "Custom",
+    suffix: "",
+    body: "For sites, print shops, and internal tools that need repeated image-to-STL processing.",
+    features: ["API access planning", "Workflow review", "Private usage limits", "Support contact"],
+    href: "/developers",
+    cta: "Request access",
   },
 ];
 
@@ -218,11 +257,20 @@ export default function HomePage() {
       {universalTool && (
         <section className="homeConverterDock" id="converter" aria-labelledby="home-converter-title">
           <div className="sectionIntro compact">
-            <p className="homeKicker">Use it here</p>
+            <p className="homeKicker">Image to STL workstation</p>
             <h2 id="home-converter-title">Upload, diagnose, then generate the right STL workflow.</h2>
             <p>The page checks whether the image fits clean extrude. If it looks like a photo, sketch, or noisy background, it recommends a safer mode before generation.</p>
           </div>
+          <div className="converterModeTabs" role="tablist" aria-label="Converter mode tabs">
+            {converterModeTabs.map((tab) => (
+              <Link key={tab.label} className={tab.active ? "active" : undefined} role="tab" aria-selected={tab.active} href={tab.href}>
+                <span aria-hidden="true">{tab.icon}</span>
+                {tab.label}
+              </Link>
+            ))}
+          </div>
           <ConverterPanel tool={universalTool} />
+          <Link className="converterHelpBubble" href="/contact" aria-label="Ask about batch or API workflow">?</Link>
         </section>
       )}
 
@@ -255,21 +303,45 @@ export default function HomePage() {
       <section className="capabilityGrid" aria-label="Converter capabilities">
         {capabilityCards.map((card) => (
           <article key={card.title}>
+            <span aria-hidden="true">{card.icon}</span>
             <h3>{card.title}</h3>
             <p>{card.body}</p>
           </article>
         ))}
       </section>
 
-      <section className="commercialCta" aria-labelledby="commercial-title">
-        <div>
-          <p className="homeKicker">Pricing and API</p>
-          <h2 id="commercial-title">No-signup converter now, batch/API path when volume appears.</h2>
-          <p>Competitor sites use credits and paid quality tiers. PNGtoSTL keeps the single-file public tool free today, while collecting serious batch, API, and commercial workflow requests.</p>
+      <section className="pricingShowcase" aria-labelledby="pricing-showcase-title">
+        <div className="sectionIntro compact centered">
+          <p className="homeKicker">Pricing plans</p>
+          <h2 id="pricing-showcase-title">Free single-file conversion now, clear upgrade paths when volume appears.</h2>
+          <p>The benchmark uses credits and paid quality tiers. This version mirrors the layout while keeping paid features clearly marked as planned or commercial.</p>
         </div>
-        <div className="commercialActions">
-          <Link className="btnPrimary" href="/pricing">View planned pricing</Link>
-          <Link className="btnSecondary" href="/developers">Request API access</Link>
+        <div className="billingToggle" role="radiogroup" aria-label="Billing view">
+          <span>Monthly</span>
+          <strong>Yearly planned</strong>
+          <span>Credits planned</span>
+        </div>
+        <div className="pricingCards">
+          {pricingCards.map((plan) => (
+            <article key={plan.name} className={plan.featured ? "pricingCard featured" : "pricingCard"}>
+              <div className="pricingCardTop">
+                <div>
+                  <span>{plan.eyebrow}</span>
+                  <h3>{plan.name}</h3>
+                </div>
+                {plan.featured ? <b>Popular</b> : null}
+              </div>
+              <p>{plan.body}</p>
+              <div className="priceLine">
+                <strong>{plan.price}</strong>
+                {plan.suffix ? <small>{plan.suffix}</small> : null}
+              </div>
+              <ul>
+                {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
+              </ul>
+              <Link className="btnPrimary" href={plan.href}>{plan.cta}</Link>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -408,7 +480,7 @@ export default function HomePage() {
       </footer>
     </main>
     <script src="/stl-preview.js?v=webgl-final-20260608a" defer></script>
-    <script src="/converter.js?v=diagnostic-router-20260609b" defer></script>
+    <script src="/converter.js?v=benchmark-ui-20260609a" defer></script>
     </>
   );
 }

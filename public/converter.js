@@ -91,6 +91,18 @@
       });
     }
 
+    qualityInputs.forEach((input) => {
+      const label = input.closest('label');
+      const applyQuality = (event) => {
+        if (event) event.preventDefault();
+        setQualityValue(input.value);
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      };
+      input.addEventListener('click', applyQuality);
+      if (label) label.addEventListener('click', applyQuality);
+    });
+
     function qualityDetail() {
       const value = selectedQuality();
       if (value === 'high') return 320;
