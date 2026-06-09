@@ -6,6 +6,66 @@ import { ConverterPanel } from "@/components/ConverterPanel";
 import { MiniToolExample, ShowcaseDemo } from "@/components/HomeShowcase";
 import { helperPages, tools } from "@/lib/tools";
 
+const qualityModes = [
+  {
+    name: "Fast Check",
+    cost: "Free",
+    detail: "Instant browser diagnosis for transparency, subject coverage, edge complexity, and recommended STL mode.",
+  },
+  {
+    name: "Clean STL",
+    cost: "Free",
+    detail: "Best for transparent logos, icons, stickers, silhouettes, and other simple shapes that can become raised geometry.",
+  },
+  {
+    name: "Print Review",
+    cost: "Planned",
+    detail: "Commercial users can request batch/API review for repeat logo, lithophane, or heightmap workflows before a public paid plan launches.",
+  },
+];
+
+const conversionSteps = [
+  {
+    step: "1",
+    title: "Upload image",
+    body: "Drop PNG, JPG, WebP, GIF, or BMP. The checker reads image structure before it lets clean extrude proceed.",
+  },
+  {
+    step: "2",
+    title: "Route the workflow",
+    body: "Simple logos stay in clean STL mode; photos, sketches, and noisy images are routed to relief, lithophane, or heightmap paths.",
+  },
+  {
+    step: "3",
+    title: "Preview geometry",
+    body: "Inspect solid, edge, wireframe, front, side, and top views before downloading the STL.",
+  },
+  {
+    step: "4",
+    title: "Download and slicer-check",
+    body: "Export the STL, then confirm scale, supports, and print settings in your slicer before printing.",
+  },
+];
+
+const capabilityCards = [
+  {
+    title: "Built-in 3D viewer",
+    body: "Preview generated STL geometry directly on the page instead of downloading blind.",
+  },
+  {
+    title: "Input-fit warnings",
+    body: "Complex cutouts, noisy photos, and sketch-like sources are blocked from misleading clean extrusion.",
+  },
+  {
+    title: "Multiple output paths",
+    body: "Use clean logo extrusion, photo lithophane, grayscale heightmap, or relief presets from one upload entry.",
+  },
+  {
+    title: "Commercial path without lock-in",
+    body: "The public converter stays no-signup. Batch/API demand is captured separately before paid plans are introduced.",
+  },
+];
+
 const primaryTools = ["logo-to-stl", "png-to-stl", "heightmap-to-stl", "lithophane-generator"];
 
 const proofSamples = [
@@ -53,7 +113,7 @@ const categories = [
     eyebrow: "02",
     title: "Guided starting points",
     description: "Use these when the source image is not a clean logo and you need guidance before generating.",
-    slugs: ["image-to-stl", "convert-image-to-stl", "jpg-to-stl"],
+    slugs: ["image-to-stl", "convert-image-to-stl", "jpg-to-stl", "jpeg-to-stl", "pic-to-stl"],
     example: "litho" as const,
   },
   {
@@ -165,6 +225,53 @@ export default function HomePage() {
           <ConverterPanel tool={universalTool} />
         </section>
       )}
+
+      <section className="workflowProductBand" aria-labelledby="workflow-product-title">
+        <div className="sectionIntro compact">
+          <p className="homeKicker">Product workflow</p>
+          <h2 id="workflow-product-title">A converter flow inspired by AI 3D tools, without overpromising reconstruction.</h2>
+          <p>Use the same page pattern users expect from modern image-to-3D sites: quality choices, upload guidance, preview, and pricing entry — but keep the promise focused on reliable STL relief workflows.</p>
+        </div>
+        <div className="qualityCards" aria-label="Available quality paths">
+          {qualityModes.map((mode) => (
+            <article key={mode.name} className="qualityCard">
+              <span>{mode.cost}</span>
+              <h3>{mode.name}</h3>
+              <p>{mode.detail}</p>
+            </article>
+          ))}
+        </div>
+        <div className="conversionSteps" aria-label="How image to STL conversion works">
+          {conversionSteps.map((item) => (
+            <article key={item.step}>
+              <b>{item.step}</b>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="capabilityGrid" aria-label="Converter capabilities">
+        {capabilityCards.map((card) => (
+          <article key={card.title}>
+            <h3>{card.title}</h3>
+            <p>{card.body}</p>
+          </article>
+        ))}
+      </section>
+
+      <section className="commercialCta" aria-labelledby="commercial-title">
+        <div>
+          <p className="homeKicker">Pricing and API</p>
+          <h2 id="commercial-title">No-signup converter now, batch/API path when volume appears.</h2>
+          <p>Competitor sites use credits and paid quality tiers. PNGtoSTL keeps the single-file public tool free today, while collecting serious batch, API, and commercial workflow requests.</p>
+        </div>
+        <div className="commercialActions">
+          <Link className="btnPrimary" href="/pricing">View planned pricing</Link>
+          <Link className="btnSecondary" href="/developers">Request API access</Link>
+        </div>
+      </section>
 
       <section className="proofStrip" id="examples" aria-label="Example outputs with source and mesh evidence">
         <div className="proofIntro">
@@ -279,6 +386,10 @@ export default function HomePage() {
         </div>
         <nav aria-label="Footer">
           <Link href="/image-to-stl">Image to STL</Link>
+          <Link href="/png-to-stl">PNG to STL</Link>
+          <Link href="/jpg-to-stl">JPG to STL</Link>
+          <Link href="/jpeg-to-stl">JPEG to STL</Link>
+          <Link href="/pic-to-stl">Pic to STL</Link>
           <Link href="/logo-to-stl">Logo to STL</Link>
           <Link href="/lithophane-generator">Lithophane</Link>
           <Link href="/heightmap-to-stl">Heightmap</Link>

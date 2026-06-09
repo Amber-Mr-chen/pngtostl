@@ -1045,9 +1045,16 @@ a {
   }
 
   .featuredGrid,
-  .workflowStages {
+  .workflowStages,
+  .qualityCards,
+  .conversionSteps,
+  .capabilityGrid,
+  .commercialCta {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .commercialCta { align-items: start; }
+  .commercialActions { justify-content: flex-start; }
 
   .utilityLinks {
     justify-content: flex-start;
@@ -1130,9 +1137,21 @@ a {
   }
 
   .featuredGrid,
-  .workflowStages {
+  .workflowStages,
+  .qualityCards,
+  .conversionSteps,
+  .capabilityGrid,
+  .commercialCta {
     grid-template-columns: 1fr;
   }
+
+  .workflowProductBand,
+  .commercialCta {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .commercialActions a { width: 100%; }
 
   .featuredTool {
     min-height: 0;
@@ -1275,6 +1294,106 @@ a {
 }
 .homeConverterDock .previewStage {
   min-height: 460px;
+}
+.workflowProductBand,
+.commercialCta {
+  margin: 34px 0;
+  border: 1px solid rgba(118, 139, 168, 0.24);
+  border-radius: 28px;
+  background: #fff;
+  padding: 26px;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.07);
+}
+.qualityCards,
+.conversionSteps,
+.capabilityGrid {
+  display: grid;
+  gap: 14px;
+}
+.qualityCards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 20px;
+}
+.qualityCard,
+.conversionSteps article,
+.capabilityGrid article {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: linear-gradient(180deg, #fff, #f8fbff);
+  padding: 18px;
+}
+.qualityCard span {
+  display: inline-flex;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  padding: 5px 9px;
+  font-size: .78rem;
+  font-weight: 850;
+}
+.qualityCard h3,
+.conversionSteps h3,
+.capabilityGrid h3 {
+  margin: 12px 0 8px;
+  font-size: 1.05rem;
+}
+.qualityCard p,
+.conversionSteps p,
+.capabilityGrid p,
+.commercialCta p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.58;
+}
+.conversionSteps {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 14px;
+}
+.conversionSteps b {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #101828;
+  color: #fff;
+}
+.capabilityGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 34px 0;
+}
+.commercialCta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 22px;
+  background: linear-gradient(135deg, #101828, #173a72);
+  color: #fff;
+}
+.commercialCta .homeKicker,
+.commercialCta p {
+  color: rgba(255,255,255,.74);
+}
+.commercialCta h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.55rem, 2.5vw, 2.35rem);
+}
+.commercialActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.commercialCta .btnPrimary {
+  background: #fff;
+  border-color: #fff;
+  color: #101828;
+  box-shadow: none;
+}
+.commercialCta .btnSecondary {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.28);
+  color: #fff;
 }
 .heroResultPanel {
   position: relative;

@@ -16,7 +16,7 @@ const primaryNav = [
 
 function activeNavFor(currentPath: string, itemHref: string) {
   const groupedRoutes: Record<string, string[]> = {
-    "/image-to-stl": ["/image-to-stl", "/png-to-stl", "/jpg-to-stl", "/convert-image-to-stl", "/2d-image-to-3d-model", "/3d-print-photo"],
+    "/image-to-stl": ["/image-to-stl", "/png-to-stl", "/jpg-to-stl", "/jpeg-to-stl", "/pic-to-stl", "/convert-image-to-stl", "/2d-image-to-3d-model", "/3d-print-photo"],
     "/lithophane-generator": ["/lithophane-generator", "/photo-to-lithophane"],
     "/heightmap-to-stl": ["/heightmap-to-stl"],
     "/logo-to-stl": ["/logo-to-stl"],
@@ -100,9 +100,11 @@ function guidanceFor(tool: ToolConfig) {
 function relatedProofsFor(tool: ToolConfig) {
   const currentPath = `/${tool.slug}`;
   const routeAliases: Record<string, string[]> = {
-    "/image-to-stl": ["/image-to-stl", "/jpg-to-stl", "/png-to-stl"],
+    "/image-to-stl": ["/image-to-stl", "/jpg-to-stl", "/jpeg-to-stl", "/pic-to-stl", "/png-to-stl"],
     "/png-to-stl": ["/png-to-stl", "/logo-to-stl", "/image-to-stl"],
-    "/jpg-to-stl": ["/jpg-to-stl", "/image-to-stl", "/lithophane-generator"],
+    "/jpg-to-stl": ["/jpg-to-stl", "/jpeg-to-stl", "/image-to-stl", "/lithophane-generator"],
+    "/jpeg-to-stl": ["/jpeg-to-stl", "/jpg-to-stl", "/image-to-stl", "/lithophane-generator"],
+    "/pic-to-stl": ["/pic-to-stl", "/image-to-stl", "/jpg-to-stl", "/png-to-stl"],
     "/logo-to-stl": ["/logo-to-stl", "/png-to-stl"],
     "/lithophane-generator": ["/lithophane-generator", "/photo-to-lithophane"],
     "/photo-to-lithophane": ["/photo-to-lithophane", "/lithophane-generator"],
@@ -119,6 +121,8 @@ const supportGuideMap: Record<string, string[]> = {
   "image-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl", "lithophane-image-guide"],
   "png-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl"],
   "jpg-to-stl": ["image-contrast-guide", "lithophane-image-guide"],
+  "jpeg-to-stl": ["image-contrast-guide", "lithophane-image-guide"],
+  "pic-to-stl": ["image-contrast-guide", "print-settings-checker", "lithophane-image-guide"],
   "convert-image-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl", "lithophane-image-guide"],
   "2d-image-to-3d-model": ["image-contrast-guide", "how-to-turn-logo-into-stl", "heightmap-to-stl-terrain-guide"],
   "3d-print-photo": ["lithophane-image-guide", "image-contrast-guide", "print-settings-checker"],
@@ -150,6 +154,10 @@ function SiteFooter() {
       </div>
       <nav aria-label="Footer">
         <Link href="/image-to-stl">Image to STL</Link>
+        <Link href="/png-to-stl">PNG to STL</Link>
+        <Link href="/jpg-to-stl">JPG to STL</Link>
+        <Link href="/jpeg-to-stl">JPEG to STL</Link>
+        <Link href="/pic-to-stl">Pic to STL</Link>
         <Link href="/logo-to-stl">Logo to STL</Link>
         <Link href="/lithophane-generator">Lithophane</Link>
         <Link href="/heightmap-to-stl">Heightmap</Link>
