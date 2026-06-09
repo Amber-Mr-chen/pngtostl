@@ -481,7 +481,7 @@
       if (autoRouteComplexImage) {
         modeInput.value = 'relief';
         if (selectedQuality() !== 'high') setQualityValue('high');
-        setRangeValue(smoothingInput, 65);
+        setRangeValue(smoothingInput, 90);
         setText(status, copy('Using smooth relief workflow', '使用平滑浮雕工作流'));
         setText(message, classification.message + copy('\nAutomatically using smooth photo relief mode to suppress noisy texture...', '\n已自动改用平滑照片浮雕，减少杂乱纹理……'));
         trackBoth('converter_auto_routed_complex_image', 'pngtostl_auto_routed_complex_image', { reason: 'image_not_fit_for_clean_extrude' });
@@ -489,7 +489,7 @@
       if (modeInput && selectedMode() === 'extrude' && classification.level === 'warn') {
         modeInput.value = 'relief';
         if (selectedQuality() !== 'high') setQualityValue('high');
-        setRangeValue(smoothingInput, 58);
+        setRangeValue(smoothingInput, 80);
         setText(message, classification.message + copy('\nAutomatically using smoother photo relief mode instead of clean extrude...', '\n已自动改用更平滑的照片浮雕面板，不再使用干净挤压……'));
       }
       const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;

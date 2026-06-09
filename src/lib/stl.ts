@@ -134,6 +134,21 @@ function localGridMean(grid: number[][], x: number, y: number, radius: number) {
   return count ? sum / count : grid[y]?.[x] ?? 0;
 }
 
+function localGridRange(grid: number[][], x: number, y: number, radius: number) {
+  const rows = grid.length;
+  const columns = grid[0]?.length ?? 0;
+  let min = Number.POSITIVE_INFINITY;
+  let max = Number.NEGATIVE_INFINITY;
+  for (let yy = Math.max(0, y - radius); yy <= Math.min(rows - 1, y + radius); yy += 1) {
+    for (let xx = Math.max(0, x - radius); xx <= Math.min(columns - 1, x + radius); xx += 1) {
+      const value = grid[yy][xx];
+      min = Math.min(min, value);
+      max = Math.max(max, value);
+    }
+  }
+  return max - min;
+}
+
 function smoothReliefGrid(grid: number[][], amount: number) {
   const strength = clamp(amount, 0, 1);
   if (strength <= 0.01) return grid;
@@ -166,16 +181,37 @@ function smoothReliefGrid(grid: number[][], amount: number) {
     }),
   );
 
+  let surfaceBase = denoised;
+  const surfaceIterations = 2 + Math.round(strength * 2);
+  for (let index = 0; index < surfaceIterations; index += 1) {
+    surfaceBase = smoothGrid(surfaceBase, 0.34 + strength * 0.2);
+  }
+
+  const textureLimit = heightRange * (0.2 + strength * 0.14);
+  const preserveEdgeRange = heightRange * (0.06 + strength * 0.04);
+  const surfaceBlend = 0.86 + strength * 0.12;
+  const textureSuppressed = denoised.map((row, y) =>
+    row.map((value, x) => {
+      const baseValue = surfaceBase[y][x];
+      const detail = value - baseValue;
+      const coarseRange = localGridRange(surfaceBase, x, y, 2);
+      if (Math.abs(detail) < textureLimit || coarseRange < preserveEdgeRange) {
+        return value * (1 - surfaceBlend) + baseValue * surfaceBlend;
+      }
+      return value * (1 - edgeBlend) + baseValue * edgeBlend;
+    }),
+  );
+
   const floorCutoff = min + heightRange * (0.06 + strength * 0.1);
   const floorBlend = 0.62 + strength * 0.28;
-  const flattened = denoised.map((row) =>
+  const flattened = textureSuppressed.map((row) =>
     row.map((value) => {
       if (value <= floorCutoff) return value * (1 - floorBlend) + min * floorBlend;
       return value;
     }),
   );
 
-  return smoothGrid(flattened, strength * 0.18);
+  return smoothGrid(flattened, strength > 0.7 ? 0.28 + strength * 0.12 : strength * 0.18);
 }
 
 function percentile(values: number[], ratio: number) {
