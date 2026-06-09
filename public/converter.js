@@ -188,9 +188,9 @@
       const silhouetteFit = !hasTransparency && removableBackground && simpleCoverage && simpleEdges;
       const photoLike = !hasTransparency && lumaSpread > 0.25 && edgeRatio > 0.28;
       const tooComplex = edgeRatio > 0.42 || subjectRatio > 0.86 || complexCutout;
-      if (logoFit || silhouetteFit) return { level: 'good', title: 'Good fit for clean logo/icon STL', message: hasTransparency ? 'Transparency detected. Clean extrude or logo relief is the safest workflow.' : 'Light background with a clear subject detected. Clean extrude can work after background removal.' };
-      if (photoLike) return { level: 'warn', title: 'Better as lithophane or photo relief', message: 'This looks more like a photo/tonal image than a flat logo. Use lithophane or photo relief instead of clean extrude.' };
-      if (tooComplex) return { level: 'bad', title: 'Not ideal for clean STL extrusion', message: 'This image appears too complex/noisy for a clean cutout. Use a simpler logo/icon or switch to relief/lithophane before generating.' };
+      if (logoFit || silhouetteFit) return { level: 'good', title: 'Good fit for clean logo/icon STL', message: hasTransparency ? 'Transparency detected. Clean extrude or logo badge mode is the safest workflow.' : 'Light background with a clear subject detected. Clean extrude can work after background removal.' };
+      if (photoLike) return { level: 'warn', title: 'Better as backlit panel or raised surface', message: 'This looks more like a photo/tonal image than a flat logo. Use backlit photo panel or photo raised surface mode instead of clean extrude.' };
+      if (tooComplex) return { level: 'bad', title: 'Not ideal for clean STL extrusion', message: 'This image appears too complex/noisy for a clean cutout. Use a simpler logo/icon or switch to raised-surface or backlit-panel mode before generating.' };
       return { level: 'warn', title: 'Usable, but check the preview carefully', message: 'The image may work, but clean extrude is safest with transparent logos, icons, and simple silhouettes.' };
     }
 
@@ -466,21 +466,21 @@
       const classification = classifyImage(imageInfo);
       if (selectedMode() === 'extrude' && classification.level === 'bad') {
         setText(status, 'Needs simpler image');
-        setText(message, classification.message + '\nClean extrude is paused for this input. Use a simpler transparent logo/icon, or manually switch to Photo-style relief/Lithophane.');
+        setText(message, classification.message + '\nClean extrude is paused for this input. Use a simpler transparent logo/icon, or manually switch to Photo raised surface or Backlit photo panel.');
         trackBoth('converter_generate_blocked', 'pngtostl_generate_blocked', { reason: 'image_not_fit_for_clean_extrude' });
-        setButtonState('Use relief mode or simpler image', false);
+        setButtonState('Use raised-surface mode or simpler image', false);
         return;
       }
       if (modeInput && selectedMode() === 'extrude' && classification.level === 'warn') {
         modeInput.value = 'relief';
         if (selectedQuality() === 'fast') setQualityValue('standard');
-        setText(message, classification.message + '\nAutomatically using photo-style relief instead of clean extrude...');
+        setText(message, classification.message + '\nAutomatically using photo raised surface mode instead of clean extrude...');
       }
       const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;
       if (modeInput && selectedMode() === 'relief' && shouldCutoutSubject) {
         modeInput.value = 'logo';
         if (selectedQuality() === 'fast') setQualityValue('standard');
-        setText(message, (imageInfo.hasTransparency ? 'Transparent background detected.' : 'Light background detected and removed.') + ' Using logo/cutout relief so the subject does not become a full square plate...');
+        setText(message, (imageInfo.hasTransparency ? 'Transparent background detected.' : 'Light background detected and removed.') + ' Using logo badge mode so the subject does not become a full square plate...');
       }
       trackBoth('converter_generate_clicked', 'pngtostl_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024), auto_mode: selectedMode() });
       trackSamplePreset('sample_preset_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
