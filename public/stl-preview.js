@@ -186,14 +186,14 @@
     const container = document.createElement('div');
     container.className = 'webglStlPreview';
     container.setAttribute('aria-label', 'Interactive STL preview');
-    container.style.cssText = 'position:absolute;inset:0;border-radius:inherit;overflow:hidden;background:#f7fafc;';
+    container.style.cssText = 'position:absolute;inset:0;border-radius:inherit;overflow:hidden;background:#f1f3f5;';
     canvas.style.visibility = 'hidden';
     parent.style.position = 'relative';
     parent.querySelectorAll('.webglStlPreview').forEach((node) => node.remove());
     parent.insertBefore(container, canvas.nextSibling);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf7fafc);
+    scene.background = new THREE.Color(0xf1f3f5);
     const aspect = Math.max(1, rect.width) / Math.max(1, rect.height);
     const camera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0.1, 5000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
@@ -215,8 +215,8 @@
     geometry.boundingBox.getSize(size);
 
     const material = new THREE.MeshStandardMaterial({
-      color: 0x7f8892,
-      roughness: 0.76,
+      color: 0xaeb5bc,
+      roughness: 0.88,
       metalness: 0,
       side: THREE.DoubleSide,
     });
@@ -228,16 +228,16 @@
 
     const edgeLines = new THREE.LineSegments(
       new THREE.EdgesGeometry(geometry, 28),
-      new THREE.LineBasicMaterial({ color: 0x3f4852, transparent: true, opacity: 0.12 })
+      new THREE.LineBasicMaterial({ color: 0x6f7780, transparent: true, opacity: 0.16 })
     );
     edgeLines.scale.x = -1;
     edgeLines.visible = false;
     scene.add(edgeLines);
 
-    const platformSize = Math.max(size.x, size.z, radius * 1.45) * 1.08;
+    const platformSize = Math.max(size.x, size.z, radius * 1.6) * 1.28;
     const platform = new THREE.Mesh(
       new THREE.BoxGeometry(platformSize, Math.max(radius * 0.035, 0.08), platformSize * 0.72),
-      new THREE.MeshStandardMaterial({ color: 0xe3e8ee, roughness: 0.9, metalness: 0 })
+      new THREE.MeshStandardMaterial({ color: 0xd4d9de, roughness: 0.86, metalness: 0 })
     );
     platform.position.y = -Math.max(size.y * 0.62, radius * 0.16);
     platform.receiveShadow = true;
@@ -267,12 +267,13 @@
 
     const grid = new THREE.GridHelper(platformSize, 16, 0xc7d0d8, 0xd9e0e6);
     grid.position.y = platform.position.y + Math.max(radius * 0.02, 0.05);
-    grid.visible = false;
+    grid.material.opacity = 0.22;
+    grid.material.transparent = true;
     scene.add(grid);
 
-    const fill = new THREE.HemisphereLight(0xffffff, 0x7d8791, 1.25);
+    const fill = new THREE.HemisphereLight(0xffffff, 0x9aa1a8, 1.55);
     scene.add(fill);
-    const key = new THREE.DirectionalLight(0xffffff, 3.05);
+    const key = new THREE.DirectionalLight(0xffffff, 2.45);
     key.position.set(-radius * 1.4, radius * 2.2, -radius * 2.8);
     key.castShadow = true;
     key.shadow.mapSize.width = 1024;
@@ -286,7 +287,7 @@
     const fitOrthographicCamera = () => {
       const next = canvas.getBoundingClientRect();
       const nextAspect = Math.max(1, next.width) / Math.max(1, next.height);
-      const halfHeight = radius * 0.74;
+      const halfHeight = radius * 1.0;
       camera.left = -halfHeight * nextAspect;
       camera.right = halfHeight * nextAspect;
       camera.top = halfHeight;
@@ -314,9 +315,9 @@
       const mode = canvas.dataset.previewMode || 'solid';
       const wireframe = mode === 'wireframe';
       material.wireframe = wireframe;
-      edgeLines.visible = mode === 'edges' || mode === 'solid';
-      material.color.setHex(wireframe ? 0x1d3445 : 0x7f8892);
-      material.roughness = wireframe ? 0.72 : 0.76;
+      edgeLines.visible = mode === 'edges';
+      material.color.setHex(wireframe ? 0x1d3445 : 0xaeb5bc);
+      material.roughness = wireframe ? 0.72 : 0.88;
       material.needsUpdate = true;
     }
 

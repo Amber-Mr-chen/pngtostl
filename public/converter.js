@@ -272,11 +272,11 @@
 
     function setSketchWorkflowDefaults() {
       if (modeInput) modeInput.value = 'sketch';
-      if (depthInput) { depthInput.value = '3.2'; syncRange(depthInput); }
-      if (baseInput) { baseInput.value = '0.8'; syncRange(baseInput); }
+      if (depthInput) { depthInput.value = '2.2'; syncRange(depthInput); }
+      if (baseInput) { baseInput.value = '1.1'; syncRange(baseInput); }
       if (thresholdInput) { thresholdInput.value = '54'; syncRange(thresholdInput); }
       if (smoothingInput) { smoothingInput.value = '52'; syncRange(smoothingInput); }
-      if (detailInput) { detailInput.value = '220'; syncRange(detailInput); }
+      if (detailInput) { detailInput.value = '180'; syncRange(detailInput); }
       if (qualityInput && qualityInput.value === 'fast') qualityInput.value = 'standard';
     }
 
