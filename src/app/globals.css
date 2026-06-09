@@ -4012,6 +4012,43 @@ html body .infoPage .sampleCard h2 {
   }
 }
 
+.secondaryHomeHero,
+.workflowProductBand,
+.capabilityGrid {
+  display: none;
+}
+
+.primaryConverterDock.homeConverterDock {
+  margin: 22px 0 38px;
+  padding: clamp(20px, 3vw, 34px);
+  border-radius: 30px;
+}
+.primaryConverterDock .sectionIntro.compact {
+  margin-bottom: 20px;
+}
+.primaryConverterDock .sectionIntro.compact h1 {
+  max-width: 680px;
+  margin: 0;
+  font-size: clamp(2.25rem, 4.8vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+  text-wrap: balance;
+}
+.primaryConverterDock .sectionIntro.compact p:not(.homeKicker) {
+  max-width: 640px;
+  margin-top: 12px;
+}
+.primaryConverterDock .converterWorkspace form {
+  grid-template-columns: minmax(380px, 0.43fr) minmax(540px, 0.57fr);
+}
+.primaryConverterDock .converterControls,
+.primaryConverterDock .resultWorkspace {
+  border-radius: 24px;
+}
+.primaryConverterDock .previewStage {
+  min-height: 440px;
+}
+
 /* Homepage converter: product landing hierarchy, not a dense settings dashboard. */
 .homeConverterDock {
   margin: 52px 0 56px;
@@ -4128,4 +4165,29 @@ html body .infoPage .sampleCard h2 {
   .homeConverterDock .converterControls,
   .homeConverterDock .resultWorkspace { padding: 16px; border-radius: 22px; }
 }
+
+.primaryConverterDock.homeConverterDock {
+  margin: 22px 0 38px;
+  padding: clamp(20px, 3vw, 34px);
+  border-radius: 30px;
+}
+.primaryConverterDock .sectionIntro.compact { margin-bottom: 20px; }
+.primaryConverterDock .sectionIntro.compact h1 {
+  max-width: 680px;
+  margin: 0;
+  font-size: clamp(2.25rem, 4.8vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+  text-wrap: balance;
+}
+.primaryConverterDock .sectionIntro.compact p:not(.homeKicker) {
+  max-width: 640px;
+  margin-top: 12px;
+}
+.primaryConverterDock .converterWorkspace form {
+  grid-template-columns: minmax(380px, 0.43fr) minmax(540px, 0.57fr);
+}
+.primaryConverterDock .converterControls,
+.primaryConverterDock .resultWorkspace { border-radius: 24px; }
+.primaryConverterDock .previewStage { min-height: 440px; }
 

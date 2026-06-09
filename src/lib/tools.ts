@@ -95,7 +95,7 @@ export const tools: ToolConfig[] = [
     steps: ["Upload an image.", "Adjust contrast and depth.", "Download the STL."],
     pains: ["Clear guidance on which images work best.", "Less trial and error before printing.", "A single page for image-to-STL intent."],
     outputFacts: [
-      { label: "Format", value: "Image -> STL" },
+      { label: "Format", value: "Image → STL" },
       { label: "Best for", value: "Logos, icons, high contrast art" },
       { label: "Output", value: "Raised STL panel" },
     ],

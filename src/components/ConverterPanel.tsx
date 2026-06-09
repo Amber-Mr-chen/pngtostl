@@ -271,7 +271,7 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
 
           <div className="uploadModeTabs" role="tablist" aria-label="Image upload mode">
             <button type="button" className="active" role="tab" aria-selected="true">Single image</button>
-            <button type="button" role="tab" aria-selected="false" disabled>Multi image <span>Planned</span></button>
+            <button type="button" role="tab" aria-selected="false" disabled>One image at a time</button>
           </div>
 
           <div className="uploadDropzone">
@@ -304,9 +304,9 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
           <div className="qualityChooser" aria-label="Quality preset">
             <div className="qualityHeader">
               <span>Quality</span>
-              <b>0 credits · local preview</b>
+              <b>Preview before download</b>
             </div>
-            <div className="qualitySegments" translate="no">
+            <div className="qualitySegments">
               <label>
                 <input type="radio" name="quality" value="fast" defaultChecked />
                 <span>Fast</span>

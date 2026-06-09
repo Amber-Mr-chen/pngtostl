@@ -65,46 +65,6 @@ const capabilityCards = [
   },
 ];
 
-const converterModeTabs = [
-  { label: "Image to STL", href: "#converter", active: true, icon: "▧" },
-  { label: "Text to 3D", href: "/contact", active: false, icon: "T" },
-  { label: "Batch/API", href: "/developers", active: false, icon: "↗" },
-];
-
-const pricingCards = [
-  {
-    name: "Free",
-    eyebrow: "Public tool",
-    price: "$0",
-    suffix: "/single file",
-    body: "For checking and converting one logo, icon, backlit photo panel, or grayscale depth map at a time.",
-    features: ["No signup core converter", "Fast / Standard / High detail", "STL preview and download", "Input-fit warnings"],
-    href: "#converter",
-    cta: "Start free",
-  },
-  {
-    name: "Maker",
-    eyebrow: "Planned",
-    price: "$9",
-    suffix: "/month",
-    body: "For repeat makers who want saved presets, larger files, and better batch workflow support.",
-    features: ["Saved conversion presets", "Batch upload queue", "Priority generation limits", "Project history"],
-    href: "/pricing",
-    cta: "View roadmap",
-    featured: true,
-  },
-  {
-    name: "API",
-    eyebrow: "Commercial",
-    price: "Custom",
-    suffix: "",
-    body: "For sites, print shops, and internal tools that need repeated image-to-STL processing.",
-    features: ["API access planning", "Workflow review", "Private usage limits", "Support contact"],
-    href: "/developers",
-    cta: "Request access",
-  },
-];
-
 const primaryTools = ["logo-to-stl", "png-to-stl", "heightmap-to-stl", "lithophane-generator"];
 
 const proofSamples = [
@@ -188,7 +148,6 @@ export default function HomePage() {
           <Link href="/image-to-stl">Image Check</Link>
           <Link href="/lithophane-generator">Photo Panel</Link>
           <Link href="/heightmap-to-stl">Depth Map</Link>
-          <Link href="/pricing">Pricing</Link>
           <Link href="/developers">API</Link>
           <Link href="/faq">Guides</Link>
         </nav>
@@ -198,7 +157,18 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="homeHero">
+      {universalTool && (
+        <section className="homeConverterDock primaryConverterDock" id="converter" aria-labelledby="home-converter-title">
+          <div className="sectionIntro compact">
+            <p className="homeKicker">Free image to STL converter</p>
+            <h1 id="home-converter-title">Upload an image. Preview a printable STL.</h1>
+            <p>Best for clean logos, icons, stickers, silhouettes, and simple high-contrast art. The checker warns when a complex photo or noisy sketch needs a safer workflow.</p>
+          </div>
+          <ConverterPanel tool={universalTool} />
+        </section>
+      )}
+
+      <section className="homeHero secondaryHomeHero">
         <div className="homeHeroCopy">
           <p className="homeKicker">Logo, icon, and simple shape to STL</p>
           <h1>Convert clean logos and simple images into printable STL models.</h1>
@@ -254,26 +224,6 @@ export default function HomePage() {
         </aside>
       </section>
 
-      {universalTool && (
-        <section className="homeConverterDock" id="converter" aria-labelledby="home-converter-title">
-          <div className="sectionIntro compact">
-            <p className="homeKicker">Image to STL workstation</p>
-            <h2 id="home-converter-title">Upload, diagnose, then generate the right STL workflow.</h2>
-            <p>The page checks whether the image fits clean extrude. If it looks like a photo, sketch, or noisy background, it recommends a safer mode before generation.</p>
-          </div>
-          <div className="converterModeTabs" role="tablist" aria-label="Converter mode tabs">
-            {converterModeTabs.map((tab) => (
-              <Link key={tab.label} className={tab.active ? "active" : undefined} role="tab" aria-selected={tab.active} href={tab.href}>
-                <span aria-hidden="true">{tab.icon}</span>
-                {tab.label}
-              </Link>
-            ))}
-          </div>
-          <ConverterPanel tool={universalTool} />
-          <Link className="converterHelpBubble" href="/contact" aria-label="Ask about batch or API workflow">?</Link>
-        </section>
-      )}
-
       <section className="workflowProductBand" aria-labelledby="workflow-product-title">
         <div className="sectionIntro compact">
           <p className="homeKicker">Product workflow</p>
@@ -308,41 +258,6 @@ export default function HomePage() {
             <p>{card.body}</p>
           </article>
         ))}
-      </section>
-
-      <section className="pricingShowcase" aria-labelledby="pricing-showcase-title">
-        <div className="sectionIntro compact centered">
-          <p className="homeKicker">Pricing plans</p>
-          <h2 id="pricing-showcase-title">Free single-file conversion now, clear upgrade paths when volume appears.</h2>
-          <p>The benchmark uses credits and paid quality tiers. This version mirrors the layout while keeping paid features clearly marked as planned or commercial.</p>
-        </div>
-        <div className="billingToggle" role="radiogroup" aria-label="Billing view">
-          <span>Monthly</span>
-          <strong>Yearly planned</strong>
-          <span>Credits planned</span>
-        </div>
-        <div className="pricingCards">
-          {pricingCards.map((plan) => (
-            <article key={plan.name} className={plan.featured ? "pricingCard featured" : "pricingCard"}>
-              <div className="pricingCardTop">
-                <div>
-                  <span>{plan.eyebrow}</span>
-                  <h3>{plan.name}</h3>
-                </div>
-                {plan.featured ? <b>Popular</b> : null}
-              </div>
-              <p>{plan.body}</p>
-              <div className="priceLine">
-                <strong>{plan.price}</strong>
-                {plan.suffix ? <small>{plan.suffix}</small> : null}
-              </div>
-              <ul>
-                {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
-              </ul>
-              <Link className="btnPrimary" href={plan.href}>{plan.cta}</Link>
-            </article>
-          ))}
-        </div>
       </section>
 
       <section className="proofStrip" id="examples" aria-label="Example outputs with source and mesh evidence">

@@ -37,6 +37,11 @@
       if (el) el.textContent = text;
     }
 
+    const isZh = /^zh\b/i.test((navigator.language || '') || (document.documentElement.lang || '')) || document.documentElement.lang === 'zh-CN';
+    function copy(en, zh) {
+      return isZh ? zh : en;
+    }
+
     function presetPayload() {
       if (!hasSamplePreset) return {};
       return {
@@ -166,11 +171,11 @@
         diagnosisPanel.hidden = true;
         diagnosisPanel.classList.remove('good', 'warn', 'bad');
       }
-      setText(diagnosisTitle, 'Upload an image to get a recommendation');
-      setText(diagnosisMessage, 'Transparent logos, icons, stickers, and simple silhouettes are the safest inputs for clean STL extrusion.');
-      setText(diagnosisAlpha, 'Transparency: waiting');
-      setText(diagnosisSubject, 'Subject coverage: waiting');
-      setText(diagnosisComplexity, 'Complexity: waiting');
+      setText(diagnosisTitle, copy('Upload an image to get a recommendation', '上传图片后获取建议'));
+      setText(diagnosisMessage, copy('Transparent logos, icons, stickers, and simple silhouettes are the safest inputs for clean STL extrusion.', '透明标志、图标、贴纸和简单轮廓最适合生成干净挤压 STL。'));
+      setText(diagnosisAlpha, copy('Transparency: waiting', '透明度：等待中'));
+      setText(diagnosisSubject, copy('Subject coverage: waiting', '主体占比：等待中'));
+      setText(diagnosisComplexity, copy('Complexity: waiting', '复杂度：等待中'));
     }
 
     function classifyImage(info) {
@@ -188,10 +193,10 @@
       const silhouetteFit = !hasTransparency && removableBackground && simpleCoverage && simpleEdges;
       const photoLike = !hasTransparency && lumaSpread > 0.25 && edgeRatio > 0.28;
       const tooComplex = edgeRatio > 0.42 || subjectRatio > 0.86 || complexCutout;
-      if (logoFit || silhouetteFit) return { level: 'good', title: 'Good fit for clean logo/icon STL', message: hasTransparency ? 'Transparency detected. Clean extrude or logo badge mode is the safest workflow.' : 'Light background with a clear subject detected. Clean extrude can work after background removal.' };
-      if (photoLike) return { level: 'warn', title: 'Better as backlit panel or raised surface', message: 'This looks more like a photo/tonal image than a flat logo. Use backlit photo panel or photo raised surface mode instead of clean extrude.' };
-      if (tooComplex) return { level: 'bad', title: 'Not ideal for clean STL extrusion', message: 'This image appears too complex/noisy for a clean cutout. Use a simpler logo/icon or switch to raised-surface or backlit-panel mode before generating.' };
-      return { level: 'warn', title: 'Usable, but check the preview carefully', message: 'The image may work, but clean extrude is safest with transparent logos, icons, and simple silhouettes.' };
+      if (logoFit || silhouetteFit) return { level: 'good', title: copy('Good fit for clean logo/icon STL', '适合生成干净的标志/图标 STL'), message: hasTransparency ? copy('Transparency detected. Clean extrude or logo badge mode is the safest workflow.', '检测到透明背景，干净挤压或标志徽章模式最稳。') : copy('Light background with a clear subject detected. Clean extrude can work after background removal.', '检测到浅色背景和清晰主体，移除背景后可尝试干净挤压。') };
+      if (photoLike) return { level: 'warn', title: copy('Better as backlit panel or raised surface', '更适合照片面板或浮雕面板'), message: copy('This looks more like a photo/tonal image than a flat logo. Use backlit photo panel or photo raised surface mode instead of clean extrude.', '这更像照片或明暗图，不像扁平标志。建议用照片面板或浮雕面板，不要直接干净挤压。') };
+      if (tooComplex) return { level: 'bad', title: copy('Not ideal for clean STL extrusion', '不适合直接生成干净挤压 STL'), message: copy('This image appears too complex/noisy for a clean cutout. Use a simpler logo/icon or switch to raised-surface or backlit-panel mode before generating.', '这张图对干净轮廓来说太复杂或噪点太多。请换更简单的标志/图标，或改用浮雕面板/照片面板模式。') };
+      return { level: 'warn', title: copy('Usable, but check the preview carefully', '可以尝试，但需要仔细检查预览'), message: copy('The image may work, but clean extrude is safest with transparent logos, icons, and simple silhouettes.', '这张图可能可用，但干净挤压最适合透明标志、图标和简单轮廓。') };
     }
 
     function updateDiagnosis(info) {
@@ -202,13 +207,13 @@
       diagnosisPanel.classList.add(classification.level);
       setText(diagnosisTitle, classification.title);
       setText(diagnosisMessage, classification.message);
-      setText(diagnosisAlpha, 'Transparency: ' + (info.hasTransparency ? 'yes' : info.removableBackground ? 'background removable' : 'no'));
-      setText(diagnosisSubject, 'Subject coverage: ' + Math.round((Number(info.subjectRatio) || 0) * 100) + '%');
-      setText(diagnosisComplexity, 'Complexity: ' + Math.round((Number(info.edgeRatio) || 0) * 100) + '% · shape ' + Math.round((Number(info.boundaryRatio) || 0) * 100) + '% · parts ' + (Number(info.componentCount) || 0));
+      setText(diagnosisAlpha, copy('Transparency: ', '透明度：') + (info.hasTransparency ? copy('yes', '有') : info.removableBackground ? copy('background removable', '背景可移除') : copy('no', '无')));
+      setText(diagnosisSubject, copy('Subject coverage: ', '主体占比：') + Math.round((Number(info.subjectRatio) || 0) * 100) + '%');
+      setText(diagnosisComplexity, copy('Complexity: ', '复杂度：') + Math.round((Number(info.edgeRatio) || 0) * 100) + '% · ' + copy('shape ', '形状 ') + Math.round((Number(info.boundaryRatio) || 0) * 100) + '% · ' + copy('parts ', '部件 ') + (Number(info.componentCount) || 0));
       if (modeInput && selectedMode() === 'extrude') {
-        if (classification.level === 'good') setButtonState('Generate clean STL now', false);
-        if (classification.level === 'warn') setButtonState('Generate anyway or switch mode', false);
-        if (classification.level === 'bad') setButtonState('Switch mode before generating', false);
+        if (classification.level === 'good') setButtonState(copy('Generate clean STL now', '生成干净 STL'), false);
+        if (classification.level === 'warn') setButtonState(copy('Generate anyway or switch mode', '继续生成或切换模式'), false);
+        if (classification.level === 'bad') setButtonState(copy('Switch mode before generating', '先切换模式再生成'), false);
       }
     }
 
@@ -237,9 +242,9 @@
       const file = fileInput && fileInput.files && fileInput.files[0];
       if (!file) {
         lastFileSignature = '';
-        setText(status, 'Waiting for image');
+        setText(status, copy('Waiting for image', '等待上传图片'));
         setText(message, emptyMessage());
-        setButtonState('Choose an image first', true);
+        setButtonState(copy('Choose an image first', '先选择图片'), true);
         if (downloadLink) {
           downloadLink.style.display = 'none';
           downloadLink.removeAttribute('href');
@@ -252,8 +257,8 @@
       const signature = [file.name, file.size, file.lastModified || 0].join(':');
       if (signature === lastFileSignature && button && !button.disabled) return;
       lastFileSignature = signature;
-      setText(status, 'Image selected');
-      setButtonState('Generate STL now', false);
+      setText(status, copy('Image selected', '图片已选择'));
+      setButtonState(copy('Generate STL now', '生成 STL'), false);
       if (downloadLink) {
         downloadLink.style.display = 'none';
         downloadLink.removeAttribute('href');
@@ -263,20 +268,20 @@
         const ctx = previewCanvas.getContext('2d');
         if (ctx) ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
       }
-      setText(message, file.name + ' selected.\nRunning an image suitability check before STL generation.');
+      setText(message, file.name + copy(' selected.\nRunning an image suitability check before STL generation.', ' 已选择。\n正在生成前检查图片是否适合 STL。'));
       if (diagnosisPanel) {
         diagnosisPanel.hidden = false;
         diagnosisPanel.classList.remove('good', 'warn', 'bad');
-        setText(diagnosisTitle, 'Checking image suitability...');
-        setText(diagnosisMessage, 'Looking for transparency, clear subject coverage, and excessive texture/noise.');
+        setText(diagnosisTitle, copy('Checking image suitability...', '正在检查图片适配度……'));
+        setText(diagnosisMessage, copy('Looking for transparency, clear subject coverage, and excessive texture/noise.', '正在检查透明度、主体占比以及过多纹理/噪点。'));
       }
       try {
         const info = await inspectImageFile(file);
         updateDiagnosis(info);
-        setText(message, file.name + ' selected.\nReview the image check, then generate the recommended STL workflow.');
+        setText(message, file.name + copy(' selected.\nReview the image check, then generate the recommended STL workflow.', ' 已选择。\n请先查看图片检查结果，再生成推荐的 STL 工作流。'));
       } catch (_) {
-        setText(diagnosisTitle, 'Image check unavailable');
-        setText(diagnosisMessage, 'You can still generate, but use simple transparent logos or icons for the cleanest STL output.');
+        setText(diagnosisTitle, copy('Image check unavailable', '图片检查暂不可用'));
+        setText(diagnosisMessage, copy('You can still generate, but use simple transparent logos or icons for the cleanest STL output.', '仍可继续生成，但简单透明标志或图标的 STL 效果最干净。'));
       }
       trackBoth('converter_upload_selected', 'pngtostl_upload_selected', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       trackSamplePreset('sample_preset_upload_selected', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
@@ -454,48 +459,47 @@
       if (event) event.preventDefault();
       const file = fileInput && fileInput.files && fileInput.files[0];
       if (!file) {
-        setText(status, 'Waiting for image');
-        setText(message, 'Upload an image before generating an STL.');
-        setButtonState('Choose an image first', true);
+        setText(status, copy('Waiting for image', '等待上传图片'));
+        setText(message, copy('Upload an image before generating an STL.', '请先上传图片，再生成 STL。'));
+        setButtonState(copy('Choose an image first', '先选择图片'), true);
         return;
       }
 
-      setButtonState('Generating STL...', true);
+      setButtonState(copy('Generating STL...', '正在生成 STL……'), true);
       const imageInfo = await inspectImageFile(file);
       updateDiagnosis(imageInfo);
       const classification = classifyImage(imageInfo);
       if (selectedMode() === 'extrude' && classification.level === 'bad') {
-        setText(status, 'Needs simpler image');
-        setText(message, classification.message + '\nClean extrude is paused for this input. Use a simpler transparent logo/icon, or manually switch to Photo raised surface or Backlit photo panel.');
+        setText(status, copy('Needs simpler image', '需要更简单的图片'));
+        setText(message, classification.message + copy('\nClean extrude is paused for this input. Use a simpler transparent logo/icon, or manually switch to Photo raised surface or Backlit photo panel.', '\n这张图已暂停干净挤压。请换更简单的透明标志/图标，或手动切换到照片浮雕面板/照片透光面板。'));
         trackBoth('converter_generate_blocked', 'pngtostl_generate_blocked', { reason: 'image_not_fit_for_clean_extrude' });
-        setButtonState('Use raised-surface mode or simpler image', false);
+        setButtonState(copy('Use raised-surface mode or simpler image', '改用浮雕模式或更简单图片'), false);
         return;
       }
       if (modeInput && selectedMode() === 'extrude' && classification.level === 'warn') {
         modeInput.value = 'relief';
         if (selectedQuality() === 'fast') setQualityValue('standard');
-        setText(message, classification.message + '\nAutomatically using photo raised surface mode instead of clean extrude...');
+        setText(message, classification.message + copy('\nAutomatically using photo raised surface mode instead of clean extrude...', '\n已自动改用照片浮雕面板，不再使用干净挤压……'));
       }
       const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;
       if (modeInput && selectedMode() === 'relief' && shouldCutoutSubject) {
         modeInput.value = 'logo';
         if (selectedQuality() === 'fast') setQualityValue('standard');
-        setText(message, (imageInfo.hasTransparency ? 'Transparent background detected.' : 'Light background detected and removed.') + ' Using logo badge mode so the subject does not become a full square plate...');
+        setText(message, (imageInfo.hasTransparency ? copy('Transparent background detected.', '检测到透明背景。') : copy('Light background detected and removed.', '检测到浅色背景并已移除。')) + copy(' Using logo badge mode so the subject does not become a full square plate...', ' 已使用标志徽章模式，避免主体变成整块方形板……'));
       }
       trackBoth('converter_generate_clicked', 'pngtostl_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024), auto_mode: selectedMode() });
       trackSamplePreset('sample_preset_generate_clicked', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
-      setText(status, 'Processing');
-      if (!shouldCutoutSubject) setText(message, 'Generating a fast preview STL at detail level ' + qualityDetail() + '...');
+      setText(status, copy('Processing', '处理中'));
+      if (!shouldCutoutSubject) setText(message, copy('Generating a fast preview STL at detail level ', '正在按细节级别 ') + qualityDetail() + copy('...', ' 生成快速 STL 预览……'));
 
       let normalizedFile;
       try {
         normalizedFile = await normalizeImageFile(file, imageInfo);
       } catch (error) {
-        setText(status, 'Needs fix');
-        setText(message, error && error.message ? error.message : 'Use a PNG, JPG, WebP, GIF, BMP, or SVG image.');
-        trackBoth('converter_generate_error', 'pngtostl_generate_error', { reason: 'normalize_failed' });
-        trackSamplePreset('sample_preset_generate_error', { reason: 'normalize_failed' });
-        setButtonState('Generate STL', false);
+        setText(status, copy('Needs fix', '需要修正'));
+        setText(message, error && error.message ? error.message : copy('Use a PNG, JPG, WebP, GIF, BMP, or SVG image.', '请使用 PNG、JPG、WebP、GIF、BMP 或 SVG 图片。'));
+        trackBoth('converter_clean_preview_failed', 'pngtostl_clean_preview_failed', { reason: error && error.message ? error.message : 'unknown' });
+        setButtonState(copy('Generate STL', '生成 STL'), false);
         return;
       }
 
@@ -529,8 +533,8 @@
         if (!response.ok) {
           let body = { message: 'Conversion failed.' };
           try { body = await response.json(); } catch (_) {}
-          setText(status, 'Needs fix');
-          setText(message, body.message || 'Conversion failed.');
+          setText(status, copy('Needs fix', '需要修正'));
+          setText(message, body.message || copy('Conversion failed.', '转换失败。'));
           trackBoth('converter_generate_error', 'pngtostl_generate_error', { reason: body.message || 'response_not_ok', status: response.status });
           trackSamplePreset('sample_preset_generate_error', { reason: body.message || 'response_not_ok', status: response.status });
           return;
@@ -559,30 +563,30 @@
           window.PNGTOSTLPreview.mount(previewCanvas, blob);
         }
         if (previewEmptyState) previewEmptyState.hidden = true;
-        setText(status, 'STL ready');
+        setText(status, copy('STL ready', 'STL 已就绪'));
         trackBoth('converter_generate_success', 'pngtostl_generate_success', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
         trackSamplePreset('sample_preset_generate_success', { output_kind: outputKind, bytes: blob.size, triangles: triangleCount, coverage: occupiedRatio || 'n/a' });
         const widthMm = Math.round(Number(widthInput ? widthInput.value : 0) || 0);
         const reliefMm = Number(depthInput ? depthInput.value : 0) || 0;
         setMetrics([
-          { label: 'Triangles', value: formatNumber(triangleCount) },
-          { label: 'File size', value: formatFileSize(blob.size) },
-          { label: 'Coverage', value: occupiedRatio ? Math.round(Number(occupiedRatio) * 100) + '%' : 'n/a' },
-          { label: 'Size', value: widthMm ? widthMm + ' mm wide' : 'n/a' },
-          { label: 'Relief depth', value: reliefMm ? reliefMm.toFixed(1) + ' mm' : 'n/a' },
-          { label: 'Mesh check', value: 'Printable STL' },
+          { label: copy('Triangles', '三角面'), value: formatNumber(triangleCount) },
+          { label: copy('File size', '文件大小'), value: formatFileSize(blob.size) },
+          { label: copy('Coverage', '覆盖率'), value: occupiedRatio ? Math.round(Number(occupiedRatio) * 100) + '%' : 'n/a' },
+          { label: copy('Size', '尺寸'), value: widthMm ? widthMm + copy(' mm wide', ' mm 宽') : 'n/a' },
+          { label: copy('Relief depth', '浮雕深度'), value: reliefMm ? reliefMm.toFixed(1) + ' mm' : 'n/a' },
+          { label: copy('Mesh check', '网格检查'), value: copy('Printable STL', '可打印 STL') },
         ]);
         setText(
           message,
-          'Binary ' + outputKind + ' STL is ready from ' + normalizedFile.name + '.\n' +
-          'Mesh: ' + (gridColumns && gridRows ? gridColumns + ' x ' + gridRows + ', ' : '') + triangleCount + ' triangles\n' +
-          'File size: ' + Math.round(blob.size / 1024) + ' KB' +
-          (occupiedRatio ? '\nRaised/detail coverage: ' + Math.round(Number(occupiedRatio) * 100) + '%' : '') +
-          '\nOpen it from the front/top view. STL is single-material geometry, not a color image.'
+          copy('Binary ', '二进制 ') + outputKind + copy(' STL is ready from ', ' STL 已从 ') + normalizedFile.name + copy('.\n', ' 生成完成。\n') +
+          copy('Mesh: ', '网格：') + (gridColumns && gridRows ? gridColumns + ' x ' + gridRows + ', ' : '') + triangleCount + copy(' triangles\n', ' 个三角面\n') +
+          copy('File size: ', '文件大小：') + Math.round(blob.size / 1024) + ' KB' +
+          (occupiedRatio ? copy('\nRaised/detail coverage: ', '\n凸起/细节覆盖率：') + Math.round(Number(occupiedRatio) * 100) + '%' : '') +
+          copy('\nOpen it from the front/top view. STL is single-material geometry, not a color image.', '\n建议从正面/顶部视图检查。STL 是单材质几何文件，不保留彩色图片。')
         );
       } catch (error) {
-        setText(status, 'Needs fix');
-        setText(message, 'Conversion failed. Please try another image or lower the detail level.');
+        setText(status, copy('Needs fix', '需要修正'));
+        setText(message, copy('Conversion failed. Please try another image or lower the detail level.', '转换失败。请换一张图片，或降低细节级别后重试。'));
         trackBoth('converter_generate_error', 'pngtostl_generate_error', {
           reason: error && error.name === 'AbortError' ? 'timeout' : 'network_or_runtime_error',
           message: error && error.message ? error.message : 'Conversion failed'
@@ -592,7 +596,7 @@
         });
       } finally {
         const hasFile = fileInput && fileInput.files && fileInput.files[0];
-        setButtonState(hasFile ? 'Generate STL now' : 'Choose an image first', !hasFile);
+        setButtonState(hasFile ? copy('Generate STL now', '生成 STL') : copy('Choose an image first', '先选择图片'), !hasFile);
       }
     }
 
