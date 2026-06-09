@@ -1,9 +1,9 @@
 (() => {
   function bootConverter(root) {
     if (!root || root.dataset.converterBooted === '1') return;
-    root.dataset.converterBooted = '1';
     const form = root.querySelector('form[data-converter-form="true"]');
     if (!form) return;
+    root.dataset.converterBooted = '1';
 
     const fileInput = form.querySelector('input[name="file"]');
     const button = form.querySelector('[data-generate-stl="true"]');
@@ -14,6 +14,12 @@
     const metrics = form.querySelector('[data-result-metrics="true"]');
     const cleanPreviewPanel = form.querySelector('[data-clean-preview-panel="true"]');
     const cleanPreviewImage = form.querySelector('[data-clean-preview-image="true"]');
+    const diagnosisPanel = form.querySelector('[data-image-diagnosis="true"]');
+    const diagnosisTitle = form.querySelector('[data-diagnosis-title="true"]');
+    const diagnosisMessage = form.querySelector('[data-diagnosis-message="true"]');
+    const diagnosisAlpha = form.querySelector('[data-diagnosis-alpha="true"]');
+    const diagnosisSubject = form.querySelector('[data-diagnosis-subject="true"]');
+    const diagnosisComplexity = form.querySelector('[data-diagnosis-complexity="true"]');
     const modeInput = form.querySelector('select[name="mode"]');
     const widthInput = form.querySelector('input[name="widthMm"]');
     const depthInput = form.querySelector('input[name="depth"]');
@@ -128,6 +134,54 @@
       if (cleanPreviewPanel) cleanPreviewPanel.hidden = true;
     }
 
+    function resetDiagnosis() {
+      if (diagnosisPanel) {
+        diagnosisPanel.hidden = true;
+        diagnosisPanel.classList.remove('good', 'warn', 'bad');
+      }
+      setText(diagnosisTitle, 'Upload an image to get a recommendation');
+      setText(diagnosisMessage, 'Transparent logos, icons, stickers, and simple silhouettes are the safest inputs for clean STL extrusion.');
+      setText(diagnosisAlpha, 'Transparency: waiting');
+      setText(diagnosisSubject, 'Subject coverage: waiting');
+      setText(diagnosisComplexity, 'Complexity: waiting');
+    }
+
+    function classifyImage(info) {
+      const subjectRatio = Number(info && info.subjectRatio) || 0;
+      const edgeRatio = Number(info && info.edgeRatio) || 0;
+      const lumaSpread = Number(info && info.lumaSpread) || 0;
+      const hasTransparency = Boolean(info && info.hasTransparency);
+      const removableBackground = Boolean(info && info.removableBackground);
+      const simpleCoverage = subjectRatio > 0.03 && subjectRatio < 0.72;
+      const simpleEdges = edgeRatio < 0.34;
+      const logoFit = (hasTransparency || removableBackground) && simpleCoverage && simpleEdges;
+      const silhouetteFit = !hasTransparency && removableBackground && simpleCoverage;
+      const photoLike = !hasTransparency && lumaSpread > 0.25 && edgeRatio > 0.28;
+      const tooComplex = edgeRatio > 0.42 || subjectRatio > 0.86;
+      if (logoFit || silhouetteFit) return { level: 'good', title: 'Good fit for clean logo/icon STL', message: hasTransparency ? 'Transparency detected. Clean extrude or logo relief is the safest workflow.' : 'Light background with a clear subject detected. Clean extrude can work after background removal.' };
+      if (photoLike) return { level: 'warn', title: 'Better as lithophane or photo relief', message: 'This looks more like a photo/tonal image than a flat logo. Use lithophane or photo relief instead of clean extrude.' };
+      if (tooComplex) return { level: 'bad', title: 'Not ideal for clean STL extrusion', message: 'This image appears too complex/noisy for a clean cutout. Use a simpler logo/icon or switch to relief/lithophane before generating.' };
+      return { level: 'warn', title: 'Usable, but check the preview carefully', message: 'The image may work, but clean extrude is safest with transparent logos, icons, and simple silhouettes.' };
+    }
+
+    function updateDiagnosis(info) {
+      if (!diagnosisPanel || !info) return;
+      const classification = classifyImage(info);
+      diagnosisPanel.hidden = false;
+      diagnosisPanel.classList.remove('good', 'warn', 'bad');
+      diagnosisPanel.classList.add(classification.level);
+      setText(diagnosisTitle, classification.title);
+      setText(diagnosisMessage, classification.message);
+      setText(diagnosisAlpha, 'Transparency: ' + (info.hasTransparency ? 'yes' : info.removableBackground ? 'background removable' : 'no'));
+      setText(diagnosisSubject, 'Subject coverage: ' + Math.round((Number(info.subjectRatio) || 0) * 100) + '%');
+      setText(diagnosisComplexity, 'Complexity: ' + Math.round((Number(info.edgeRatio) || 0) * 100) + '%');
+      if (modeInput && selectedMode() === 'extrude') {
+        if (classification.level === 'good') setButtonState('Generate clean STL now', false);
+        if (classification.level === 'warn') setButtonState('Generate anyway or switch mode', false);
+        if (classification.level === 'bad') setButtonState('Switch mode before generating', false);
+      }
+    }
+
     function showCleanPreview(blob) {
       if (!cleanPreviewPanel || !cleanPreviewImage || !blob) return;
       if (cleanPreviewImage.dataset.objectUrl) URL.revokeObjectURL(cleanPreviewImage.dataset.objectUrl);
@@ -149,7 +203,7 @@
 
     [widthInput, depthInput, baseInput, thresholdInput, smoothingInput, detailInput].forEach(bindRange);
 
-    function syncFile() {
+    async function syncFile() {
       const file = fileInput && fileInput.files && fileInput.files[0];
       if (!file) {
         lastFileSignature = '';
@@ -162,6 +216,7 @@
         }
         setMetrics([]);
         clearCleanPreview();
+        resetDiagnosis();
         return;
       }
       const signature = [file.name, file.size, file.lastModified || 0].join(':');
@@ -178,7 +233,21 @@
         const ctx = previewCanvas.getContext('2d');
         if (ctx) ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
       }
-      setText(message, file.name + ' selected.\nClick “Generate STL now” to create the preview and download. You can adjust settings first if needed.');
+      setText(message, file.name + ' selected.\nRunning an image suitability check before STL generation.');
+      if (diagnosisPanel) {
+        diagnosisPanel.hidden = false;
+        diagnosisPanel.classList.remove('good', 'warn', 'bad');
+        setText(diagnosisTitle, 'Checking image suitability...');
+        setText(diagnosisMessage, 'Looking for transparency, clear subject coverage, and excessive texture/noise.');
+      }
+      try {
+        const info = await inspectImageFile(file);
+        updateDiagnosis(info);
+        setText(message, file.name + ' selected.\nReview the image check, then generate the recommended STL workflow.');
+      } catch (_) {
+        setText(diagnosisTitle, 'Image check unavailable');
+        setText(diagnosisMessage, 'You can still generate, but use simple transparent logos or icons for the cleanest STL output.');
+      }
       trackBoth('converter_upload_selected', 'pngtostl_upload_selected', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       trackSamplePreset('sample_preset_upload_selected', { fileType: file.type || 'unknown', fileSizeKb: Math.round(file.size / 1024) });
       setMetrics([]);
@@ -215,20 +284,41 @@
             const avgBorder = { r: borderR / Math.max(1, borderCount), g: borderG / Math.max(1, borderCount), b: borderB / Math.max(1, borderCount) };
             const borderLuma = (avgBorder.r * 0.2126 + avgBorder.g * 0.7152 + avgBorder.b * 0.0722) / 255;
             let subjectLike = 0;
-            for (let i = 0; i < data.length; i += 4) {
+            let lumaSum = 0;
+            let lumaSqSum = 0;
+            let edgeChanges = 0;
+            let edgeSamples = 0;
+            const lumas = new Float32Array(pixels);
+            for (let i = 0, p = 0; i < data.length; i += 4, p += 1) {
+              const luma = (data[i] * 0.2126 + data[i + 1] * 0.7152 + data[i + 2] * 0.0722) / 255;
+              lumas[p] = luma;
+              lumaSum += luma;
+              lumaSqSum += luma * luma;
               const dr = data[i] - avgBorder.r;
               const dg = data[i + 1] - avgBorder.g;
               const db = data[i + 2] - avgBorder.b;
               const distance = Math.sqrt(dr * dr + dg * dg + db * db);
               if (distance > 42) subjectLike += 1;
             }
+            for (let y = 1; y < canvas.height; y += 1) {
+              for (let x = 1; x < canvas.width; x += 1) {
+                const p = y * canvas.width + x;
+                const diff = Math.max(Math.abs(lumas[p] - lumas[p - 1]), Math.abs(lumas[p] - lumas[p - canvas.width]));
+                if (diff > 0.18) edgeChanges += 1;
+                edgeSamples += 1;
+              }
+            }
             URL.revokeObjectURL(objectUrl);
             const transparentRatio = transparent / pixels;
             const subjectRatio = subjectLike / pixels;
+            const avgLuma = lumaSum / pixels;
+            const lumaSpread = Math.sqrt(Math.max(0, lumaSqSum / pixels - avgLuma * avgLuma));
             resolve({
               hasTransparency: transparentRatio > 0.08,
               removableBackground: transparentRatio <= 0.08 && borderLuma > 0.78 && subjectRatio > 0.04 && subjectRatio < 0.82,
               subjectRatio,
+              edgeRatio: edgeChanges / Math.max(1, edgeSamples),
+              lumaSpread,
               background: avgBorder
             });
           } catch (_) {
@@ -310,6 +400,20 @@
 
       setButtonState('Generating STL...', true);
       const imageInfo = await inspectImageFile(file);
+      updateDiagnosis(imageInfo);
+      const classification = classifyImage(imageInfo);
+      if (selectedMode() === 'extrude' && classification.level === 'bad') {
+        setText(status, 'Needs simpler image');
+        setText(message, classification.message + '\nClean extrude is paused for this input. Use a simpler transparent logo/icon, or manually switch to Photo-style relief/Lithophane.');
+        trackBoth('converter_generate_blocked', 'pngtostl_generate_blocked', { reason: 'image_not_fit_for_clean_extrude' });
+        setButtonState('Use relief mode or simpler image', false);
+        return;
+      }
+      if (modeInput && selectedMode() === 'extrude' && classification.level === 'warn') {
+        modeInput.value = 'relief';
+        if (qualityInput && qualityInput.value === 'fast') qualityInput.value = 'standard';
+        setText(message, classification.message + '\nAutomatically using photo-style relief instead of clean extrude...');
+      }
       const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;
       if (modeInput && selectedMode() === 'relief' && shouldCutoutSubject) {
         modeInput.value = 'logo';
@@ -447,7 +551,12 @@
     document.querySelectorAll('[data-converter-root="true"]').forEach(bootConverter);
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootAll);
-  else bootAll();
-  window.addEventListener('pageshow', bootAll);
+  function bootWithRetries() {
+    bootAll();
+    [100, 500, 1200].forEach((delay) => setTimeout(bootAll, delay));
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootWithRetries);
+  else bootWithRetries();
+  window.addEventListener('pageshow', bootWithRetries);
 })();

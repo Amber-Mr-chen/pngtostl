@@ -16,7 +16,7 @@ const modeLabels = {
   icon: "Icon / emoji relief",
   logo: "Transparent logo relief",
   extrude: "Clean solid extrude",
-  sketch: "Sketch / line art relief",
+  sketch: "Experimental sketch relief",
   relief: "Photo-style relief",
   heightmap: "Heightmap terrain",
   lithophane: "Lithophane",
@@ -45,8 +45,8 @@ const toolPresets: Record<string, Partial<NonNullable<ToolConfig["converter"]>>>
     threshold: 54,
     smoothing: 0,
     detail: 256,
-    helper: "Universal image entry: default to clean solid extrusion for logos, icons, stickers, transparent PNGs, and high-contrast subjects. Switch to Photo relief, Sketch, Lithophane, or Heightmap when needed.",
-    preview: "Default matches ImageToSTL-style extrude: convert the detected subject into a flat-top printable solid with vertical walls instead of a noisy shallow texture.",
+    helper: "Best for transparent logos, icons, stickers, and simple silhouettes. The image check will warn when a photo, sketch, or noisy background is a poor fit for clean extrude.",
+    preview: "Upload an image to diagnose whether clean extrude, relief, lithophane, or heightmap is the safer path.",
     filename: "clean-image-extrude.stl",
   },
   "convert-image-to-stl": {
@@ -273,6 +273,19 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
             </ul>
           </div>
 
+          <div className="imageDiagnosis" data-image-diagnosis="true" hidden>
+            <div>
+              <span className="smallMuted">Image check</span>
+              <strong data-diagnosis-title="true">Upload an image to get a recommendation</strong>
+              <p data-diagnosis-message="true">Transparent logos, icons, stickers, and simple silhouettes are the safest inputs for clean STL extrusion.</p>
+            </div>
+            <div className="diagnosisFacts" aria-label="Image suitability facts">
+              <span data-diagnosis-alpha="true">Transparency: waiting</span>
+              <span data-diagnosis-subject="true">Subject coverage: waiting</span>
+              <span data-diagnosis-complexity="true">Complexity: waiting</span>
+            </div>
+          </div>
+
           <button data-generate-stl="true" className="btnPrimary converterGenerateButton" type="button" disabled={!canConvert}>
             Choose an image, then generate STL
           </button>
@@ -285,7 +298,7 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
                   <option key={value} value={value}>{label}</option>
                 ))}
               </select>
-              <small>Choose clean extrude, photo relief, sketch, logo, lithophane, or heightmap defaults before generating.</small>
+              <small>Choose clean extrude for logos/icons, relief for tonal images, lithophane for photos, or heightmap for grayscale depth maps.</small>
             </label>
           ) : null}
 

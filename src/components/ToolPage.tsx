@@ -323,7 +323,7 @@ export function ToolPage({ tool, loadedSample }: { tool: ToolConfig; loadedSampl
       <SiteFooter />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script src="/stl-preview.js?v=webgl-final-20260608a" defer />
-      <script src="/converter.js?v=clean-preview-20260608a" defer />
+      <script src="/converter.js?v=diagnostic-router-20260609a" defer />
     </>
   );
 }

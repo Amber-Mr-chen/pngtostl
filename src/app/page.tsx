@@ -6,7 +6,7 @@ import { ConverterPanel } from "@/components/ConverterPanel";
 import { MiniToolExample, ShowcaseDemo } from "@/components/HomeShowcase";
 import { helperPages, tools } from "@/lib/tools";
 
-const primaryTools = ["image-to-stl", "logo-to-stl", "lithophane-generator", "heightmap-to-stl"];
+const primaryTools = ["logo-to-stl", "png-to-stl", "heightmap-to-stl", "lithophane-generator"];
 
 const proofSamples = [
   {
@@ -44,22 +44,22 @@ const proofSamples = [
 const categories = [
   {
     eyebrow: "01",
-    title: "Core STL workflows",
-    description: "Start from the output you want, not the file extension. Format-specific pages remain available for SEO and defaults.",
-    slugs: ["image-to-stl", "logo-to-stl", "lithophane-generator", "heightmap-to-stl"],
+    title: "Reliable STL workflows",
+    description: "Start with inputs this site can handle well: transparent logos, icons, simple silhouettes, heightmaps, and lithophanes.",
+    slugs: ["logo-to-stl", "png-to-stl", "heightmap-to-stl", "lithophane-generator"],
     example: "relief" as const,
   },
   {
     eyebrow: "02",
-    title: "Format-specific starting points",
-    description: "SEO-friendly entry pages with the same converter engine and better defaults for each file type.",
-    slugs: ["png-to-stl", "jpg-to-stl", "convert-image-to-stl"],
+    title: "Guided starting points",
+    description: "Use these when the source image is not a clean logo and you need guidance before generating.",
+    slugs: ["image-to-stl", "convert-image-to-stl", "jpg-to-stl"],
     example: "litho" as const,
   },
   {
     eyebrow: "03",
     title: "Photo and print planning utilities",
-    description: "Choose the right path before wasting filament: lithophane, relief, or settings check.",
+    description: "Route photos and complex images away from clean extrude before they waste time or filament.",
     slugs: ["photo-to-lithophane", "3d-print-photo", "2d-image-to-3d-model"],
     example: "plan" as const,
   },
@@ -84,8 +84,9 @@ export default function HomePage() {
         <BrandMark />
         <div className="homeNavRight">
         <nav className="homeNavLinks" aria-label="Primary">
-          <Link href="/image-to-stl">Image to STL</Link>
           <Link href="/logo-to-stl">Logo to STL</Link>
+          <Link href="/png-to-stl">Icon to STL</Link>
+          <Link href="/image-to-stl">Image Check</Link>
           <Link href="/lithophane-generator">Lithophane</Link>
           <Link href="/heightmap-to-stl">Heightmap</Link>
           <Link href="/pricing">Pricing</Link>
@@ -100,21 +101,27 @@ export default function HomePage() {
 
       <section className="homeHero">
         <div className="homeHeroCopy">
-          <p className="homeKicker">Upload-first image to STL workspace</p>
-          <h1>Convert sketches, logos, and images into printable STL models.</h1>
+          <p className="homeKicker">Logo, icon, and simple shape to STL</p>
+          <h1>Convert clean logos and simple images into printable STL models.</h1>
           <p>
-            Upload directly on this page, inspect the source image beside a slicer-style 3D preview, tune relief thickness, then download a print-ready STL without leaving the homepage.
+            Built for transparent PNGs, icons, stickers, flat logos, and simple silhouettes. Photos, pencil sketches, and grid-paper drawings are routed to safer relief or lithophane workflows instead of being overpromised.
           </p>
+          <div className="fitChecklist" aria-label="What works best">
+            <span>Best: transparent logo</span>
+            <span>Best: simple icon</span>
+            <span>Best: silhouette</span>
+            <span>Not ideal: noisy photo/sketch</span>
+          </div>
           <div className="heroActions" aria-label="Popular conversion tools">
-            <Link className="btnPrimary" href="#converter">Upload and generate STL</Link>
-            <Link className="btnSecondary" href="#examples">See real examples</Link>
+            <Link className="btnPrimary" href="#converter">Check image and generate</Link>
+            <Link className="btnSecondary" href="#examples">See reliable examples</Link>
           </div>
         </div>
 
         <aside className="heroResultPanel" aria-label="Input image to generated STL proof">
           <div className="heroProofTopline">
-            <span>Live workflow preview</span>
-            <strong>Input → STL</strong>
+            <span>Reliable workflow preview</span>
+            <strong>Clean input → clean STL</strong>
           </div>
           <div className="heroProofVisual">
             <figure>
@@ -144,7 +151,7 @@ export default function HomePage() {
             <span><b>22,300</b> triangles</span>
             <span><b>Printable</b> STL</span>
           </div>
-          <Link className="btnSecondary heroProofCta" href="#converter">Upload your own image below</Link>
+          <Link className="btnSecondary heroProofCta" href="#converter">Check your image below</Link>
         </aside>
       </section>
 
@@ -152,8 +159,8 @@ export default function HomePage() {
         <section className="homeConverterDock" id="converter" aria-labelledby="home-converter-title">
           <div className="sectionIntro compact">
             <p className="homeKicker">Use it here</p>
-            <h2 id="home-converter-title">Upload, preview, and download without leaving the homepage.</h2>
-            <p>Designed like a lightweight slicer workspace: source image on the left, STL preview and mesh checks on the right.</p>
+            <h2 id="home-converter-title">Upload, diagnose, then generate the right STL workflow.</h2>
+            <p>The page checks whether the image fits clean extrude. If it looks like a photo, sketch, or noisy background, it recommends a safer mode before generation.</p>
           </div>
           <ConverterPanel tool={universalTool} />
         </section>
@@ -162,8 +169,8 @@ export default function HomePage() {
       <section className="proofStrip" id="examples" aria-label="Example outputs with source and mesh evidence">
         <div className="proofIntro">
           <div>
-            <p className="homeKicker">Pick an output type</p>
-            <h2>Start from the print result you want.</h2>
+            <p className="homeKicker">Pick a reliable output type</p>
+            <h2>Use examples this site can reproduce consistently.</h2>
           </div>
           <TrackedLink
             className="proofExamplesLink"
@@ -208,8 +215,8 @@ export default function HomePage() {
 
       <section className="quickTools" id="tools" aria-labelledby="quick-tools-title">
         <div className="sectionIntro compact">
-          <p className="homeKicker">Most used</p>
-          <h2 id="quick-tools-title">Start with a common task.</h2>
+          <p className="homeKicker">Most reliable</p>
+          <h2 id="quick-tools-title">Start with a high-success workflow.</h2>
         </div>
         <div className="featuredGrid">
           {featured.map((tool, index) => tool && (
@@ -290,7 +297,7 @@ export default function HomePage() {
       </footer>
     </main>
     <script src="/stl-preview.js?v=webgl-final-20260608a" defer></script>
-    <script src="/converter.js?v=clean-preview-20260608a" defer></script>
+    <script src="/converter.js?v=diagnostic-router-20260609a" defer></script>
     </>
   );
 }
