@@ -1,4 +1,6 @@
 (() => {
+  if (window.__pngtostlPreviewLoaded) return;
+  window.__pngtostlPreviewLoaded = true;
   function readTriangles(buffer) {
     const view = new DataView(buffer);
     if (buffer.byteLength < 84) return [];

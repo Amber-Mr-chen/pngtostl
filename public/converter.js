@@ -1,9 +1,9 @@
 (() => {
   function bootConverter(root) {
     if (!root || root.dataset.converterBooted === '1') return;
-    root.dataset.converterBooted = '1';
     const form = root.querySelector('form[data-converter-form="true"]');
     if (!form) return;
+    root.dataset.converterBooted = '1';
 
     const fileInput = form.querySelector('input[name="file"]');
     const button = form.querySelector('[data-generate-stl="true"]');
@@ -345,7 +345,15 @@
       }
 
       setButtonState('Generating STL...', true);
-      const imageInfo = await inspectImageFile(file);
+      let imageInfo;
+      try {
+        imageInfo = await Promise.race([
+          inspectImageFile(file),
+          new Promise((resolve) => setTimeout(() => resolve({ hasTransparency: false, probableSketch: false }), 2500))
+        ]);
+      } catch (_) {
+        imageInfo = { hasTransparency: false, probableSketch: false };
+      }
       if (modeInput && selectedMode() === 'extrude' && imageInfo.probableSketch) {
         setSketchWorkflowDefaults();
         setText(message, 'Hand-drawn line art / graph-paper sketch detected. Switching to Sketch line relief so the drawing lines are preserved instead of becoming a solid silhouette...');
@@ -487,7 +495,12 @@
     document.querySelectorAll('[data-converter-root="true"]').forEach(bootConverter);
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootAll);
-  else bootAll();
-  window.addEventListener('pageshow', bootAll);
+  function bootWithRetries() {
+    bootAll();
+    [100, 500, 1200].forEach((delay) => setTimeout(bootAll, delay));
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootWithRetries);
+  else bootWithRetries();
+  window.addEventListener('pageshow', bootWithRetries);
 })();
