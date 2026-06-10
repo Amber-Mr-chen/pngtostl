@@ -736,6 +736,25 @@ function buildCompactMaskExtrusionTriangles(heights: number[][], widthMm: number
   for (let y = 0; y < rows - 1; y += 1) {
     for (let x = 0; x < columns - 1; x += 1) {
       if (!activeCells[y][x]) continue;
+      const yTop = cellTopY(x, y);
+      const x0 = x * cellX;
+      const x1 = (x + 1) * cellX;
+      const z0 = y * cellZ;
+      const z1 = (y + 1) * cellZ;
+      if (isActiveCell(x + 1, y)) {
+        const neighborTop = cellTopY(x + 1, y);
+        if (neighborTop !== yTop) addQuad(triangles, point(x1, z0, yTop), point(x1, z1, yTop), point(x1, z1, neighborTop), point(x1, z0, neighborTop));
+      }
+      if (isActiveCell(x, y + 1)) {
+        const neighborTop = cellTopY(x, y + 1);
+        if (neighborTop !== yTop) addQuad(triangles, point(x0, z1, yTop), point(x1, z1, yTop), point(x1, z1, neighborTop), point(x0, z1, neighborTop));
+      }
+    }
+  }
+
+  for (let y = 0; y < rows - 1; y += 1) {
+    for (let x = 0; x < columns - 1; x += 1) {
+      if (!activeCells[y][x]) continue;
       const x0 = x * cellX;
       const x1 = (x + 1) * cellX;
       const z0 = y * cellZ;

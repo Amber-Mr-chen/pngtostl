@@ -45,6 +45,23 @@ function uniqueStlYLevels(stl: Buffer) {
   return [...levels].sort((a, b) => a - b);
 }
 
+function stlHasFaceConnectingYLevels(stl: Buffer, lowerLevel: number, upperLevel: number) {
+  const view = new DataView(stl.buffer, stl.byteOffset, stl.byteLength);
+  const triangles = view.getUint32(80, true);
+
+  for (let triangle = 0; triangle < triangles; triangle += 1) {
+    const triangleOffset = 84 + triangle * 50;
+    const levels = new Set<number>();
+    for (let vertex = 0; vertex < 3; vertex += 1) {
+      const yOffset = triangleOffset + 12 + vertex * 12 + 4;
+      levels.add(Number(view.getFloat32(yOffset, true).toFixed(3)));
+    }
+    if (levels.has(lowerLevel) && levels.has(upperLevel)) return true;
+  }
+
+  return false;
+}
+
 test('homepage upload generates visible STL result', async ({ page }) => {
   await page.goto(TARGET_URL, { waitUntil: 'networkidle' });
 
@@ -128,7 +145,10 @@ test('logo STL includes an intermediate bevel height layer', async ({ request })
   });
 
   expect(response.ok()).toBeTruthy();
-  const levels = uniqueStlYLevels(Buffer.from(await response.body()));
+  const body = Buffer.from(await response.body());
+  const levels = uniqueStlYLevels(body);
   expect(levels.length).toBeGreaterThanOrEqual(3);
-  expect(levels.some((level) => level > levels[0] && level < levels.at(-1)!)).toBeTruthy();
+  const bevelLevel = levels.find((level) => level > levels[0] && level < levels.at(-1)!);
+  expect(bevelLevel).toBeDefined();
+  expect(stlHasFaceConnectingYLevels(body, bevelLevel!, levels.at(-1)!)).toBeTruthy();
 });
