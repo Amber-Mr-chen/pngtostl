@@ -96,6 +96,11 @@
       return select ? select.value : 'fast';
     }
 
+    function isPhotoTool() {
+      const tool = form.dataset.tool || '';
+      return tool === 'photo-to-stl' || tool === 'photo-to-lithophane';
+    }
+
     function setQualityValue(value) {
       qualityInputs.forEach((input) => {
         if (input.type === 'radio') input.checked = input.value === value;
@@ -184,7 +189,7 @@
     function resetDiagnosis() {
       if (diagnosisPanel) {
         diagnosisPanel.hidden = true;
-        diagnosisPanel.classList.remove('good', 'warn', 'bad');
+        diagnosisPanel.classList.remove('good', 'warn', 'bad', 'photoCheck');
       }
       setText(diagnosisTitle, copy('Upload an image to get a recommendation', '上传图片后获取建议'));
       setText(diagnosisMessage, copy('Transparent logos, icons, stickers, and simple silhouettes are the safest inputs for clean STL extrusion.', '透明标志、图标、贴纸和简单轮廓最适合生成干净挤压 STL。'));
@@ -214,18 +219,37 @@
       return { level: 'warn', title: copy('Usable, but check the preview carefully', '可以尝试，但需要仔细检查预览'), message: copy('The image may work, but clean extrude is safest with transparent logos, icons, and simple silhouettes.', '这张图可能可用，但干净挤压最适合透明标志、图标和简单轮廓。') };
     }
 
+    function classifyPhotoImage(info) {
+      const subjectRatio = Number(info && info.subjectRatio) || 0;
+      const edgeRatio = Number(info && info.edgeRatio) || 0;
+      const boundaryRatio = Number(info && info.boundaryRatio) || 0;
+      const componentCount = Number(info && info.componentCount) || 0;
+      const lumaSpread = Number(info && info.lumaSpread) || 0;
+      const busyBackground = edgeRatio > 0.18 || boundaryRatio > 0.4 || componentCount > 8;
+      const tinySubject = subjectRatio > 0 && subjectRatio < 0.12;
+      const tonalPhoto = lumaSpread > 0.18;
+      if (busyBackground) return { level: 'warn', title: copy('Image check: Try smoother relief', '图片检查：建议更平滑的浮雕'), message: copy('Background busy · crop tighter or try lithophane', '背景较复杂 · 建议裁紧或试试透光照片板') };
+      if (tinySubject) return { level: 'warn', title: copy('Image check: Photo relief possible', '图片检查：可生成照片浮雕'), message: copy('Subject small · crop tighter before generating', '主体偏小 · 生成前建议裁紧') };
+      if (tonalPhoto) return { level: 'good', title: copy('Image check: Photo relief recommended', '图片检查：推荐照片浮雕'), message: copy('Subject clear · background moderate', '主体清晰 · 背景适中') };
+      return { level: 'warn', title: copy('Image check: Try lithophane', '图片检查：可试试透光照片板'), message: copy('Low tonal range · lithophane may keep detail better', '明暗层次较少 · 透光照片板可能保留更多细节') };
+    }
+
     function updateDiagnosis(info) {
       if (!diagnosisPanel || !info) return;
-      const classification = classifyImage(info);
+      const photoTool = isPhotoTool();
+      const classification = photoTool ? classifyPhotoImage(info) : classifyImage(info);
       diagnosisPanel.hidden = false;
       diagnosisPanel.classList.remove('good', 'warn', 'bad');
+      diagnosisPanel.classList.toggle('photoCheck', photoTool);
       diagnosisPanel.classList.add(classification.level);
       setText(diagnosisTitle, classification.title);
       setText(diagnosisMessage, classification.message);
-      setText(diagnosisAlpha, copy('Transparency: ', '透明度：') + (info.hasTransparency ? copy('yes', '有') : info.removableBackground ? copy('background removable', '背景可移除') : copy('no', '无')));
-      setText(diagnosisSubject, copy('Subject coverage: ', '主体占比：') + Math.round((Number(info.subjectRatio) || 0) * 100) + '%');
-      setText(diagnosisComplexity, copy('Complexity: ', '复杂度：') + Math.round((Number(info.edgeRatio) || 0) * 100) + '% · ' + copy('shape ', '形状 ') + Math.round((Number(info.boundaryRatio) || 0) * 100) + '% · ' + copy('parts ', '部件 ') + (Number(info.componentCount) || 0));
-      if (modeInput && selectedMode() === 'extrude') {
+      setText(diagnosisAlpha, photoTool ? '' : copy('Transparency: ', '透明度：') + (info.hasTransparency ? copy('yes', '有') : info.removableBackground ? copy('background removable', '背景可移除') : copy('no', '无')));
+      setText(diagnosisSubject, photoTool ? classification.message : copy('Subject coverage: ', '主体占比：') + Math.round((Number(info.subjectRatio) || 0) * 100) + '%');
+      setText(diagnosisComplexity, photoTool ? '' : copy('Complexity: ', '复杂度：') + Math.round((Number(info.edgeRatio) || 0) * 100) + '% · ' + copy('shape ', '形状 ') + Math.round((Number(info.boundaryRatio) || 0) * 100) + '% · ' + copy('parts ', '部件 ') + (Number(info.componentCount) || 0));
+      if (photoTool) {
+        setButtonState(copy('Generate photo relief preview', '生成照片浮雕预览'), false);
+      } else if (modeInput && selectedMode() === 'extrude') {
         if (classification.level === 'good') setButtonState(copy('Generate clean STL now', '生成干净 STL'), false);
         if (classification.level === 'warn') setButtonState(copy('Generate photo panel preview', '生成照片面板预览'), false);
         if (classification.level === 'bad') setButtonState(copy('Generate safer STL preview', '生成安全 STL 预览'), false);

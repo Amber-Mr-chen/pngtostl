@@ -81,6 +81,29 @@ function wideSparsePortraitPng() {
   return Buffer.from(encode({ width, height, data, channels: 4 }));
 }
 
+function busyScenePhotoPng() {
+  const width = 128;
+  const height = 96;
+  const data = new Uint8Array(width * height * 4);
+
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const offset = (y * width + x) * 4;
+      const stripe = ((x * 17 + y * 19) % 53) / 53;
+      const checker = ((Math.floor(x / 4) + Math.floor(y / 5)) % 2) * 0.18;
+      const portrait = ((x - 64) / 28) ** 2 + ((y - 50) / 32) ** 2 < 1;
+      const luma = portrait ? 0.38 + stripe * 0.12 : 0.42 + stripe * 0.38 + checker;
+      const value = Math.round(Math.max(0, Math.min(1, luma)) * 255);
+      data[offset] = value;
+      data[offset + 1] = value;
+      data[offset + 2] = value;
+      data[offset + 3] = 255;
+    }
+  }
+
+  return Buffer.from(encode({ width, height, data, channels: 4 }));
+}
+
 function uniqueStlYLevels(stl: Buffer) {
   const view = new DataView(stl.buffer, stl.byteOffset, stl.byteLength);
   const triangles = view.getUint32(80, true);
@@ -201,6 +224,23 @@ test('photo page uses a dedicated relief preset while image page stays general-p
   await expect(page.locator('form[data-converter-form="true"]')).toHaveAttribute('data-mode', 'extrude');
   await expect(page.locator('input[name="smoothing"]')).toHaveValue('0');
   await expect(page.locator('input[name="detail"]')).toHaveValue('256');
+});
+
+test('photo page shows a compact image check without blocking generation', async ({ page }) => {
+  await page.goto(`${BASE_URL}/photo-to-stl?regression=photo-diagnosis`, { waitUntil: 'networkidle' });
+
+  await page.setInputFiles('input[name="file"]', {
+    name: 'busy-scene.png',
+    mimeType: 'image/png',
+    buffer: busyScenePhotoPng(),
+  });
+
+  const diagnosis = page.locator('[data-image-diagnosis="true"]');
+  await expect(diagnosis).toBeVisible();
+  await expect(diagnosis).toContainText(/Image check: (Photo relief|Try smoother relief|Try lithophane)/, { timeout: 10_000 });
+  await expect(diagnosis).toContainText(/Subject|Background|Lithophane/);
+  await expect(diagnosis.locator('p')).toBeHidden();
+  await expect(page.locator('[data-generate-stl="true"]')).toBeEnabled();
 });
 
 test('logo page generates a clean STL result for PNG input', async ({ page }) => {

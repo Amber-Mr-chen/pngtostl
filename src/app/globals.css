@@ -1371,6 +1371,12 @@ a {
 .imageDiagnosis.good { border-color: rgba(22,163,74,.28); background: #f0fdf4; }
 .imageDiagnosis.warn { border-color: rgba(217,119,6,.3); background: #fffbeb; }
 .imageDiagnosis.bad { border-color: rgba(220,38,38,.28); background: #fef2f2; }
+.imageDiagnosis.photoCheck { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; border-radius: 12px; padding: 10px 12px; box-shadow: none; }
+.imageDiagnosis.photoCheck .eyebrow { margin: 0; font-size: .72rem; }
+.imageDiagnosis.photoCheck strong { margin: 0; font-size: .88rem; }
+.imageDiagnosis.photoCheck p, .imageDiagnosis.photoCheck .diagnosisFacts span:empty { display: none; }
+.imageDiagnosis.photoCheck .diagnosisFacts { display: contents; }
+.imageDiagnosis.photoCheck .diagnosisFacts span { border: 0; background: transparent; padding: 0; font-size: .82rem; font-weight: 760; }
 .diagnosisFacts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .diagnosisFacts span { border: 1px solid rgba(15,23,42,.08); border-radius: 10px; background: rgba(255,255,255,.72); padding: 8px; font-size: .78rem; font-weight: 760; color: var(--muted); }
 .converterField { display: grid; gap: 7px; }
