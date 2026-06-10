@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { sampleWorkflowSlug, type SampleWorkflow, type ToolConfig } from "@/lib/tools";
 
 const defaultModeBySlug: Record<string, NonNullable<ToolConfig["converter"]>["mode"]> = {
@@ -331,6 +333,7 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
               <span data-diagnosis-subject="true">Subject coverage: waiting</span>
               <span data-diagnosis-complexity="true">Complexity: waiting</span>
             </div>
+            <Link href="/lithophane-generator" className="diagnosisLink" data-lithophane-suggestion="true" hidden>Try lithophane</Link>
           </div>
 
           <div className="qualityChooser" aria-label="Quality preset">

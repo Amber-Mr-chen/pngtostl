@@ -240,6 +240,8 @@ test('photo page shows a compact image check without blocking generation', async
   await expect(diagnosis).toContainText(/Image check: (Photo relief|Try smoother relief|Try lithophane)/, { timeout: 10_000 });
   await expect(diagnosis).toContainText(/Subject|Background|Lithophane/);
   await expect(diagnosis.locator('p')).toBeHidden();
+  await expect(page.locator('[data-lithophane-suggestion="true"]')).toHaveAttribute('href', '/lithophane-generator');
+  await expect(page.locator('[data-lithophane-suggestion="true"]')).toContainText('Try lithophane');
   await expect(page.locator('[data-generate-stl="true"]')).toBeEnabled();
 });
 
