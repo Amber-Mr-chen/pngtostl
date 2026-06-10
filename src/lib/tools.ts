@@ -1193,13 +1193,38 @@ export const helperPages: HelperPage[] = [
       { q: "Can a normal photo become a relief STL?", a: "Sometimes, but high-contrast subjects work best. Many photos are better as lithophanes instead of raised relief." },
     ],
   },
+  {
+    slug: "ai-image-to-3d-roadmap",
+    title: "AI Image to 3D Roadmap",
+    description: "Plan the future AI image-to-3D experience while keeping the live relief, logo, lithophane, and heightmap tools as the real printable path today.",
+    cta: "Open AI 3D roadmap",
+    href: "/ai-image-to-3d?utm_source=seo_helper&utm_medium=internal&utm_campaign=ai_image_to_3d_roadmap",
+    intent: "Use this page when you want to understand the future AI product structure without mistaking it for an already live full 3D generator.",
+    advisorKind: "photo-path",
+    sampleSlugs: ["universal-image-relief", "backlit-lithophane-panel", "logo-badge-relief"],
+    checks: [
+      "The live product today is still relief-first and STL-first.",
+      "GLB preview, credits, saved creations, and history belong in a future account flow.",
+      "Batch and API access should be introduced only after demand and billing rules are clear.",
+      "Use current tools for printable outputs instead of waiting for a future AI model pipeline.",
+    ],
+    steps: [
+      { title: "Use the live STL path first", body: "Relief, logo, lithophane, and heightmap workflows already solve the printable use case for today." },
+      { title: "Map future account features", body: "My Creations, credits, and history can wrap around a future generation pipeline once it exists." },
+      { title: "Request the commercial path", body: "If you need batch, API, or team usage, send a request so the pricing model can be shaped by real demand." },
+    ],
+    faqs: [
+      { q: "Is full AI 3D live now?", a: "No. This page is a roadmap and interest entry only. The current live output is still printable STL relief and related 2.5D workflows." },
+      { q: "What should I use today?", a: "Use the current image-to-STL tools for reliable printable output, and use this page to track future AI 3D plans." },
+    ],
+  },
 ];
 
 export const staticPages = [
   {
     slug: "samples",
     title: "Image to STL Examples",
-    description: "Explore real image-to-STL examples with source images, generated STL previews, recommended settings, file sizes, and downloadable sample models.",
+    description: "Real image-to-STL examples with source images, generated STL previews, recommended settings, and downloadable STL files.",
   },
   {
     slug: "privacy",

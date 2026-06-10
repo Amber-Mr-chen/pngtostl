@@ -263,6 +263,10 @@ function SamplesPage() {
         <p className="pill">Real workflow examples</p>
         <h1>Image to STL examples</h1>
         <p>Use these examples to choose the right PNGtoSTL workflow before you upload. Each sample explains the input, output, recommended settings, and common failure cases.</p>
+        <div className="heroActions compactActions">
+          <Link className="btnPrimary" href="/image-to-stl">Try Image to STL</Link>
+          <Link className="btnSecondary" href="/pricing">View pricing path</Link>
+        </div>
       </section>
       <SampleGalleryFilter samples={sampleWorkflows} />
       <LegalSupportLinks />
