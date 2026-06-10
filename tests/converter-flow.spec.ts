@@ -29,6 +29,22 @@ function transparentRingLogoPng() {
   return Buffer.from(encode({ width, height, data, channels: 4 }));
 }
 
+function uniqueStlYLevels(stl: Buffer) {
+  const view = new DataView(stl.buffer, stl.byteOffset, stl.byteLength);
+  const triangles = view.getUint32(80, true);
+  const levels = new Set<number>();
+
+  for (let triangle = 0; triangle < triangles; triangle += 1) {
+    const triangleOffset = 84 + triangle * 50;
+    for (let vertex = 0; vertex < 3; vertex += 1) {
+      const yOffset = triangleOffset + 12 + vertex * 12 + 4;
+      levels.add(Number(view.getFloat32(yOffset, true).toFixed(3)));
+    }
+  }
+
+  return [...levels].sort((a, b) => a - b);
+}
+
 test('homepage upload generates visible STL result', async ({ page }) => {
   await page.goto(TARGET_URL, { waitUntil: 'networkidle' });
 
@@ -91,4 +107,28 @@ test('logo conversion uses compact contour-style geometry for transparent PNG ma
   const triangleCount = Number(convertResponses.at(-1)?.['x-tool-triangle-count']);
   expect(triangleCount).toBeGreaterThan(0);
   expect(triangleCount).toBeLessThan(4000);
+});
+
+test('logo STL includes an intermediate bevel height layer', async ({ request }) => {
+  const response = await request.post(`${BASE_URL}/api/stl/convert`, {
+    multipart: {
+      file: {
+        name: 'ring-logo.png',
+        mimeType: 'image/png',
+        buffer: transparentRingLogoPng(),
+      },
+      mode: 'logo',
+      widthMm: '95',
+      depth: '2.4',
+      baseMm: '1.2',
+      threshold: '0.66',
+      smoothing: '0',
+      detail: '320',
+    },
+  });
+
+  expect(response.ok()).toBeTruthy();
+  const levels = uniqueStlYLevels(Buffer.from(await response.body()));
+  expect(levels.length).toBeGreaterThanOrEqual(3);
+  expect(levels.some((level) => level > levels[0] && level < levels.at(-1)!)).toBeTruthy();
 });

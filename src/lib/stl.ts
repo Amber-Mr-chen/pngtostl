@@ -707,6 +707,9 @@ function buildCompactMaskExtrusionTriangles(heights: number[][], widthMm: number
     Array.from({ length: columns - 1 }, (_, x) => Boolean(mask[y]?.[x]) || Boolean(mask[y]?.[x + 1]) || Boolean(mask[y + 1]?.[x]) || Boolean(mask[y + 1]?.[x + 1])),
   );
   const isActiveCell = (x: number, y: number) => Boolean(activeCells[y]?.[x]);
+  const isBoundaryCell = (x: number, y: number) => !isActiveCell(x - 1, y) || !isActiveCell(x + 1, y) || !isActiveCell(x, y - 1) || !isActiveCell(x, y + 1);
+  const bevelY = clamp(backY + (topY - backY) * 0.72, backY + 0.05, topY - 0.05);
+  const cellTopY = (x: number, y: number) => (isBoundaryCell(x, y) ? bevelY : topY);
   const point = (gridX: number, gridY: number, reliefY: number): Vec3 => [gridX, reliefY, heightMm - gridY];
   const triangles: Vec3[][] = [];
 
@@ -718,13 +721,14 @@ function buildCompactMaskExtrusionTriangles(heights: number[][], widthMm: number
         continue;
       }
       const startX = x;
-      while (x < columns - 1 && activeCells[y][x]) x += 1;
+      const rowTopY = cellTopY(x, y);
+      while (x < columns - 1 && activeCells[y][x] && cellTopY(x, y) === rowTopY) x += 1;
       const endX = x;
       const x0 = startX * cellX;
       const x1 = endX * cellX;
       const z0 = y * cellZ;
       const z1 = (y + 1) * cellZ;
-      addQuad(triangles, point(x0, z0, topY), point(x1, z0, topY), point(x1, z1, topY), point(x0, z1, topY));
+      addQuad(triangles, point(x0, z0, rowTopY), point(x1, z0, rowTopY), point(x1, z1, rowTopY), point(x0, z1, rowTopY));
       addQuad(triangles, point(x0, z0, backY), point(x0, z1, backY), point(x1, z1, backY), point(x1, z0, backY));
     }
   }
@@ -736,10 +740,11 @@ function buildCompactMaskExtrusionTriangles(heights: number[][], widthMm: number
       const x1 = (x + 1) * cellX;
       const z0 = y * cellZ;
       const z1 = (y + 1) * cellZ;
-      if (!isActiveCell(x - 1, y)) addQuad(triangles, point(x0, z1, backY), point(x0, z0, backY), point(x0, z0, topY), point(x0, z1, topY));
-      if (!isActiveCell(x + 1, y)) addQuad(triangles, point(x1, z0, backY), point(x1, z1, backY), point(x1, z1, topY), point(x1, z0, topY));
-      if (!isActiveCell(x, y - 1)) addQuad(triangles, point(x0, z0, backY), point(x1, z0, backY), point(x1, z0, topY), point(x0, z0, topY));
-      if (!isActiveCell(x, y + 1)) addQuad(triangles, point(x1, z1, backY), point(x0, z1, backY), point(x0, z1, topY), point(x1, z1, topY));
+      const yTop = cellTopY(x, y);
+      if (!isActiveCell(x - 1, y)) addQuad(triangles, point(x0, z1, backY), point(x0, z0, backY), point(x0, z0, yTop), point(x0, z1, yTop));
+      if (!isActiveCell(x + 1, y)) addQuad(triangles, point(x1, z0, backY), point(x1, z1, backY), point(x1, z1, yTop), point(x1, z0, yTop));
+      if (!isActiveCell(x, y - 1)) addQuad(triangles, point(x0, z0, backY), point(x1, z0, backY), point(x1, z0, yTop), point(x0, z0, yTop));
+      if (!isActiveCell(x, y + 1)) addQuad(triangles, point(x1, z1, backY), point(x0, z1, backY), point(x0, z1, yTop), point(x1, z1, yTop));
     }
   }
 
