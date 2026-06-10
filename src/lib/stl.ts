@@ -639,6 +639,33 @@ function cropSketchPlateToContent(heights: number[][], contentMask?: boolean[][]
   };
 }
 
+function cropReliefToSubject(heights: number[][]): CroppedGrid {
+  const rows = heights.length;
+  const columns = heights[0]?.length ?? 0;
+  if (rows < 12 || columns < 12) return { heights };
+
+  const values = heights.flat().sort((a, b) => a - b);
+  const low = values[Math.floor(values.length * 0.18)] ?? values[0] ?? 0;
+  const high = values[Math.floor(values.length * 0.86)] ?? values.at(-1) ?? 0;
+  const range = Math.max(high - low, 0.001);
+  const threshold = low + range * 0.5;
+  const mask = heights.map((row) => row.map((value) => value >= threshold));
+  const bounds = contentBounds(mask, 0.35);
+  if (!bounds) return { heights };
+
+  const contentWidth = bounds.maxX - bounds.minX + 1;
+  const contentHeight = bounds.maxY - bounds.minY + 1;
+  const activeCount = mask.reduce((sum, row) => sum + row.filter(Boolean).length, 0);
+  const activeRatio = activeCount / Math.max(rows * columns, 1);
+  if (activeRatio < 0.025 || activeRatio > 0.62) return { heights };
+  if (contentWidth > columns * 0.9 && contentHeight > rows * 0.9) return { heights };
+  if (contentWidth < columns * 0.18 || contentHeight < rows * 0.18) return { heights };
+
+  return {
+    heights: heights.slice(bounds.minY, bounds.maxY + 1).map((row) => row.slice(bounds.minX, bounds.maxX + 1)),
+  };
+}
+
 function subtract(a: Vec3, b: Vec3): Vec3 {
   return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 }
@@ -895,10 +922,15 @@ export async function pngToStl(file: File, options: ConvertOptions): Promise<{ s
   const preparedSamples = applySketchContentMask(lineArtSamples, sketchContentMask, options);
   const { heights, occupiedRatio } = buildHeightGrid(preparedSamples, options);
   const geometryMask = buildGeometryMask(preparedSamples, heights, options);
-  const mesh = options.mode === "sketch" ? cropSketchPlateToContent(heights, sketchContentMask) : cropToMaskBounds(heights, geometryMask);
+  const mesh =
+    options.mode === "sketch"
+      ? cropSketchPlateToContent(heights, sketchContentMask)
+      : options.mode === "relief"
+        ? cropReliefToSubject(heights)
+        : cropToMaskBounds(heights, geometryMask);
   const meshRows = mesh.heights.length;
   const meshColumns = mesh.heights[0]?.length ?? 0;
-  const outputHeightMm = (mesh.mask || options.mode === "sketch") && meshRows > 1 && meshColumns > 1 ? widthMm * ((meshRows - 1) / (meshColumns - 1)) : heightMm;
+  const outputHeightMm = (mesh.mask || options.mode === "sketch" || options.mode === "relief") && meshRows > 1 && meshColumns > 1 ? widthMm * ((meshRows - 1) / (meshColumns - 1)) : heightMm;
   const useCompactMaskExtrusion = (options.mode === "logo" || options.mode === "extrude") && Boolean(mesh.mask);
   const triangles = useCompactMaskExtrusion
     ? buildCompactMaskExtrusionTriangles(mesh.heights, widthMm, outputHeightMm, mesh.mask!)

@@ -57,6 +57,30 @@ function texturedPortraitPng() {
   return Buffer.from(encode({ width, height, data, channels: 4 }));
 }
 
+function wideSparsePortraitPng() {
+  const width = 220;
+  const height = 110;
+  const data = new Uint8Array(width * height * 4);
+  const centerX = width / 2;
+  const centerY = height / 2;
+
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const offset = (y * width + x) * 4;
+      const normalizedX = (x - centerX) / 22;
+      const normalizedY = (y - centerY) / 28;
+      const inSubject = normalizedX * normalizedX + normalizedY * normalizedY < 1;
+      const value = Math.round((inSubject ? 0.35 : 0.82) * 255);
+      data[offset] = value;
+      data[offset + 1] = value;
+      data[offset + 2] = value;
+      data[offset + 3] = 255;
+    }
+  }
+
+  return Buffer.from(encode({ width, height, data, channels: 4 }));
+}
+
 function uniqueStlYLevels(stl: Buffer) {
   const view = new DataView(stl.buffer, stl.byteOffset, stl.byteLength);
   const triangles = view.getUint32(80, true);
@@ -112,6 +136,33 @@ function averageStlTopHeightInRegion(stl: Buffer, region: { minX: number; maxX: 
   }
 
   return count ? sum / count : 0;
+}
+
+function highReliefWidthRatio(stl: Buffer, thresholdY: number) {
+  const view = new DataView(stl.buffer, stl.byteOffset, stl.byteLength);
+  const triangles = view.getUint32(80, true);
+  let minX = Number.POSITIVE_INFINITY;
+  let maxX = Number.NEGATIVE_INFINITY;
+  let highMinX = Number.POSITIVE_INFINITY;
+  let highMaxX = Number.NEGATIVE_INFINITY;
+
+  for (let triangle = 0; triangle < triangles; triangle += 1) {
+    const triangleOffset = 84 + triangle * 50;
+    for (let vertex = 0; vertex < 3; vertex += 1) {
+      const vertexOffset = triangleOffset + 12 + vertex * 12;
+      const x = view.getFloat32(vertexOffset, true);
+      const y = view.getFloat32(vertexOffset + 4, true);
+      minX = Math.min(minX, x);
+      maxX = Math.max(maxX, x);
+      if (y >= thresholdY) {
+        highMinX = Math.min(highMinX, x);
+        highMaxX = Math.max(highMaxX, x);
+      }
+    }
+  }
+
+  if (!Number.isFinite(highMinX)) return 0;
+  return (highMaxX - highMinX) / Math.max(maxX - minX, 0.001);
 }
 
 test('homepage upload generates visible STL result', async ({ page }) => {
@@ -228,4 +279,27 @@ test('photo relief suppresses textured background behind a centered subject', as
   const centerHeight = averageStlTopHeightInRegion(body, { minX: 48, maxX: 72, minZ: 35, maxZ: 55 });
   const backgroundHeight = averageStlTopHeightInRegion(body, { minX: 4, maxX: 28, minZ: 4, maxZ: 24 });
   expect(centerHeight).toBeGreaterThan(backgroundHeight + 0.7);
+});
+
+test('photo relief auto-crops sparse side margins around the main subject', async ({ request }) => {
+  const response = await request.post(`${BASE_URL}/api/stl/convert`, {
+    multipart: {
+      file: {
+        name: 'wide-sparse-portrait.png',
+        mimeType: 'image/png',
+        buffer: wideSparsePortraitPng(),
+      },
+      mode: 'relief',
+      widthMm: '120',
+      depth: '2.4',
+      baseMm: '1.2',
+      threshold: '0.38',
+      smoothing: '0.46',
+      detail: '192',
+    },
+  });
+
+  expect(response.ok()).toBeTruthy();
+  const body = Buffer.from(await response.body());
+  expect(highReliefWidthRatio(body, 2.45)).toBeGreaterThan(0.4);
 });
