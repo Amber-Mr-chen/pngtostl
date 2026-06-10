@@ -385,6 +385,19 @@ test('structured artwork STL creates support and raised detail layers without be
   expect(levels.length).toBeGreaterThanOrEqual(4);
 });
 
+test('AI 3D provider endpoint is explicit when Meshy credentials are missing', async ({ request }) => {
+  const response = await request.get(`${BASE_URL}/api/ai-3d/meshy?id=test-task`);
+
+  if (process.env.MESHY_API_KEY || process.env.AI3D_MESHY_API_KEY) {
+    expect([200, 502]).toContain(response.status());
+    return;
+  }
+
+  expect(response.status()).toBe(503);
+  const body = await response.json();
+  expect(body.error).toBe('AI_3D_NOT_CONFIGURED');
+});
+
 test('logo page generates a clean STL result for PNG input', async ({ page }) => {
   await page.goto(`${BASE_URL}/logo-to-stl?regression=logo-flow`, { waitUntil: 'networkidle' });
 

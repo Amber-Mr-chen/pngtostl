@@ -329,10 +329,10 @@ function buildStructuredArtworkGrid(samples: ImageSample[][], options: ConvertOp
   supportMask = erodeMask(supportMask, 1, 0.34);
 
   const detailMask = dilateMask(strokeMask, 1, 1);
-  const heights: number[][] = [];
+  const rawHeights: number[][] = [];
   let occupied = 0;
-  const supportHeight = options.baseMm + options.depth * 0.34;
-  const detailFloor = options.baseMm + options.depth * 0.62;
+  const supportHeight = options.baseMm + options.depth * 0.28;
+  const detailFloor = options.baseMm + options.depth * 0.68;
 
   for (let y = 0; y < rows; y += 1) {
     const row: number[] = [];
@@ -341,17 +341,25 @@ function buildStructuredArtworkGrid(samples: ImageSample[][], options: ConvertOp
       let value = 0;
       if (supportMask[y][x]) value = supportHeight;
       if (detailMask[y][x]) {
-        const detail = clamp((sample.darkness - options.threshold * 0.45) / Math.max(0.22, 1 - options.threshold * 0.45), 0, 1);
-        value = Math.max(value, detailFloor + detail * options.depth * 0.38);
+        const detail = clamp((sample.darkness - options.threshold * 0.42) / Math.max(0.2, 1 - options.threshold * 0.42), 0, 1);
+        value = Math.max(value, detailFloor + detail * options.depth * 0.32);
       }
       if (value > options.baseMm + 0.02) occupied += 1;
       row.push(value > 0 ? value : 0);
     }
-    heights.push(row);
+    rawHeights.push(row);
   }
 
-  const smoothedSupport = smoothGrid(heights, Math.min(0.22, options.smoothing * 0.45));
-  return { heights: smoothedSupport, mask: supportMask, occupiedRatio: rows * columns ? occupied / (rows * columns) : 0 };
+  const supportOnly = rawHeights.map((row, y) => row.map((value, x) => (supportMask[y][x] ? Math.min(value || supportHeight, supportHeight) : 0)));
+  const smoothedSupport = smoothGrid(supportOnly, Math.min(0.16, options.smoothing * 0.32));
+  const heights = rawHeights.map((row, y) =>
+    row.map((value, x) => {
+      if (!supportMask[y][x] && !detailMask[y][x]) return 0;
+      if (detailMask[y][x]) return Math.max(value, detailFloor);
+      return smoothedSupport[y][x] || supportHeight;
+    }),
+  );
+  return { heights, mask: supportMask, occupiedRatio: rows * columns ? occupied / (rows * columns) : 0 };
 }
 
 function buildHeightGrid(samples: ImageSample[][], options: ConvertOptions) {

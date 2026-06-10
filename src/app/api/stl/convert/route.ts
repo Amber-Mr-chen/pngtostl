@@ -34,6 +34,7 @@ export async function POST(request: Request) {
     const filename =
       options.mode === "lithophane" ? "pngtostl-lithophane.stl" :
       options.mode === "extrude" ? "pngtostl-clean-extrude.stl" :
+      options.mode === "structured" ? "pngtostl-structured-artwork.stl" :
       options.mode === "sketch" ? "pngtostl-sketch-relief.stl" :
       "pngtostl-relief.stl";
 
