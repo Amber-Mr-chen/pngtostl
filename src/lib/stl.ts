@@ -1,6 +1,6 @@
 import { decode, encode } from "fast-png";
 
-export type StlMode = "icon" | "relief" | "sketch" | "extrude" | "heightmap" | "logo" | "lithophane";
+export type StlMode = "icon" | "relief" | "sketch" | "structured" | "extrude" | "heightmap" | "logo" | "lithophane";
 
 export type ConvertOptions = {
   mode: StlMode;
@@ -51,13 +51,13 @@ function parseNumber(value: FormDataEntryValue | null, fallback: number, min: nu
 export function parseConvertOptions(formData: FormData): ConvertOptions {
   const modeRaw = formData.get("mode");
   const mode: StlMode =
-    modeRaw === "lithophane" || modeRaw === "heightmap" || modeRaw === "logo" || modeRaw === "extrude" || modeRaw === "sketch" || modeRaw === "relief" || modeRaw === "icon"
+    modeRaw === "lithophane" || modeRaw === "heightmap" || modeRaw === "logo" || modeRaw === "extrude" || modeRaw === "structured" || modeRaw === "sketch" || modeRaw === "relief" || modeRaw === "icon"
       ? modeRaw
       : "icon";
 
   return {
     mode,
-    depth: parseNumber(formData.get("depth"), mode === "icon" || mode === "logo" || mode === "sketch" || mode === "extrude" ? 1.8 : 2.5, 0.3, 8),
+    depth: parseNumber(formData.get("depth"), mode === "icon" || mode === "logo" || mode === "sketch" || mode === "structured" || mode === "extrude" ? 1.8 : 2.5, 0.3, 8),
     widthMm: parseNumber(formData.get("widthMm"), 90, 20, 220),
     baseMm: parseNumber(formData.get("baseMm"), 1, 0.2, 5),
     invert: formData.get("invert") === "true",
@@ -235,7 +235,7 @@ function percentile(values: number[], ratio: number) {
 }
 
 function preprocessLineArtSamples(samples: ImageSample[][], options: ConvertOptions) {
-  if (options.mode !== "sketch" && options.mode !== "logo" && options.mode !== "icon" && options.mode !== "extrude") return samples;
+  if (options.mode !== "sketch" && options.mode !== "structured" && options.mode !== "logo" && options.mode !== "icon" && options.mode !== "extrude") return samples;
 
   const flat = samples.flat().filter((sample) => sample.alpha > 0.05);
   if (!flat.length || flat.some((sample) => sample.alpha < 0.95)) return samples;
@@ -284,7 +284,85 @@ function preprocessLineArtSamples(samples: ImageSample[][], options: ConvertOpti
   );
 }
 
+function dilateMask(mask: boolean[][], radius: number, minNeighbors = 1) {
+  const rows = mask.length;
+  const columns = mask[0]?.length ?? 0;
+  return mask.map((row, y) =>
+    row.map((active, x) => {
+      if (active) return true;
+      let neighbors = 0;
+      for (let yy = Math.max(0, y - radius); yy <= Math.min(rows - 1, y + radius); yy += 1) {
+        for (let xx = Math.max(0, x - radius); xx <= Math.min(columns - 1, x + radius); xx += 1) {
+          if (mask[yy][xx]) neighbors += 1;
+        }
+      }
+      return neighbors >= minNeighbors;
+    }),
+  );
+}
+
+function erodeMask(mask: boolean[][], radius: number, minNeighborsRatio = 0.58) {
+  const rows = mask.length;
+  const columns = mask[0]?.length ?? 0;
+  const windowSize = (radius * 2 + 1) ** 2;
+  const minNeighbors = Math.max(1, Math.round(windowSize * minNeighborsRatio));
+  return mask.map((row, y) =>
+    row.map((active, x) => {
+      if (!active) return false;
+      let neighbors = 0;
+      for (let yy = Math.max(0, y - radius); yy <= Math.min(rows - 1, y + radius); yy += 1) {
+        for (let xx = Math.max(0, x - radius); xx <= Math.min(columns - 1, x + radius); xx += 1) {
+          if (mask[yy][xx]) neighbors += 1;
+        }
+      }
+      return neighbors >= minNeighbors;
+    }),
+  );
+}
+
+function buildStructuredArtworkGrid(samples: ImageSample[][], options: ConvertOptions) {
+  const rows = samples.length;
+  const columns = samples[0]?.length ?? 0;
+  const strokeMask = samples.map((row) => row.map((sample) => sample.darkness >= Math.max(0.16, options.threshold * 0.78)));
+  let supportMask = dilateMask(strokeMask, 3, 1);
+  supportMask = dilateMask(supportMask, 2, 2);
+  supportMask = erodeMask(supportMask, 1, 0.34);
+
+  const detailMask = dilateMask(strokeMask, 1, 1);
+  const heights: number[][] = [];
+  let occupied = 0;
+  const supportHeight = options.baseMm + options.depth * 0.34;
+  const detailFloor = options.baseMm + options.depth * 0.62;
+
+  for (let y = 0; y < rows; y += 1) {
+    const row: number[] = [];
+    for (let x = 0; x < columns; x += 1) {
+      const sample = samples[y][x];
+      let value = 0;
+      if (supportMask[y][x]) value = supportHeight;
+      if (detailMask[y][x]) {
+        const detail = clamp((sample.darkness - options.threshold * 0.45) / Math.max(0.22, 1 - options.threshold * 0.45), 0, 1);
+        value = Math.max(value, detailFloor + detail * options.depth * 0.38);
+      }
+      if (value > options.baseMm + 0.02) occupied += 1;
+      row.push(value > 0 ? value : 0);
+    }
+    heights.push(row);
+  }
+
+  const smoothedSupport = smoothGrid(heights, Math.min(0.22, options.smoothing * 0.45));
+  return { heights: smoothedSupport, mask: supportMask, occupiedRatio: rows * columns ? occupied / (rows * columns) : 0 };
+}
+
 function buildHeightGrid(samples: ImageSample[][], options: ConvertOptions) {
+  if (options.mode === "structured") {
+    const structured = buildStructuredArtworkGrid(samples, options);
+    return {
+      heights: structured.heights,
+      occupiedRatio: structured.occupiedRatio,
+    };
+  }
+
   const rows = samples.length;
   const columns = samples[0]?.length ?? 0;
   const hasTransparentPixels = samples.some((row) => row.some((sample) => sample.alpha < 0.95));
@@ -917,20 +995,23 @@ export async function pngToStl(file: File, options: ConvertOptions): Promise<{ s
   }
 
   const lineArtSamples = preprocessLineArtSamples(samples, options);
+  const structuredGrid = options.mode === "structured" ? buildStructuredArtworkGrid(lineArtSamples, options) : undefined;
   const rawSketchContentMask = buildSketchContentMask(lineArtSamples, options);
   const sketchContentMask = rawSketchContentMask ? smoothSketchMask(rawSketchContentMask) : undefined;
   const preparedSamples = applySketchContentMask(lineArtSamples, sketchContentMask, options);
-  const { heights, occupiedRatio } = buildHeightGrid(preparedSamples, options);
-  const geometryMask = buildGeometryMask(preparedSamples, heights, options);
+  const { heights, occupiedRatio } = structuredGrid ?? buildHeightGrid(preparedSamples, options);
+  const geometryMask = structuredGrid?.mask ?? buildGeometryMask(preparedSamples, heights, options);
   const mesh =
-    options.mode === "sketch"
-      ? cropSketchPlateToContent(heights, sketchContentMask)
-      : options.mode === "relief"
-        ? cropReliefToSubject(heights)
-        : cropToMaskBounds(heights, geometryMask);
+    options.mode === "structured"
+      ? cropToMaskBounds(heights, geometryMask)
+      : options.mode === "sketch"
+        ? cropSketchPlateToContent(heights, sketchContentMask)
+        : options.mode === "relief"
+          ? cropReliefToSubject(heights)
+          : cropToMaskBounds(heights, geometryMask);
   const meshRows = mesh.heights.length;
   const meshColumns = mesh.heights[0]?.length ?? 0;
-  const outputHeightMm = (mesh.mask || options.mode === "sketch" || options.mode === "relief") && meshRows > 1 && meshColumns > 1 ? widthMm * ((meshRows - 1) / (meshColumns - 1)) : heightMm;
+  const outputHeightMm = (mesh.mask || options.mode === "structured" || options.mode === "sketch" || options.mode === "relief") && meshRows > 1 && meshColumns > 1 ? widthMm * ((meshRows - 1) / (meshColumns - 1)) : heightMm;
   const useCompactMaskExtrusion = (options.mode === "logo" || options.mode === "extrude") && Boolean(mesh.mask);
   const triangles = useCompactMaskExtrusion
     ? buildCompactMaskExtrusionTriangles(mesh.heights, widthMm, outputHeightMm, mesh.mask!)

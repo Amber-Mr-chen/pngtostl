@@ -294,9 +294,9 @@ test('photo page uses a dedicated relief preset while image page stays general-p
 
 test('ai image page stays contour-first for complex artwork instead of routing to photo relief', async ({ page }) => {
   await page.goto(`${BASE_URL}/ai-image-to-3d?regression=ai-contour-first`, { waitUntil: 'networkidle' });
-  await expect(page.locator('form[data-converter-form="true"]')).toHaveAttribute('data-mode', 'extrude');
-  await expect(page.locator('input[name="smoothing"]')).toHaveValue('10');
-  await expect(page.locator('input[name="detail"]')).toHaveValue('256');
+  await expect(page.locator('form[data-converter-form="true"]')).toHaveAttribute('data-mode', 'structured');
+  await expect(page.locator('input[name="smoothing"]')).toHaveValue('15');
+  await expect(page.locator('input[name="detail"]')).toHaveValue('320');
 
   await page.setInputFiles('input[name="file"]', {
     name: 'complex-contour-artwork.png',
@@ -310,11 +310,14 @@ test('ai image page stays contour-first for complex artwork instead of routing t
   await expect(diagnosis).not.toContainText(/raised photo panel|浮雕\/照片面板/i);
 });
 
-test('ai image page keeps sketch detail for complex artwork instead of making one solid silhouette', async ({ page }) => {
-  await page.goto(`${BASE_URL}/ai-image-to-3d?regression=ai-sketch-detail`, { waitUntil: 'networkidle' });
+test('ai image page uses structured artwork details for complex images instead of solid or loose sketch output', async ({ page }) => {
+  await page.goto(`${BASE_URL}/ai-image-to-3d?regression=ai-structured-detail`, { waitUntil: 'networkidle' });
 
+  await expect(page.locator('form[data-converter-form="true"]')).toHaveAttribute('data-mode', 'structured');
+  await expect(page.locator('input[name="threshold"]')).toHaveValue('30');
+  await expect(page.locator('input[name="smoothing"]')).toHaveValue('15');
   await page.setInputFiles('input[name="file"]', {
-    name: 'complex-contour-artwork.png',
+    name: 'complex-artwork.png',
     mimeType: 'image/png',
     buffer: complexContourArtworkPng(),
   });
@@ -326,10 +329,8 @@ test('ai image page keeps sketch detail for complex artwork instead of making on
   await generate.click();
 
   await expect(page.locator('[data-converter-status]')).toHaveText('STL ready', { timeout: 30_000 });
-  await expect(page.locator('select[name="mode"]')).toHaveValue('sketch');
-  await expect(page.locator('input[name="threshold"]')).toHaveValue('34');
-  await expect(page.locator('input[name="smoothing"]')).toHaveValue('20');
-  await expect(page.locator('[data-converter-message="true"]')).toContainText(/Binary sketch STL|二进制 sketch STL/, { timeout: 10_000 });
+  await expect(page.locator('select[name="mode"]')).toHaveValue('structured');
+  await expect(page.locator('[data-converter-message="true"]')).toContainText(/Binary structured STL|二进制 structured STL/, { timeout: 10_000 });
   await expect(page.locator('[data-clean-preview-panel="true"]')).toBeVisible();
 });
 
@@ -354,6 +355,34 @@ test('photo page shows a compact image check without blocking generation', async
   await page.locator('[data-smoother-suggestion="true"]').click();
   await expect(page.locator('input[name="smoothing"]')).toHaveValue('80');
   await expect(page.locator('[data-generate-stl="true"]')).toBeEnabled();
+});
+
+test('structured artwork STL creates support and raised detail layers without becoming a full plate', async ({ request }) => {
+  const response = await request.post(`${BASE_URL}/api/stl/convert`, {
+    multipart: {
+      file: {
+        name: 'complex-artwork.png',
+        mimeType: 'image/png',
+        buffer: complexContourArtworkPng(),
+      },
+      mode: 'structured',
+      widthMm: '100',
+      depth: '2.4',
+      baseMm: '1.2',
+      threshold: '0.30',
+      smoothing: '0.15',
+      detail: '320',
+    },
+  });
+
+  expect(response.ok()).toBeTruthy();
+  expect(response.headers()['x-tool-output-kind']).toBe('structured');
+  const coverage = Number(response.headers()['x-tool-occupied-ratio']);
+  expect(coverage).toBeGreaterThan(0.1);
+  expect(coverage).toBeLessThan(0.72);
+  const body = Buffer.from(await response.body());
+  const levels = uniqueStlYLevels(body);
+  expect(levels.length).toBeGreaterThanOrEqual(4);
 });
 
 test('logo page generates a clean STL result for PNG input', async ({ page }) => {

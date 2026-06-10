@@ -552,12 +552,12 @@
       const shouldUsePhotoRelief = classification.suggestRelief && !preferContourWorkflow;
       const autoRouteComplexImage = modeInput && selectedMode() === 'extrude' && classification.level === 'bad' && shouldUsePhotoRelief;
       if (modeInput && selectedMode() === 'extrude' && classification.suggestContour) {
-        modeInput.value = 'sketch';
-        if (selectedQuality() === 'fast') setQualityValue('standard');
-        setRangeValue(thresholdInput, 34);
-        setRangeValue(smoothingInput, 20);
-        setText(status, copy('Using sketch detail workflow', '使用线稿细节工作流'));
-        setText(message, classification.message + copy('\nAutomatically using sketch-style STL so interior lines and smaller edge details are kept instead of becoming one solid silhouette.', '\n已自动使用线稿式 STL，保留内部线条和小边缘细节，避免变成一整块实心剪影。'));
+        modeInput.value = 'structured';
+        if (selectedQuality() === 'fast') setQualityValue('detailed');
+        setRangeValue(thresholdInput, 30);
+        setRangeValue(smoothingInput, 15);
+        setText(status, copy('Using structured artwork workflow', '使用结构化图像工作流'));
+        setText(message, classification.message + copy('\nAutomatically building a two-layer STL: a broad support shape plus raised interior details, instead of one solid silhouette or loose sketch lines.', '\n已自动构建双层 STL：宽主体承托层 + 凸起内部细节，避免变成一整块剪影或散乱线条。'));
       }
       if (autoRouteComplexImage) {
         modeInput.value = 'relief';
@@ -607,7 +607,7 @@
       formData.set('minThicknessMm', form.dataset.minThicknessMm || '0.8');
       formData.set('maxThicknessMm', form.dataset.maxThicknessMm || (depthInput ? depthInput.value : '3.2'));
 
-      if (selectedMode() === 'sketch') {
+      if (selectedMode() === 'sketch' || selectedMode() === 'structured') {
         try {
           const previewResponse = await fetch('/api/stl/clean-preview', { method: 'POST', body: formData });
           if (previewResponse.ok) showCleanPreview(await previewResponse.blob());

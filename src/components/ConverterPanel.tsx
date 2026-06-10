@@ -21,7 +21,7 @@ const defaultModeBySlug: Record<string, NonNullable<ToolConfig["converter"]>["mo
   "black-and-white-image-to-stl": "logo",
   "text-to-3d": "logo",
   "pic-to-stl": "extrude",
-  "ai-image-to-3d": "extrude",
+  "ai-image-to-3d": "structured",
   "2d-image-to-3d-model": "relief",
 };
 
@@ -29,6 +29,7 @@ const modeLabels = {
   icon: "Icon / emoji raised surface",
   logo: "Transparent logo badge",
   extrude: "Clean solid extrude",
+  structured: "Structured artwork details",
   sketch: "Experimental sketch raised surface",
   relief: "Photo raised surface",
   heightmap: "Depth-map terrain",
@@ -198,17 +199,17 @@ const toolPresets: Record<string, Partial<NonNullable<ToolConfig["converter"]>>>
     filename: "text-artwork-relief.stl",
   },
   "ai-image-to-3d": {
-    mode: "extrude",
+    mode: "structured",
     accept: "image/png,image/jpeg,image/webp,image/gif,image/bmp",
     widthMm: 100,
     depth: 2.4,
     baseMm: 1.2,
-    threshold: 58,
-    smoothing: 10,
-    detail: 256,
-    helper: "Current preview prioritizes a clean contour STL. Photo relief, lithophane, and future full-3D AI paths remain separate choices.",
-    preview: "Upload an image to check whether it can become a readable contour STL before trying relief or future AI 3D generation.",
-    filename: "ai-image-to-3d-contour-preview.stl",
+    threshold: 30,
+    smoothing: 15,
+    detail: 320,
+    helper: "Complex artwork uses a structured STL workflow: broad support geometry plus raised interior detail. Photo relief, lithophane, and future full-3D AI paths remain separate choices.",
+    preview: "Upload an image to check whether it can become a readable layered artwork STL before trying relief or future AI 3D generation.",
+    filename: "ai-image-to-3d-structured-artwork.stl",
   },
   "logo-to-stl": {
     mode: "logo",
@@ -476,7 +477,7 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
                   <option key={value} value={value}>{label}</option>
                 ))}
               </select>
-              <small>Choose clean extrude for logos/icons, raised-surface panels for tonal images, backlit photo panels for photos, or grayscale depth maps.</small>
+              <small>Choose structured artwork for complex drawings, clean extrude for logos/icons, raised-surface panels for tonal images, backlit photo panels for photos, or grayscale depth maps.</small>
             </label>
           ) : null}
 
