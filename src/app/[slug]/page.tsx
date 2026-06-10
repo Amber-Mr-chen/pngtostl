@@ -340,6 +340,15 @@ function DevelopersPage() {
         <article className="shell"><h2>Current free path</h2><p>For single images, use the no-signup converter first. It is the fastest way to validate whether the relief, logo, lithophane, or heightmap output fits your source image.</p><p><Link href="/image-to-stl">Open Image to STL</Link></p></article>
         <article className="shell"><h2>Not promised yet</h2><p>Self-serve API keys, uptime commitments, saved project libraries, billing, and team dashboards are planned only after enough real demand is confirmed.</p></article>
       </section>
+      <section className="shell" style={{ marginTop: 22, padding: 22 }}>
+        <h2 className="sectionTitle">What a good request looks like</h2>
+        <div className="outputRealityGrid">
+          <article className="outputRealityBlock"><strong>Volume</strong><p>How many images per day or month.</p></article>
+          <article className="outputRealityBlock"><strong>Workflow</strong><p>Relief, logo, lithophane, or heightmap.</p></article>
+          <article className="outputRealityBlock"><strong>Integration</strong><p>Manual use, batch queue, or API.</p></article>
+          <article className="outputRealityBlock"><strong>Commercial details</strong><p>Team access, invoices, or client-facing use.</p></article>
+        </div>
+      </section>
       <LegalSupportLinks />
       </main>
     </>

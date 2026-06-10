@@ -252,6 +252,40 @@ export function ToolPage({ tool, loadedSample }: { tool: ToolConfig; loadedSampl
           </aside>
         </section>
 
+        {tool.slug === "ai-image-to-3d" ? (
+          <section className="shell" style={{ marginTop: 20, padding: 22, display: "grid", gap: 14 }}>
+            <div>
+              <p className="homeKicker">AI 3D roadmap</p>
+              <h2 style={{ margin: 0 }}>Preview the future workflow without pretending it is live.</h2>
+              <p className="smallMuted" style={{ marginBottom: 0 }}>
+                The current live path stays relief-first. This page keeps the future AI product honest by showing how GLB preview, credits, saved creations, and history would fit around the existing STL workflow.
+              </p>
+            </div>
+            <div className="outputRealityGrid">
+              <article className="outputRealityBlock">
+                <strong>Now</strong>
+                <p>Relief STL, logo badges, lithophanes, and heightmaps are the live printable outputs.</p>
+              </article>
+              <article className="outputRealityBlock">
+                <strong>Planned</strong>
+                <p>AI image-to-3D can grow into a GLB preview and STL export flow when the model pipeline is ready.</p>
+              </article>
+              <article className="outputRealityBlock">
+                <strong>Future account features</strong>
+                <p>My Creations, credits, and conversion history belong after the actual generation pipeline is stable.</p>
+              </article>
+              <article className="outputRealityBlock">
+                <strong>Commercial path</strong>
+                <p>Batch, API, and pricing should be introduced only after real usage demand and billing rules are confirmed.</p>
+              </article>
+            </div>
+            <div className="heroActions">
+              <Link className="btnPrimary" href="/pricing">View pricing path</Link>
+              <Link className="btnSecondary" href="/developers">Request batch/API access</Link>
+            </div>
+          </section>
+        ) : null}
+
         <section id="converter" className="toolConverterBlock">
           {advisorOnly ? (
             <div className="advisorGrid">
