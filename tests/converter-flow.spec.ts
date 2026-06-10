@@ -29,6 +29,34 @@ function transparentRingLogoPng() {
   return Buffer.from(encode({ width, height, data, channels: 4 }));
 }
 
+function texturedPortraitPng() {
+  const width = 128;
+  const height = 96;
+  const data = new Uint8Array(width * height * 4);
+  const centerX = width / 2;
+  const centerY = height / 2;
+
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const offset = (y * width + x) * 4;
+      const normalizedX = (x - centerX) / 30;
+      const normalizedY = (y - centerY) / 24;
+      const inSubject = normalizedX * normalizedX + normalizedY * normalizedY < 1;
+      const texture = ((x * 7 + y * 5) % 31) / 31;
+      const backgroundLuma = 0.54 + texture * 0.24;
+      const subjectLuma = 0.44 + texture * 0.04;
+      const luma = inSubject ? subjectLuma : backgroundLuma;
+      const value = Math.round(luma * 255);
+      data[offset] = value;
+      data[offset + 1] = value;
+      data[offset + 2] = value;
+      data[offset + 3] = 255;
+    }
+  }
+
+  return Buffer.from(encode({ width, height, data, channels: 4 }));
+}
+
 function uniqueStlYLevels(stl: Buffer) {
   const view = new DataView(stl.buffer, stl.byteOffset, stl.byteLength);
   const triangles = view.getUint32(80, true);
@@ -60,6 +88,30 @@ function stlHasFaceConnectingYLevels(stl: Buffer, lowerLevel: number, upperLevel
   }
 
   return false;
+}
+
+function averageStlTopHeightInRegion(stl: Buffer, region: { minX: number; maxX: number; minZ: number; maxZ: number }) {
+  const view = new DataView(stl.buffer, stl.byteOffset, stl.byteLength);
+  const triangles = view.getUint32(80, true);
+  let sum = 0;
+  let count = 0;
+
+  for (let triangle = 0; triangle < triangles; triangle += 1) {
+    const triangleOffset = 84 + triangle * 50;
+    for (let vertex = 0; vertex < 3; vertex += 1) {
+      const vertexOffset = triangleOffset + 12 + vertex * 12;
+      const x = view.getFloat32(vertexOffset, true);
+      const y = view.getFloat32(vertexOffset + 4, true);
+      const z = view.getFloat32(vertexOffset + 8, true);
+      if (y <= 0.01) continue;
+      if (x >= region.minX && x <= region.maxX && z >= region.minZ && z <= region.maxZ) {
+        sum += y;
+        count += 1;
+      }
+    }
+  }
+
+  return count ? sum / count : 0;
 }
 
 test('homepage upload generates visible STL result', async ({ page }) => {
@@ -151,4 +203,29 @@ test('logo STL includes an intermediate bevel height layer', async ({ request })
   const bevelLevel = levels.find((level) => level > levels[0] && level < levels.at(-1)!);
   expect(bevelLevel).toBeDefined();
   expect(stlHasFaceConnectingYLevels(body, bevelLevel!, levels.at(-1)!)).toBeTruthy();
+});
+
+test('photo relief suppresses textured background behind a centered subject', async ({ request }) => {
+  const response = await request.post(`${BASE_URL}/api/stl/convert`, {
+    multipart: {
+      file: {
+        name: 'textured-portrait.png',
+        mimeType: 'image/png',
+        buffer: texturedPortraitPng(),
+      },
+      mode: 'relief',
+      widthMm: '120',
+      depth: '2.4',
+      baseMm: '1.2',
+      threshold: '0.38',
+      smoothing: '0.46',
+      detail: '192',
+    },
+  });
+
+  expect(response.ok()).toBeTruthy();
+  const body = Buffer.from(await response.body());
+  const centerHeight = averageStlTopHeightInRegion(body, { minX: 48, maxX: 72, minZ: 35, maxZ: 55 });
+  const backgroundHeight = averageStlTopHeightInRegion(body, { minX: 4, maxX: 28, minZ: 4, maxZ: 24 });
+  expect(centerHeight).toBeGreaterThan(backgroundHeight + 0.7);
 });

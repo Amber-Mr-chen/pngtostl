@@ -211,7 +211,20 @@ function smoothReliefGrid(grid: number[][], amount: number) {
     }),
   );
 
-  return smoothGrid(flattened, strength > 0.7 ? 0.28 + strength * 0.12 : strength * 0.18);
+  const photoFocusThreshold = min + heightRange * (0.38 - strength * 0.06);
+  const backgroundFlattenBlend = 0.42 + strength * 0.42;
+  const subjectBoost = heightRange * (0.14 + strength * 0.14);
+  const photoFocused = flattened.map((row, y) =>
+    row.map((value, x) => {
+      const localMean = localGridMean(flattened, x, y, 3);
+      if (localMean < photoFocusThreshold) {
+        return value * (1 - backgroundFlattenBlend) + min * backgroundFlattenBlend;
+      }
+      return clamp(value + subjectBoost * clamp((localMean - photoFocusThreshold) / Math.max(heightRange * 0.35, 0.001), 0, 1), min, max + subjectBoost);
+    }),
+  );
+
+  return smoothGrid(photoFocused, strength > 0.7 ? 0.28 + strength * 0.12 : strength * 0.18);
 }
 
 function percentile(values: number[], ratio: number) {
