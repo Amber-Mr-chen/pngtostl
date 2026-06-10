@@ -658,6 +658,7 @@ export const tools: ToolConfig[] = [
       { label: "Image to STL", href: "/image-to-stl" },
       { label: "2D Image to 3D Model", href: "/2d-image-to-3d-model" },
       { label: "Developers and Batch", href: "/developers" },
+      { label: "Pricing", href: "/pricing" },
     ],
     faq: [
       { q: "Is AI full 3D generation live here?", a: "Not yet. The current live tools create relief, lithophane, logo, and heightmap STL outputs." },

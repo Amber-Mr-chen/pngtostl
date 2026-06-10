@@ -386,6 +386,34 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="aiRoadmapSection" aria-labelledby="ai-roadmap-title">
+        <div className="sectionIntro compact centerIntro">
+          <p className="homeKicker">AI 3D roadmap</p>
+          <h2 id="ai-roadmap-title">Keep the AI 3D funnel honest while preparing the paid path.</h2>
+          <p>Users who search for AI image to 3D can see the current STL tools, the future GLB/STL direction, and the planned credits / history / pricing structure without claiming features that are not live yet.</p>
+        </div>
+        <div className="pricingCards">
+          <article>
+            <span>Now</span>
+            <h3>Printable STL tools</h3>
+            <p>Logo, photo, lithophane, and heightmap workflows are live today and stay the safest path for most images.</p>
+            <Link href="/image-to-stl">Open Image to STL</Link>
+          </article>
+          <article className="featuredPrice">
+            <span>Roadmap</span>
+            <h3>AI Image to 3D</h3>
+            <p>Future single-image and multi-image AI generation can live here with GLB preview, STL export, credits, and a creation history.</p>
+            <Link href="/ai-image-to-3d">Open AI 3D roadmap</Link>
+          </article>
+          <article>
+            <span>Commercial</span>
+            <h3>Pricing and batch</h3>
+            <p>When teams need volume jobs or API access, the current path is to request planning input instead of pretending billing is already live.</p>
+            <Link href="/developers">Request batch/API access</Link>
+          </article>
+        </div>
+      </section>
+
       <section className="homeFaqSection" aria-labelledby="home-faq-title">
         <div className="sectionIntro compact centerIntro">
           <p className="homeKicker">FAQ</p>
