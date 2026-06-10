@@ -211,6 +211,25 @@ test('homepage upload generates visible STL result', async ({ page }) => {
   await expect(page.locator('[data-stl-preview]')).toHaveAttribute('data-preview-ready', '1', { timeout: 30_000 });
 });
 
+test('P1 expansion pages are real differentiated tools, not empty SEO shells', async ({ page }) => {
+  const pages = [
+    { path: '/photo-relief-generator', h1: /Photo Relief Generator/i, text: /photo relief|portrait|background/i },
+    { path: '/stl-relief-generator', h1: /STL Relief Generator/i, text: /relief STL|raised surface|printable/i },
+    { path: '/svg-to-stl', h1: /SVG to STL/i, text: /vector|SVG|logo/i },
+    { path: '/icon-to-stl', h1: /Icon to STL/i, text: /icon|transparent|badge/i },
+    { path: '/silhouette-to-stl', h1: /Silhouette to STL/i, text: /silhouette|single-height|outline/i },
+    { path: '/black-and-white-image-to-stl', h1: /Black and White Image to STL/i, text: /black and white|threshold|monochrome/i },
+    { path: '/text-to-3d', h1: /Text to 3D/i, text: /text|planned|relief/i },
+  ];
+
+  for (const item of pages) {
+    await page.goto(`${BASE_URL}${item.path}?regression=p1-matrix`, { waitUntil: 'networkidle' });
+    await expect(page.locator('h1')).toContainText(item.h1);
+    await expect(page.locator('main')).toContainText(item.text);
+    await expect(page.locator('form[data-converter-form="true"], [data-utility-advisor="true"]')).toHaveCount(1);
+  }
+});
+
 test('photo page uses a dedicated relief preset while image page stays general-purpose', async ({ page }) => {
   await page.goto(`${BASE_URL}/photo-to-stl?regression=photo-preset`, { waitUntil: 'networkidle' });
   await expect(page.locator('form[data-converter-form="true"]')).toHaveAttribute('data-mode', 'relief');
