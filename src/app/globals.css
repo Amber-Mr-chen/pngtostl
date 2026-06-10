@@ -1440,6 +1440,11 @@ a {
 .stepGrid p { margin: 0; color: var(--muted); line-height: 1.55; }
 .supportGrid { grid-template-columns: 1fr 1fr; }
 .relatedTools { display: flex; flex-wrap: wrap; gap: 10px; }
+.outputRealityBlock { margin-top: 22px; padding: 22px; }
+.outputRealityGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.outputRealityGrid article { border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, #fff, #f8fbff); padding: 18px; }
+.outputRealityGrid h3 { margin: 0 0 8px; font-size: 1.02rem; }
+.outputRealityGrid p { margin: 0; color: var(--muted); line-height: 1.6; }
 .faqBlock { margin-top: 22px; }
 .faqBlock > div { display: grid; gap: 12px; }
 .faqBlock details { border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 14px; }

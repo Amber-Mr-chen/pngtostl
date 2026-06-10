@@ -125,6 +125,7 @@ function relatedProofsFor(tool: ToolConfig) {
     "/photo-to-lithophane": ["/photo-to-lithophane", "/lithophane-generator"],
     "/heightmap-to-stl": ["/heightmap-to-stl"],
   };
+
   const aliases = routeAliases[currentPath] ?? [currentPath];
   return sampleWorkflows
     .filter((sample) => aliases.includes(sample.route))
@@ -133,20 +134,20 @@ function relatedProofsFor(tool: ToolConfig) {
 }
 
 const supportGuideMap: Record<string, string[]> = {
-  "image-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl", "lithophane-image-guide"],
-  "png-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl"],
-  "jpg-to-stl": ["image-contrast-guide", "lithophane-image-guide"],
-  "photo-to-stl": ["image-contrast-guide", "lithophane-image-guide", "print-settings-checker"],
-  "ai-image-to-3d": ["image-contrast-guide", "heightmap-to-stl-terrain-guide", "print-settings-checker"],
-  "jpeg-to-stl": ["image-contrast-guide", "lithophane-image-guide"],
+  "image-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl", "lithophane-image-guide", "image-to-stl-vs-lithophane", "why-your-image-to-stl-looks-bad", "image-to-stl-settings"],
+  "png-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl", "how-to-make-a-clean-logo-stl", "transparent-png-to-stl-guide"],
+  "jpg-to-stl": ["image-contrast-guide", "lithophane-image-guide", "best-images-for-stl-conversion"],
+  "photo-to-stl": ["image-contrast-guide", "lithophane-image-guide", "print-settings-checker", "photo-to-relief-stl-guide", "why-your-image-to-stl-looks-bad"],
+  "ai-image-to-3d": ["image-contrast-guide", "heightmap-to-stl-terrain-guide", "print-settings-checker", "image-to-stl-vs-lithophane"],
+  "jpeg-to-stl": ["image-contrast-guide", "lithophane-image-guide", "best-images-for-stl-conversion"],
   "pic-to-stl": ["image-contrast-guide", "print-settings-checker", "lithophane-image-guide"],
-  "convert-image-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl", "lithophane-image-guide"],
-  "2d-image-to-3d-model": ["image-contrast-guide", "how-to-turn-logo-into-stl", "heightmap-to-stl-terrain-guide"],
+  "convert-image-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl", "lithophane-image-guide", "how-to-convert-image-to-stl"],
+  "2d-image-to-3d-model": ["image-contrast-guide", "how-to-turn-logo-into-stl", "heightmap-to-stl-terrain-guide", "stl-file-for-3d-printing-guide"],
   "3d-print-photo": ["lithophane-image-guide", "image-contrast-guide", "print-settings-checker"],
-  "photo-to-lithophane": ["lithophane-image-guide", "image-contrast-guide"],
-  "logo-to-stl": ["how-to-turn-logo-into-stl", "image-contrast-guide", "print-settings-checker"],
-  "lithophane-generator": ["lithophane-image-guide", "image-contrast-guide", "print-settings-checker"],
-  "heightmap-to-stl": ["heightmap-to-stl-terrain-guide", "image-contrast-guide", "print-settings-checker"],
+  "photo-to-lithophane": ["lithophane-image-guide", "image-contrast-guide", "best-images-for-stl-conversion"],
+  "logo-to-stl": ["how-to-turn-logo-into-stl", "how-to-make-a-clean-logo-stl", "image-contrast-guide", "print-settings-checker"],
+  "lithophane-generator": ["lithophane-image-guide", "image-contrast-guide", "best-images-for-stl-conversion", "image-to-stl-vs-lithophane"],
+  "heightmap-to-stl": ["heightmap-to-stl-terrain-guide", "image-contrast-guide", "print-settings-checker", "stl-file-for-3d-printing-guide"],
 };
 
 function supportGuidesFor(tool: ToolConfig) {
@@ -290,6 +291,24 @@ export function ToolPage({ tool, loadedSample }: { tool: ToolConfig; loadedSampl
         </section>
 
         <ToolProofBlock tool={tool} samples={relatedProofs} />
+
+        <section className="shell outputRealityBlock" aria-label="Why output may look bad">
+          <h2 className="sectionTitle">Why output may look bad</h2>
+          <div className="outputRealityGrid">
+            <article>
+              <h3>Background noise becomes geometry</h3>
+              <p>Busy photos and screenshots can turn texture, compression artifacts, and shadows into bumps or weak edges. Crop tighter or use a cleaner source before printing.</p>
+            </article>
+            <article>
+              <h3>Wrong workflow gives the wrong result</h3>
+              <p>A logo should usually become a clean badge or sign. A portrait may need lithophane. A depth map should use heightmap mode. One input rarely fits every STL path.</p>
+            </article>
+            <article>
+              <h3>Small size hides detail</h3>
+              <p>If the output width is too small, fine text and thin strokes will merge. Increase width, simplify the image, or lower detail to keep the STL printable.</p>
+            </article>
+          </div>
+        </section>
 
         <section id="how-it-works" className="stepGrid">
           {tool.steps.map((step, index) => (
