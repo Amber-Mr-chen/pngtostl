@@ -310,6 +310,29 @@ test('ai image page stays contour-first for complex artwork instead of routing t
   await expect(diagnosis).not.toContainText(/raised photo panel|浮雕\/照片面板/i);
 });
 
+test('ai image page keeps sketch detail for complex artwork instead of making one solid silhouette', async ({ page }) => {
+  await page.goto(`${BASE_URL}/ai-image-to-3d?regression=ai-sketch-detail`, { waitUntil: 'networkidle' });
+
+  await page.setInputFiles('input[name="file"]', {
+    name: 'complex-contour-artwork.png',
+    mimeType: 'image/png',
+    buffer: complexContourArtworkPng(),
+  });
+
+  await expect(page.locator('[data-image-diagnosis="true"]')).toContainText(/contour|sketch|轮廓|线稿/i, { timeout: 10_000 });
+
+  const generate = page.locator('[data-generate-stl="true"]');
+  await expect(generate).toBeEnabled();
+  await generate.click();
+
+  await expect(page.locator('[data-converter-status]')).toHaveText('STL ready', { timeout: 30_000 });
+  await expect(page.locator('select[name="mode"]')).toHaveValue('sketch');
+  await expect(page.locator('input[name="threshold"]')).toHaveValue('34');
+  await expect(page.locator('input[name="smoothing"]')).toHaveValue('20');
+  await expect(page.locator('[data-converter-message="true"]')).toContainText(/Binary sketch STL|二进制 sketch STL/, { timeout: 10_000 });
+  await expect(page.locator('[data-clean-preview-panel="true"]')).toBeVisible();
+});
+
 test('photo page shows a compact image check without blocking generation', async ({ page }) => {
   await page.goto(`${BASE_URL}/photo-to-stl?regression=photo-diagnosis`, { waitUntil: 'networkidle' });
 

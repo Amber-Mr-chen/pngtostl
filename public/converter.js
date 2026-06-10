@@ -551,6 +551,14 @@
       const preferContourWorkflow = shouldCutoutSubject || classification.level === 'good' || classification.suggestContour;
       const shouldUsePhotoRelief = classification.suggestRelief && !preferContourWorkflow;
       const autoRouteComplexImage = modeInput && selectedMode() === 'extrude' && classification.level === 'bad' && shouldUsePhotoRelief;
+      if (modeInput && selectedMode() === 'extrude' && classification.suggestContour) {
+        modeInput.value = 'sketch';
+        if (selectedQuality() === 'fast') setQualityValue('standard');
+        setRangeValue(thresholdInput, 34);
+        setRangeValue(smoothingInput, 20);
+        setText(status, copy('Using sketch detail workflow', '使用线稿细节工作流'));
+        setText(message, classification.message + copy('\nAutomatically using sketch-style STL so interior lines and smaller edge details are kept instead of becoming one solid silhouette.', '\n已自动使用线稿式 STL，保留内部线条和小边缘细节，避免变成一整块实心剪影。'));
+      }
       if (autoRouteComplexImage) {
         modeInput.value = 'relief';
         setQualityValue('standard');
