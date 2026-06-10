@@ -188,6 +188,21 @@ test('homepage upload generates visible STL result', async ({ page }) => {
   await expect(page.locator('[data-stl-preview]')).toHaveAttribute('data-preview-ready', '1', { timeout: 30_000 });
 });
 
+test('photo page uses a dedicated relief preset while image page stays general-purpose', async ({ page }) => {
+  await page.goto(`${BASE_URL}/photo-to-stl?regression=photo-preset`, { waitUntil: 'networkidle' });
+  await expect(page.locator('form[data-converter-form="true"]')).toHaveAttribute('data-mode', 'relief');
+  await expect(page.locator('input[name="widthMm"]')).toHaveValue('120');
+  await expect(page.locator('input[name="depth"]')).toHaveValue('2.8');
+  await expect(page.locator('input[name="smoothing"]')).toHaveValue('65');
+  await expect(page.locator('input[name="detail"]')).toHaveValue('192');
+  await expect(page.locator('.uploadDropzone small')).toContainText('Subject-focused photo relief');
+
+  await page.goto(`${BASE_URL}/image-to-stl?regression=image-preset`, { waitUntil: 'networkidle' });
+  await expect(page.locator('form[data-converter-form="true"]')).toHaveAttribute('data-mode', 'extrude');
+  await expect(page.locator('input[name="smoothing"]')).toHaveValue('0');
+  await expect(page.locator('input[name="detail"]')).toHaveValue('256');
+});
+
 test('logo page generates a clean STL result for PNG input', async ({ page }) => {
   await page.goto(`${BASE_URL}/logo-to-stl?regression=logo-flow`, { waitUntil: 'networkidle' });
 
