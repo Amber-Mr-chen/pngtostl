@@ -230,6 +230,28 @@ test('P1 expansion pages are real differentiated tools, not empty SEO shells', a
   }
 });
 
+test('P2 guide pages answer the search intent and link back to the right tools', async ({ page }) => {
+  const pages = [
+    { path: '/how-to-convert-image-to-stl', h1: /How to Convert Image to STL/i, href: '/image-to-stl', text: /upload|preview|download/i },
+    { path: '/best-images-for-stl-conversion', h1: /Best Images for STL Conversion/i, href: '/image-to-stl', text: /logos|photos|heightmaps/i },
+    { path: '/image-to-stl-vs-lithophane', h1: /Image to STL vs Lithophane/i, href: '/lithophane-generator', text: /relief|backlit|choose/i },
+    { path: '/why-your-image-to-stl-looks-bad', h1: /Why Your Image to STL Looks Bad/i, href: '/photo-to-stl', text: /background|contrast|smoothing/i },
+    { path: '/how-to-make-a-clean-logo-stl', h1: /How to Make a Clean Logo STL/i, href: '/logo-to-stl', text: /transparent PNG|base plate|bevel/i },
+    { path: '/stl-file-for-3d-printing-guide', h1: /STL File for 3D Printing Guide/i, href: '/print-settings-checker', text: /slicer|scale|thin/i },
+    { path: '/image-to-stl-settings', h1: /Image to STL Settings/i, href: '/image-to-stl', text: /width|relief height|threshold/i },
+    { path: '/transparent-png-to-stl-guide', h1: /Transparent PNG to STL Guide/i, href: '/png-to-stl', text: /alpha|transparent|badge/i },
+    { path: '/photo-to-relief-stl-guide', h1: /Photo to Relief STL Guide/i, href: '/photo-relief-generator', text: /portrait|background|relief/i },
+  ];
+
+  for (const item of pages) {
+    await page.goto(`${BASE_URL}${item.path}?regression=p2-guides`, { waitUntil: 'networkidle' });
+    await expect(page.locator('h1')).toContainText(item.h1);
+    await expect(page.locator('main')).toContainText(item.text);
+    await expect(page.locator(`a[href^="${item.href}"]`).first()).toBeVisible();
+    await expect(page.locator('details')).not.toHaveCount(0);
+  }
+});
+
 test('photo page uses a dedicated relief preset while image page stays general-purpose', async ({ page }) => {
   await page.goto(`${BASE_URL}/photo-to-stl?regression=photo-preset`, { waitUntil: 'networkidle' });
   await expect(page.locator('form[data-converter-form="true"]')).toHaveAttribute('data-mode', 'relief');
