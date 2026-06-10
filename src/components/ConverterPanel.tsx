@@ -1,7 +1,7 @@
 import { sampleWorkflowSlug, type SampleWorkflow, type ToolConfig } from "@/lib/tools";
 
 const defaultModeBySlug: Record<string, NonNullable<ToolConfig["converter"]>["mode"]> = {
-  "png-to-stl": "icon",
+  "png-to-stl": "logo",
   "image-to-stl": "extrude",
   "convert-image-to-stl": "relief",
   "logo-to-stl": "logo",
@@ -28,17 +28,17 @@ const modeLabels = {
 
 const toolPresets: Record<string, Partial<NonNullable<ToolConfig["converter"]>>> = {
   "png-to-stl": {
-    mode: "icon",
+    mode: "logo",
     accept: "image/png",
     widthMm: 90,
-    depth: 1.8,
+    depth: 2.2,
     baseMm: 1,
     threshold: 58,
-    smoothing: 25,
-    detail: 96,
-    helper: "Best for transparent PNG icons, emojis, stickers, and simple shapes.",
-    preview: "Upload a PNG icon to create raised geometry without a full square back plate.",
-    filename: "pngtostl-icon-relief.stl",
+    smoothing: 0,
+    detail: 256,
+    helper: "Best for transparent PNG logos, icons, stickers, and silhouettes that should become clean solid raised geometry.",
+    preview: "Upload a PNG logo or icon to create a cropped, single-height STL badge without a full square back plate.",
+    filename: "png-to-stl-logo-badge.stl",
   },
   "image-to-stl": {
     mode: "extrude",
@@ -115,9 +115,9 @@ const toolPresets: Record<string, Partial<NonNullable<ToolConfig["converter"]>>>
     smoothing: 0,
     detail: 320,
     hiddenControls: ["mode"],
-    helper: "Logo preset crops empty margins, scales the actual artwork width, and uses maximum detail with no smoothing to preserve text and sharp edges.",
-    preview: "Upload a high-contrast PNG or SVG logo to generate a raised badge or sign STL.",
-    filename: "logo-relief.stl",
+    helper: "Logo preset crops empty margins, removes small mask islands, and uses single-height solid extrusion for cleaner badges and signs.",
+    preview: "Upload a high-contrast PNG or SVG logo to generate a clean raised badge or sign STL.",
+    filename: "logo-to-stl-badge.stl",
   },
   "heightmap-to-stl": {
     mode: "heightmap",

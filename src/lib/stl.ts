@@ -304,7 +304,15 @@ function buildHeightGrid(samples: ImageSample[][], options: ConvertOptions) {
           const foreground = options.invert ? sample.luma >= options.threshold : sample.darkness >= options.threshold;
           signal = foreground ? 1 : 0;
         }
-      } else if (options.mode === "icon" || options.mode === "logo") {
+      } else if (options.mode === "logo") {
+        const transparentBackground = sample.alpha <= 0.05;
+        if (hasTransparentPixels) {
+          signal = transparentBackground ? 0 : 1;
+        } else {
+          const foreground = options.invert ? sample.luma >= options.threshold : sample.darkness >= options.threshold;
+          signal = foreground ? 1 : 0;
+        }
+      } else if (options.mode === "icon") {
         const transparentBackground = sample.alpha <= 0.05;
         if (hasTransparentPixels) {
           signal = transparentBackground ? 0 : Math.max(0.35, sample.darkness);
@@ -355,7 +363,7 @@ function buildGeometryMask(samples: ImageSample[][], heights: number[][], option
     }
   }
 
-  return options.mode === "extrude" ? cleanExtrudeMask(mask) : mask;
+  return options.mode === "extrude" || options.mode === "logo" ? cleanExtrudeMask(mask) : mask;
 }
 
 function cleanExtrudeMask(mask: boolean[][]) {
