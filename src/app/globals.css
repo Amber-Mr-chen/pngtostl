@@ -165,7 +165,8 @@ a {
   text-transform: uppercase;
 }
 
-.homeHero h1 {
+.homeHero h1,
+.homeHero h2 {
   max-width: 920px;
   margin: 0 auto;
   font-size: clamp(3.1rem, 7vw, 5.9rem);
@@ -1047,7 +1048,8 @@ a {
     padding: 34px;
   }
 
-  .homeHero h1 {
+  .homeHero h1,
+  .homeHero h2 {
     font-size: 3.05rem;
   }
 
@@ -1104,7 +1106,8 @@ a {
     border-radius: 18px;
   }
 
-  .homeHero h1 {
+  .homeHero h1,
+  .homeHero h2 {
     font-size: 2.32rem;
   }
 
@@ -1810,7 +1813,8 @@ a {
   .heroUploadPanel { padding: 12px; gap: 10px; }
   .workflowChoice.heroToolLink { padding: 10px; }
   .homeHero { padding: 18px; gap: 18px; }
-  .homeHero h1 { font-size: 2.05rem; line-height: 1.02; }
+  .homeHero h1,
+  .homeHero h2 { font-size: 2.05rem; line-height: 1.02; }
   .homeHeroCopy > p:not(.homeKicker) { margin-top: 14px; line-height: 1.5; }
   .heroActions { margin-top: 18px; }
   .uploadIcon { width: 44px; height: 44px; font-size: 1.45rem; }

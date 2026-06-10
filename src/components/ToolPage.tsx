@@ -10,14 +10,16 @@ import { helperPages, sampleWorkflows, type SampleWorkflow, type ToolConfig } fr
 const primaryNav = [
   { href: "/image-to-stl", label: "Image to STL" },
   { href: "/logo-to-stl", label: "Logo to STL" },
+  { href: "/photo-to-stl", label: "Photo to STL" },
   { href: "/lithophane-generator", label: "Photo Panel" },
+  { href: "/ai-image-to-3d", label: "AI 3D" },
   { href: "/heightmap-to-stl", label: "Depth Map" },
   { href: "/faq", label: "Guides" },
 ];
 
 function activeNavFor(currentPath: string, itemHref: string) {
   const groupedRoutes: Record<string, string[]> = {
-    "/image-to-stl": ["/image-to-stl", "/png-to-stl", "/jpg-to-stl", "/jpeg-to-stl", "/pic-to-stl", "/convert-image-to-stl", "/2d-image-to-3d-model", "/3d-print-photo"],
+    "/image-to-stl": ["/image-to-stl", "/png-to-stl", "/jpg-to-stl", "/jpeg-to-stl", "/pic-to-stl", "/convert-image-to-stl", "/2d-image-to-3d-model", "/3d-print-photo", "/photo-to-stl", "/ai-image-to-3d"],
     "/lithophane-generator": ["/lithophane-generator", "/photo-to-lithophane"],
     "/heightmap-to-stl": ["/heightmap-to-stl"],
     "/logo-to-stl": ["/logo-to-stl"],
@@ -73,6 +75,16 @@ const toolGuidance: Record<string, {
     avoid: ["Portraits with subtle skin tones when you actually want a backlit lithophane.", "Compressed, blurry, or shadow-heavy photos that will create noisy surface bumps.", "Full object reconstruction claims; this creates relief-style STL output."],
     printTips: ["Crop the subject and increase contrast before upload when possible.", "If the relief looks noisy, try lithophane mode or reduce detail/smoothing.", "Use a larger output width for photo reliefs so small features remain printable."],
   },
+  "photo-to-stl": {
+    bestFor: ["Photos with one clear subject, strong foreground-background separation, and enough contrast for raised relief.", "Display plaques, pet portraits, simple memorial panels, and photo-style gifts where a front-facing surface is acceptable.", "Users who searched photo to STL but need realistic guidance before expecting AI reconstruction."],
+    avoid: ["Busy full-scene photos, low-light portraits, background clutter, and images where color is the main detail.", "Expecting the converter to invent hidden backside geometry from a single photo.", "Tiny faces or detailed textures that will become noisy surface bumps at small print sizes."],
+    printTips: ["Crop tightly around the subject before uploading.", "Use smoother relief settings when fur, fabric, or background texture becomes noise.", "Try lithophane mode for portraits that depend on smooth tonal shading or backlight."],
+  },
+  "ai-image-to-3d": {
+    bestFor: ["Users comparing current relief STL tools with upcoming AI full-3D generation.", "Planning single-image, multi-image, GLB, and STL export workflows before a paid AI pipeline launches.", "Images that need an honest fit check before choosing relief, lithophane, logo, or future AI 3D generation."],
+    avoid: ["Assuming full AI 3D reconstruction is already live on PNGtoSTL.", "Selling Pro quality before GLB/STL AI output has been verified.", "Using one ordinary image when multiple views would be needed for better true 3D shape."],
+    printTips: ["Use current STL relief tools for printable 2.5D output today.", "Use multiple-angle source photos when future AI 3D generation is available.", "Keep current generated STL files slicer-checked; AI 3D output will still need printability review."],
+  },
   "logo-to-stl": {
     bestFor: ["Simple SVG or transparent PNG logos with strong edges.", "Badges, plaques, signs, product marks, makerspace labels, and name plates.", "Flat artwork that should become a raised logo on a printable base."],
     avoid: ["Complex mascot art, gradients, tiny text, and low-resolution screenshots.", "Logos that rely on multiple colors rather than silhouette or contrast.", "Trying to create a sculpted 3D character from a 2D logo."],
@@ -101,9 +113,11 @@ function guidanceFor(tool: ToolConfig) {
 function relatedProofsFor(tool: ToolConfig) {
   const currentPath = `/${tool.slug}`;
   const routeAliases: Record<string, string[]> = {
-    "/image-to-stl": ["/image-to-stl", "/jpg-to-stl", "/jpeg-to-stl", "/pic-to-stl", "/png-to-stl"],
+    "/image-to-stl": ["/image-to-stl", "/jpg-to-stl", "/jpeg-to-stl", "/pic-to-stl", "/png-to-stl", "/photo-to-stl"],
     "/png-to-stl": ["/png-to-stl", "/logo-to-stl", "/image-to-stl"],
     "/jpg-to-stl": ["/jpg-to-stl", "/jpeg-to-stl", "/image-to-stl", "/lithophane-generator"],
+    "/photo-to-stl": ["/photo-to-stl", "/jpg-to-stl", "/lithophane-generator", "/image-to-stl"],
+    "/ai-image-to-3d": ["/ai-image-to-3d", "/image-to-stl", "/2d-image-to-3d-model"],
     "/jpeg-to-stl": ["/jpeg-to-stl", "/jpg-to-stl", "/image-to-stl", "/lithophane-generator"],
     "/pic-to-stl": ["/pic-to-stl", "/image-to-stl", "/jpg-to-stl", "/png-to-stl"],
     "/logo-to-stl": ["/logo-to-stl", "/png-to-stl"],
@@ -122,6 +136,8 @@ const supportGuideMap: Record<string, string[]> = {
   "image-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl", "lithophane-image-guide"],
   "png-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl"],
   "jpg-to-stl": ["image-contrast-guide", "lithophane-image-guide"],
+  "photo-to-stl": ["image-contrast-guide", "lithophane-image-guide", "print-settings-checker"],
+  "ai-image-to-3d": ["image-contrast-guide", "heightmap-to-stl-terrain-guide", "print-settings-checker"],
   "jpeg-to-stl": ["image-contrast-guide", "lithophane-image-guide"],
   "pic-to-stl": ["image-contrast-guide", "print-settings-checker", "lithophane-image-guide"],
   "convert-image-to-stl": ["image-contrast-guide", "how-to-turn-logo-into-stl", "lithophane-image-guide"],
@@ -160,6 +176,8 @@ function SiteFooter() {
         <Link href="/jpeg-to-stl">JPEG to STL</Link>
         <Link href="/pic-to-stl">Pic to STL</Link>
         <Link href="/logo-to-stl">Logo to STL</Link>
+        <Link href="/photo-to-stl">Photo to STL</Link>
+        <Link href="/ai-image-to-3d">AI Image to 3D</Link>
         <Link href="/lithophane-generator">Photo Panel</Link>
         <Link href="/heightmap-to-stl">Depth Map</Link>
         <Link href="/how-to-turn-logo-into-stl">Logo guide</Link>

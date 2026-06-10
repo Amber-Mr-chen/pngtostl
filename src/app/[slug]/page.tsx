@@ -54,9 +54,10 @@ function samplesJsonLd() {
 
 const primaryInfoNav = [
   { href: "/image-to-stl", label: "Image to STL" },
+  { href: "/png-to-stl", label: "PNG to STL" },
   { href: "/logo-to-stl", label: "Logo to STL" },
-  { href: "/lithophane-generator", label: "Photo Panel" },
-  { href: "/heightmap-to-stl", label: "Depth Map" },
+  { href: "/photo-to-stl", label: "Photo to STL" },
+  { href: "/ai-image-to-3d", label: "AI 3D" },
   { href: "/samples", label: "Examples" },
   { href: "/pricing", label: "Pricing" },
 ];

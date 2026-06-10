@@ -100,7 +100,7 @@ const homeFaqs = [
   { q: "Which files can I upload?", a: "PNG, JPG, JPEG, WebP, GIF, and BMP are supported through the browser upload flow." },
 ];
 
-const primaryTools = ["logo-to-stl", "png-to-stl", "heightmap-to-stl", "lithophane-generator"];
+const primaryTools = ["image-to-stl", "png-to-stl", "logo-to-stl", "photo-to-stl", "lithophane-generator", "heightmap-to-stl"];
 
 const proofSamples = [
   {
@@ -138,23 +138,23 @@ const proofSamples = [
 const categories = [
   {
     eyebrow: "01",
-    title: "Reliable STL workflows",
-    description: "Start with inputs this site can handle well: transparent logos, icons, simple silhouettes, grayscale depth maps, and backlit photo panels.",
-    slugs: ["logo-to-stl", "png-to-stl", "heightmap-to-stl", "lithophane-generator"],
+    title: "Core image-to-STL tools",
+    description: "Start with the highest-intent workflows: image to STL, PNG to STL, logo extrusion, photo relief, lithophane, and heightmap surfaces.",
+    slugs: ["image-to-stl", "png-to-stl", "logo-to-stl", "photo-to-stl", "lithophane-generator", "heightmap-to-stl"],
     example: "relief" as const,
   },
   {
     eyebrow: "02",
-    title: "Guided starting points",
-    description: "Use these when the source image is not a clean logo and you need guidance before generating.",
-    slugs: ["image-to-stl", "convert-image-to-stl", "jpg-to-stl", "jpeg-to-stl", "pic-to-stl"],
+    title: "Format and beginner starting points",
+    description: "Use these long-tail pages when users search by file type or broad conversion wording before generating.",
+    slugs: ["convert-image-to-stl", "jpg-to-stl", "jpeg-to-stl", "pic-to-stl", "2d-image-to-3d-model"],
     example: "litho" as const,
   },
   {
     eyebrow: "03",
-    title: "Photo and print planning utilities",
-    description: "Route photos and complex images away from clean extrude before they waste time or filament.",
-    slugs: ["photo-to-lithophane", "3d-print-photo", "2d-image-to-3d-model"],
+    title: "AI 3D and print planning utilities",
+    description: "Capture AI image-to-3D demand honestly while routing current users toward printable relief, lithophane, and review workflows.",
+    slugs: ["ai-image-to-3d", "photo-to-lithophane", "3d-print-photo"],
     example: "plan" as const,
   },
 ];
@@ -178,11 +178,11 @@ export default function HomePage() {
         <BrandMark />
         <div className="homeNavRight">
         <nav className="homeNavLinks" aria-label="Primary">
+          <Link href="/image-to-stl">Image to STL</Link>
+          <Link href="/png-to-stl">PNG to STL</Link>
           <Link href="/logo-to-stl">Logo to STL</Link>
-          <Link href="/png-to-stl">Icon to STL</Link>
-          <Link href="/image-to-stl">Image Check</Link>
-          <Link href="/lithophane-generator">Photo Panel</Link>
-          <Link href="/heightmap-to-stl">Depth Map</Link>
+          <Link href="/photo-to-stl">Photo to STL</Link>
+          <Link href="/ai-image-to-3d">AI 3D</Link>
           <Link href="/developers">API</Link>
           <Link href="/faq">Guides</Link>
         </nav>
@@ -195,9 +195,9 @@ export default function HomePage() {
       {universalTool && (
         <section className="homeConverterDock primaryConverterDock" id="converter" aria-labelledby="home-converter-title">
           <div className="sectionIntro compact">
-            <p className="homeKicker">Free image to STL converter</p>
-            <h1 id="home-converter-title">Upload an image. Preview a printable STL.</h1>
-            <p>Best for clean logos, icons, stickers, silhouettes, and simple high-contrast art. The checker warns when a complex photo or noisy sketch needs a safer workflow.</p>
+            <p className="homeKicker">Free image to STL converter by PNGtoSTL</p>
+            <h1 id="home-converter-title">Image to STL Converter for 3D Printing</h1>
+            <p>Convert PNG, JPG, WebP, GIF, BMP, logos, photos, and heightmaps into printable STL workflows. PNG to STL stays a core path for transparent icons and clean logo badges.</p>
           </div>
           <ConverterPanel tool={universalTool} />
         </section>
@@ -205,8 +205,8 @@ export default function HomePage() {
 
       <section className="homeHero secondaryHomeHero">
         <div className="homeHeroCopy">
-          <p className="homeKicker">Logo, icon, and simple shape to STL</p>
-          <h1>Convert clean logos and simple images into printable STL models.</h1>
+          <p className="homeKicker">PNG to STL, logo to STL, and photo relief paths</p>
+          <h2>Turn clean images into printable STL outputs without overpromising full 3D reconstruction.</h2>
           <p>
             Built for transparent PNGs, icons, stickers, flat logos, and simple silhouettes. Photos, pencil sketches, and grid-paper drawings are routed to safer raised-surface or backlit-panel workflows instead of being overpromised.
           </p>
@@ -529,6 +529,8 @@ export default function HomePage() {
           <Link href="/jpeg-to-stl">JPEG to STL</Link>
           <Link href="/pic-to-stl">Pic to STL</Link>
           <Link href="/logo-to-stl">Logo to STL</Link>
+          <Link href="/photo-to-stl">Photo to STL</Link>
+          <Link href="/ai-image-to-3d">AI Image to 3D</Link>
           <Link href="/lithophane-generator">Photo Panel</Link>
           <Link href="/heightmap-to-stl">Depth Map</Link>
           <Link href="/how-to-turn-logo-into-stl">Logo guide</Link>
