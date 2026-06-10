@@ -215,11 +215,13 @@
       const complexCutout = boundaryRatio > 0.24 || componentCount > 3;
       const logoFit = (hasTransparency || removableBackground) && simpleCoverage && simpleEdges;
       const silhouetteFit = !hasTransparency && removableBackground && simpleCoverage && simpleEdges;
-      const photoLike = !hasTransparency && lumaSpread > 0.25 && edgeRatio > 0.28;
+      const photoLike = !hasTransparency && lumaSpread > 0.25 && edgeRatio > 0.28 && boundaryRatio < 0.34;
+      const contourLike = !hasTransparency && !photoLike && (edgeRatio > 0.24 || boundaryRatio > 0.18 || componentCount > 2);
       const tooComplex = edgeRatio > 0.42 || subjectRatio > 0.86 || complexCutout;
       if (logoFit || silhouetteFit) return { level: 'good', title: copy('Good fit for clean logo/icon STL', '适合生成干净的标志/图标 STL'), message: hasTransparency ? copy('Transparency detected. Clean extrude or logo badge mode is the safest workflow.', '检测到透明背景，干净挤压或标志徽章模式最稳。') : copy('Light background with a clear subject detected. Clean extrude can work after background removal.', '检测到浅色背景和清晰主体，移除背景后可尝试干净挤压。') };
-      if (photoLike) return { level: 'warn', title: copy('Better as backlit panel or raised surface', '更适合照片面板或浮雕面板'), message: copy('This looks more like a photo/tonal image than a flat logo. Use backlit photo panel or photo raised surface mode instead of clean extrude.', '这更像照片或明暗图，不像扁平标志。建议用照片面板或浮雕面板，不要直接干净挤压。') };
-      if (tooComplex) return { level: 'bad', title: copy('Recommended: raised photo panel', '推荐：浮雕/照片面板'), message: copy('This image has rich detail, so a clean logo cutout is not the best path. The converter can route it to a raised-surface preview instead.', '这张图细节较多，不适合按简单标志切边；转换器会优先用浮雕面板方式生成预览。') };
+      if (photoLike) return { level: 'warn', title: copy('Better as backlit panel or raised surface', '更适合照片面板或浮雕面板'), message: copy('This looks more like a photo/tonal image than a flat logo. Use backlit photo panel or photo raised surface mode instead of clean extrude.', '这更像照片或明暗图，不像扁平标志。建议用照片面板或浮雕面板，不要直接干净挤压。'), suggestRelief: true };
+      if (contourLike) return { level: 'warn', title: copy('Better as contour or sketch STL', '更适合轮廓/线稿 STL'), message: copy('This image has strong edges and multiple parts. Use contour extraction or sketch-style STL before trying photo relief.', '这张图边缘和部件比较多，更适合先做轮廓提取或线稿 STL，不要先走照片浮雕。'), suggestContour: true };
+      if (tooComplex) return { level: 'bad', title: copy('Recommended: contour cleanup first', '推荐：先做轮廓清理'), message: copy('This image has rich detail, so a clean logo cutout is not the best path. Use contour-style conversion or background cleanup first instead of photo relief.', '这张图细节较多，不适合按照片浮雕直接做；更适合先做轮廓式转换或背景清理。'), suggestContour: true };
       return { level: 'warn', title: copy('Usable, but check the preview carefully', '可以尝试，但需要仔细检查预览'), message: copy('The image may work, but clean extrude is safest with transparent logos, icons, and simple silhouettes.', '这张图可能可用，但干净挤压最适合透明标志、图标和简单轮廓。') };
     }
 
@@ -545,22 +547,24 @@
       const imageInfo = await inspectImageFile(file);
       updateDiagnosis(imageInfo);
       const classification = classifyImage(imageInfo);
-      const autoRouteComplexImage = modeInput && selectedMode() === 'extrude' && classification.level === 'bad';
+      const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;
+      const preferContourWorkflow = shouldCutoutSubject || classification.level === 'good' || classification.suggestContour;
+      const shouldUsePhotoRelief = classification.suggestRelief && !preferContourWorkflow;
+      const autoRouteComplexImage = modeInput && selectedMode() === 'extrude' && classification.level === 'bad' && shouldUsePhotoRelief;
       if (autoRouteComplexImage) {
         modeInput.value = 'relief';
         setQualityValue('standard');
-        setRangeValue(smoothingInput, 90);
-        setText(status, copy('Using smooth relief workflow', '使用平滑浮雕工作流'));
-        setText(message, classification.message + copy('\nAutomatically using Standard 256 smooth relief for a stable preview. Detailed 352 is still available after the preview works.', '\n已自动使用 Standard 256 平滑浮雕，先保证稳定预览。预览正常后仍可手动尝试 Detailed 352。'));
+        setRangeValue(smoothingInput, 75);
+        setText(status, copy('Using photo relief workflow', '使用照片浮雕工作流'));
+        setText(message, classification.message + copy('\nThis image is better as a raised surface panel, so the preview is being routed to relief instead of clean extrude.', '\n这张图更适合做浮雕面板，所以预览会改走浮雕，而不是干净挤压。'));
         trackBoth('converter_auto_routed_complex_image', 'pngtostl_auto_routed_complex_image', { reason: 'image_not_fit_for_clean_extrude' });
       }
-      if (modeInput && selectedMode() === 'extrude' && classification.level === 'warn') {
+      if (modeInput && selectedMode() === 'extrude' && classification.level === 'warn' && classification.suggestRelief && !shouldCutoutSubject) {
         modeInput.value = 'relief';
         if (selectedQuality() === 'fast') setQualityValue('standard');
-        setRangeValue(smoothingInput, 80);
-        setText(message, classification.message + copy('\nAutomatically using smoother photo relief mode instead of clean extrude...', '\n已自动改用更平滑的照片浮雕面板，不再使用干净挤压……'));
+        setRangeValue(smoothingInput, 65);
+        setText(message, classification.message + copy('\nAutomatically using photo relief mode instead of clean extrude...', '\n已自动改用照片浮雕模式，而不是干净挤压……'));
       }
-      const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;
       if (modeInput && selectedMode() === 'relief' && shouldCutoutSubject && !autoRouteComplexImage) {
         modeInput.value = 'logo';
         if (selectedQuality() === 'fast') setQualityValue('standard');

@@ -253,38 +253,60 @@ export function ToolPage({ tool, loadedSample }: { tool: ToolConfig; loadedSampl
         </section>
 
         {tool.slug === "ai-image-to-3d" ? (
-          <section className="shell" style={{ marginTop: 20, padding: 22, display: "grid", gap: 14 }}>
+          <section className="shell" style={{ marginTop: 20, padding: 22, display: "grid", gap: 16 }}>
             <div>
               <p className="homeKicker">AI 3D roadmap</p>
               <h2 style={{ margin: 0 }}>Preview the future workflow without pretending it is live.</h2>
               <p className="smallMuted" style={{ marginBottom: 0 }}>
-                The current live path stays relief-first. This page keeps the future AI product honest by showing how GLB preview, credits, saved creations, and history would fit around the existing STL workflow.
+                The current live path stays relief-first. This page now shows the future AI product as a concrete layout: preview, account history, credits, and commercial access live in separate blocks instead of one vague paragraph.
               </p>
             </div>
+
             <div className="outputRealityGrid">
               <article className="outputRealityBlock">
                 <strong>Now</strong>
                 <p>Relief STL, logo badges, lithophanes, and heightmaps are the live printable outputs.</p>
               </article>
               <article className="outputRealityBlock">
-                <strong>Planned</strong>
-                <p>AI image-to-3D can grow into a GLB preview and STL export flow when the model pipeline is ready.</p>
+                <strong>Preview</strong>
+                <p>GLB preview belongs here later, alongside STL export, when the actual AI mesh pipeline exists.</p>
               </article>
               <article className="outputRealityBlock">
-                <strong>Future account features</strong>
-                <p>My Creations, credits, and conversion history belong after the actual generation pipeline is stable.</p>
+                <strong>My Creations</strong>
+                <p>A saved creation library should appear only after the product can really store and recall jobs.</p>
               </article>
               <article className="outputRealityBlock">
-                <strong>Commercial path</strong>
-                <p>Batch, API, and pricing should be introduced only after real usage demand and billing rules are confirmed.</p>
+                <strong>Credits</strong>
+                <p>Usage credits can sit above generation once a real billing rule exists, not before.</p>
               </article>
             </div>
+
+            <div className="outputRealityGrid">
+              <article className="outputRealityBlock">
+                <strong>History</strong>
+                <p>Conversion history fits the account layer after generation is stable and auditable.</p>
+              </article>
+              <article className="outputRealityBlock">
+                <strong>Batch / API</strong>
+                <p>Commercial batch jobs and API access should open through a request flow, not a fake self-serve switch.</p>
+              </article>
+              <article className="outputRealityBlock">
+                <strong>Pricing</strong>
+                <p>A pricing page can explain the path from free single-file conversion to paid volume usage.</p>
+              </article>
+              <article className="outputRealityBlock">
+                <strong>Reality check</strong>
+                <p>The current page is intentionally honest: it exposes the future structure without claiming the feature is already finished.</p>
+              </article>
+            </div>
+
             <div className="heroActions">
               <Link className="btnPrimary" href="/pricing">View pricing path</Link>
               <Link className="btnSecondary" href="/developers">Request batch/API access</Link>
             </div>
           </section>
         ) : null}
+
 
         <section id="converter" className="toolConverterBlock">
           {advisorOnly ? (

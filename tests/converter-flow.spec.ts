@@ -104,6 +104,31 @@ function busyScenePhotoPng() {
   return Buffer.from(encode({ width, height, data, channels: 4 }));
 }
 
+function complexContourArtworkPng() {
+  const width = 128;
+  const height = 96;
+  const data = new Uint8Array(width * height * 4);
+
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const offset = (y * width + x) * 4;
+      const stroke =
+        Math.abs(x - y - 14) < 3 ||
+        Math.abs(x + y - 104) < 3 ||
+        (x > 18 && x < 48 && y > 18 && y < 42) ||
+        (x > 72 && x < 108 && y > 52 && y < 78) ||
+        ((x - 68) ** 2 + (y - 28) ** 2 < 15 ** 2 && (x - 68) ** 2 + (y - 28) ** 2 > 9 ** 2);
+      const value = stroke ? 24 : 238;
+      data[offset] = value;
+      data[offset + 1] = value;
+      data[offset + 2] = value;
+      data[offset + 3] = 255;
+    }
+  }
+
+  return Buffer.from(encode({ width, height, data, channels: 4 }));
+}
+
 function uniqueStlYLevels(stl: Buffer) {
   const view = new DataView(stl.buffer, stl.byteOffset, stl.byteLength);
   const triangles = view.getUint32(80, true);
@@ -265,6 +290,24 @@ test('photo page uses a dedicated relief preset while image page stays general-p
   await expect(page.locator('form[data-converter-form="true"]')).toHaveAttribute('data-mode', 'extrude');
   await expect(page.locator('input[name="smoothing"]')).toHaveValue('0');
   await expect(page.locator('input[name="detail"]')).toHaveValue('256');
+});
+
+test('ai image page stays contour-first for complex artwork instead of routing to photo relief', async ({ page }) => {
+  await page.goto(`${BASE_URL}/ai-image-to-3d?regression=ai-contour-first`, { waitUntil: 'networkidle' });
+  await expect(page.locator('form[data-converter-form="true"]')).toHaveAttribute('data-mode', 'extrude');
+  await expect(page.locator('input[name="smoothing"]')).toHaveValue('10');
+  await expect(page.locator('input[name="detail"]')).toHaveValue('256');
+
+  await page.setInputFiles('input[name="file"]', {
+    name: 'complex-contour-artwork.png',
+    mimeType: 'image/png',
+    buffer: complexContourArtworkPng(),
+  });
+
+  const diagnosis = page.locator('[data-image-diagnosis="true"]');
+  await expect(diagnosis).toBeVisible();
+  await expect(diagnosis).toContainText(/contour|sketch|轮廓|线稿/i, { timeout: 10_000 });
+  await expect(diagnosis).not.toContainText(/raised photo panel|浮雕\/照片面板/i);
 });
 
 test('photo page shows a compact image check without blocking generation', async ({ page }) => {
