@@ -242,6 +242,10 @@ test('photo page shows a compact image check without blocking generation', async
   await expect(diagnosis.locator('p')).toBeHidden();
   await expect(page.locator('[data-lithophane-suggestion="true"]')).toHaveAttribute('href', '/lithophane-generator');
   await expect(page.locator('[data-lithophane-suggestion="true"]')).toContainText('Try lithophane');
+  await expect(page.locator('[data-smoother-suggestion="true"]')).toContainText('Apply smoother');
+  await expect(page.locator('input[name="smoothing"]')).toHaveValue('65');
+  await page.locator('[data-smoother-suggestion="true"]').click();
+  await expect(page.locator('input[name="smoothing"]')).toHaveValue('80');
   await expect(page.locator('[data-generate-stl="true"]')).toBeEnabled();
 });
 

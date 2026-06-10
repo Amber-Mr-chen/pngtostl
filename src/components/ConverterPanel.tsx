@@ -334,6 +334,7 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
               <span data-diagnosis-complexity="true">Complexity: waiting</span>
             </div>
             <Link href="/lithophane-generator" className="diagnosisLink" data-lithophane-suggestion="true" hidden>Try lithophane</Link>
+            <button className="diagnosisAction" data-smoother-suggestion="true" type="button" hidden>Apply smoother</button>
           </div>
 
           <div className="qualityChooser" aria-label="Quality preset">

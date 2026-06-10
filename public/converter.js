@@ -23,6 +23,7 @@
     const diagnosisSubject = form.querySelector('[data-diagnosis-subject="true"]');
     const diagnosisComplexity = form.querySelector('[data-diagnosis-complexity="true"]');
     const lithophaneSuggestion = form.querySelector('[data-lithophane-suggestion="true"]');
+    const smootherSuggestion = form.querySelector('[data-smoother-suggestion="true"]');
     const modeInput = form.querySelector('select[name="mode"]');
     const widthInput = form.querySelector('input[name="widthMm"]');
     const depthInput = form.querySelector('input[name="depth"]');
@@ -198,6 +199,7 @@
       setText(diagnosisSubject, copy('Subject coverage: waiting', '主体占比：等待中'));
       setText(diagnosisComplexity, copy('Complexity: waiting', '复杂度：等待中'));
       if (lithophaneSuggestion) lithophaneSuggestion.hidden = true;
+      if (smootherSuggestion) smootherSuggestion.hidden = true;
     }
 
     function classifyImage(info) {
@@ -230,7 +232,7 @@
       const busyBackground = edgeRatio > 0.18 || boundaryRatio > 0.4 || componentCount > 8;
       const tinySubject = subjectRatio > 0 && subjectRatio < 0.12;
       const tonalPhoto = lumaSpread > 0.18;
-      if (busyBackground) return { level: 'warn', title: copy('Image check: Try smoother relief', '图片检查：建议更平滑的浮雕'), message: copy('Background busy · crop tighter or try lithophane', '背景较复杂 · 建议裁紧或试试透光照片板'), suggestLithophane: true };
+      if (busyBackground) return { level: 'warn', title: copy('Image check: Try smoother relief', '图片检查：建议更平滑的浮雕'), message: copy('Background busy · crop tighter or try lithophane', '背景较复杂 · 建议裁紧或试试透光照片板'), suggestLithophane: true, suggestSmoother: true };
       if (tinySubject) return { level: 'warn', title: copy('Image check: Photo relief possible', '图片检查：可生成照片浮雕'), message: copy('Subject small · crop tighter before generating', '主体偏小 · 生成前建议裁紧') };
       if (tonalPhoto) return { level: 'good', title: copy('Image check: Photo relief recommended', '图片检查：推荐照片浮雕'), message: copy('Subject clear · background moderate', '主体清晰 · 背景适中') };
       return { level: 'warn', title: copy('Image check: Try lithophane', '图片检查：可试试透光照片板'), message: copy('Low tonal range · lithophane may keep detail better', '明暗层次较少 · 透光照片板可能保留更多细节'), suggestLithophane: true };
@@ -252,6 +254,10 @@
       if (lithophaneSuggestion) {
         lithophaneSuggestion.hidden = !(photoTool && classification.suggestLithophane);
         lithophaneSuggestion.textContent = copy('Try lithophane', '试试透光照片板');
+      }
+      if (smootherSuggestion) {
+        smootherSuggestion.hidden = !(photoTool && classification.suggestSmoother);
+        smootherSuggestion.textContent = copy('Apply smoother', '应用更平滑');
       }
       if (photoTool) {
         setButtonState(copy('Generate photo relief preview', '生成照片浮雕预览'), false);
@@ -291,6 +297,17 @@
 
     [widthInput, depthInput, baseInput, thresholdInput, smoothingInput, detailInput].forEach(bindRange);
 
+    if (smootherSuggestion) {
+      smootherSuggestion.addEventListener('click', () => {
+        if (!smoothingInput) return;
+        smoothingInput.value = '80';
+        smoothingInput.dispatchEvent(new Event('input', { bubbles: true }));
+        smoothingInput.dispatchEvent(new Event('change', { bubbles: true }));
+        smootherSuggestion.hidden = true;
+        track('photo_smoother_applied', { smoothing: 80 });
+      });
+    }
+
     async function syncFile() {
       const file = fileInput && fileInput.files && fileInput.files[0];
       if (!file) {
@@ -328,6 +345,7 @@
         diagnosisPanel.hidden = false;
         diagnosisPanel.classList.remove('good', 'warn', 'bad');
         if (lithophaneSuggestion) lithophaneSuggestion.hidden = true;
+        if (smootherSuggestion) smootherSuggestion.hidden = true;
         setText(diagnosisTitle, copy('Checking image suitability...', '正在检查图片适配度……'));
         setText(diagnosisMessage, copy('Looking for transparency, clear subject coverage, and excessive texture/noise.', '正在检查透明度、主体占比以及过多纹理/噪点。'));
       }

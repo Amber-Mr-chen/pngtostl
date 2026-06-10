@@ -1377,8 +1377,9 @@ a {
 .imageDiagnosis.photoCheck p, .imageDiagnosis.photoCheck .diagnosisFacts span:empty { display: none; }
 .imageDiagnosis.photoCheck .diagnosisFacts { display: contents; }
 .imageDiagnosis.photoCheck .diagnosisFacts span { border: 0; background: transparent; padding: 0; font-size: .82rem; font-weight: 760; }
-.diagnosisLink { color: var(--accent-strong); font-size: .82rem; font-weight: 820; text-decoration: none; white-space: nowrap; }
-.diagnosisLink:hover { text-decoration: underline; }
+.diagnosisLink, .diagnosisAction { color: var(--accent-strong); font-size: .82rem; font-weight: 820; text-decoration: none; white-space: nowrap; }
+.diagnosisAction { border: 0; background: transparent; padding: 0; cursor: pointer; font-family: inherit; }
+.diagnosisLink:hover, .diagnosisAction:hover { text-decoration: underline; }
 .diagnosisFacts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .diagnosisFacts span { border: 1px solid rgba(15,23,42,.08); border-radius: 10px; background: rgba(255,255,255,.72); padding: 8px; font-size: .78rem; font-weight: 760; color: var(--muted); }
 .converterField { display: grid; gap: 7px; }
