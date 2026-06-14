@@ -10,7 +10,15 @@ import {
 export const runtime = "nodejs";
 
 function jsonError(status: number, error: string, message: string) {
-  return NextResponse.json({ error, message }, { status });
+  return NextResponse.json({ error, message }, { status, headers: { "Cache-Control": "no-store" } });
+}
+
+function jsonOk(body: unknown) {
+  return NextResponse.json(body, { headers: { "Cache-Control": "no-store" } });
+}
+
+export function OPTIONS() {
+  return new Response(null, { status: 204, headers: { Allow: "GET, HEAD, OPTIONS, POST", "Cache-Control": "no-store" } });
 }
 
 export async function GET(request: Request) {
@@ -22,7 +30,7 @@ export async function GET(request: Request) {
 
   try {
     const task = type === "text" ? await getMeshyTextTo3dTask(id) : await getMeshyImageTo3dTask(id);
-    return NextResponse.json({ provider: "meshy", task, type });
+    return jsonOk({ provider: "meshy", task, type });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Could not check the AI 3D task.";
     return jsonError(502, "AI_3D_TASK_LOOKUP_FAILED", message);
@@ -43,7 +51,7 @@ export async function POST(request: Request) {
   if (prompt) {
     try {
       const task = await createMeshyTextTo3dTask(prompt);
-      return NextResponse.json({ provider: "meshy", task, type: "text" });
+      return jsonOk({ provider: "meshy", task, type: "text" });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Could not start AI 3D generation.";
       return jsonError(502, "AI_3D_TASK_CREATE_FAILED", message);
@@ -57,7 +65,7 @@ export async function POST(request: Request) {
 
   try {
     const task = await createMeshyImageTo3dTask(file);
-    return NextResponse.json({ provider: "meshy", task, type: "image" });
+    return jsonOk({ provider: "meshy", task, type: "image" });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Could not start AI 3D generation.";
     return jsonError(502, "AI_3D_TASK_CREATE_FAILED", message);

@@ -4,8 +4,18 @@ import { parseConvertOptions, pngToStl } from "@/lib/stl";
 export const runtime = "nodejs";
 
 function jsonError(status: number, error: string, message: string) {
-  return NextResponse.json({ error, message }, { status });
+  return NextResponse.json({ error, message }, { status, headers: { "Cache-Control": "no-store" } });
 }
+
+export function OPTIONS() {
+  return new Response(null, { status: 204, headers: { Allow: "OPTIONS, POST", "Cache-Control": "no-store" } });
+}
+
+export function GET() {
+  return new Response(null, { status: 405, headers: { Allow: "OPTIONS, POST", "Cache-Control": "no-store" } });
+}
+
+export const HEAD = GET;
 
 export async function POST(request: Request) {
   let formData: FormData;
@@ -46,6 +56,7 @@ export async function POST(request: Request) {
         "Content-Type": "model/stl",
         "Content-Disposition": `attachment; filename="${filename}"`,
         "Content-Length": String(result.binarySize),
+        "Cache-Control": "no-store",
         "X-Tool-Mode": options.mode,
         "X-Tool-Source-Width": String(result.sourceWidth),
         "X-Tool-Source-Height": String(result.sourceHeight),

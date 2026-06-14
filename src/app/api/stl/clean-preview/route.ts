@@ -4,8 +4,18 @@ import { cleanSketchPreviewPng, parseConvertOptions } from "@/lib/stl";
 export const runtime = "nodejs";
 
 function jsonError(status: number, error: string, message: string) {
-  return NextResponse.json({ error, message }, { status });
+  return NextResponse.json({ error, message }, { status, headers: { "Cache-Control": "no-store" } });
 }
+
+export function OPTIONS() {
+  return new Response(null, { status: 204, headers: { Allow: "OPTIONS, POST", "Cache-Control": "no-store" } });
+}
+
+export function GET() {
+  return new Response(null, { status: 405, headers: { Allow: "OPTIONS, POST", "Cache-Control": "no-store" } });
+}
+
+export const HEAD = GET;
 
 export async function POST(request: Request) {
   let formData: FormData;
@@ -38,6 +48,7 @@ export async function POST(request: Request) {
       headers: {
         "Content-Type": "image/png",
         "Content-Length": String(result.png.byteLength),
+        "Cache-Control": "no-store",
         "X-Clean-Preview-Width": String(result.width),
         "X-Clean-Preview-Height": String(result.height),
       },
