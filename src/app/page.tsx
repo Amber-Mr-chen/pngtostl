@@ -45,7 +45,7 @@ const trustStats = [
 
 const aboutPoints = [
   "Transform 2D images into raised STL reliefs, panels, and printable surfaces.",
-  "Use AI-assisted routing to choose the safest workflow for logos, photos, and artwork.",
+  "Use guided routing to choose the safest workflow for logos, photos, and artwork.",
   "Preview before downloading so you can avoid wasted prints and wrong expectations.",
 ];
 
@@ -57,7 +57,7 @@ const aboutFlow = [
 
 const steps = [
   { step: "01", title: "Upload image", copy: "Choose PNG, JPG, WebP, GIF, or BMP." },
-  { step: "02", title: "AI analyzes", copy: "The tool checks contrast, outlines, and shape fit." },
+  { step: "02", title: "Analyze image", copy: "The tool checks contrast, outlines, and shape fit." },
   { step: "03", title: "Generate STL", copy: "Create a printable mesh with practical defaults." },
   { step: "04", title: "Download model", copy: "Export your STL and open it in your slicer." },
 ];
@@ -539,7 +539,7 @@ export default function HomePage() {
         <div className="refFooterInner">
           <div className="refFooterBrand">
             <strong>PNGtoSTL</strong>
-            <p>AI-powered image to STL conversion for makers, designers, and 3D printing workflows.</p>
+            <p>Image to STL conversion for makers, designers, and 3D printing workflows.</p>
           </div>
           <div className="refFooterCol">
             <h4>Product</h4>
