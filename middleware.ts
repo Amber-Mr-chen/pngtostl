@@ -8,7 +8,16 @@ function withSecurityHeaders(response: NextResponse) {
   return response;
 }
 
+function withImmutableAssetCache(response: NextResponse) {
+  response.headers.set("Cache-Control", "public, max-age=31536000, immutable");
+  return response;
+}
+
 export function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith("/_next/static/")) {
+    return withImmutableAssetCache(withSecurityHeaders(NextResponse.next()));
+  }
+
   const host = request.headers.get("host");
   const forwardedProto = request.headers.get("x-forwarded-proto");
   const isCanonicalHost = host === "pngtostl.net";
@@ -26,5 +35,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)"],
+  matcher: ["/_next/static/:path*", "/((?!_next/image|favicon.ico|robots.txt|sitemap.xml).*)"],
 };
