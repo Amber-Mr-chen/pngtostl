@@ -1,5 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 
+function withSecurityHeaders(response: NextResponse) {
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
+  response.headers.set("X-Frame-Options", "SAMEORIGIN");
+  return response;
+}
+
 export function middleware(request: NextRequest) {
   const host = request.headers.get("host");
   const forwardedProto = request.headers.get("x-forwarded-proto");
@@ -11,10 +19,10 @@ export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.hostname = "pngtostl.net";
     url.protocol = "https:";
-    return NextResponse.redirect(url, 308);
+    return withSecurityHeaders(NextResponse.redirect(url, 308));
   }
 
-  return NextResponse.next();
+  return withSecurityHeaders(NextResponse.next());
 }
 
 export const config = {
