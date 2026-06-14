@@ -397,7 +397,7 @@ export const tools: ToolConfig[] = [
     navLabel: "Photo Relief",
     eyebrow: "Portrait relief generator",
     title: "Photo Relief Generator",
-    description: "Generate a raised photo relief STL from portraits, pet photos, memorial plaques, and display panels with subject-focused crop, background flattening, and smoothing defaults.",
+    description: "Generate raised photo relief STL panels from portraits, pet photos, memorial plaques, and display images with crop, background cleanup, and smoothing defaults.",
     promise: "Best for photos with one clear subject that should become a front-facing raised relief panel.",
     primaryCta: "Upload Photo",
     secondaryCta: "Preview Relief",
