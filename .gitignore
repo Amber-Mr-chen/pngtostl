@@ -15,6 +15,12 @@ yarn-error.log*
 pnpm-debug.log*
 tmp
 
+# generated local caches
+*.tsbuildinfo
+
+# local source/reference assets; public deployable assets live in public/
+assets/
+
 __pycache__/
 *.pyc
 *.log
