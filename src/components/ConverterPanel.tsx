@@ -1,5 +1,6 @@
-import Link from "next/link";
+"use client";
 
+import { useMemo, useState } from "react";
 import { sampleWorkflowSlug, type SampleWorkflow, type ToolConfig } from "@/lib/tools";
 
 const defaultModeBySlug: Record<string, NonNullable<ToolConfig["converter"]>["mode"]> = {
@@ -356,7 +357,7 @@ function RangeField({ name, label, value, min, max, step, help }: { name: string
   );
 }
 
-export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loadedSample?: SampleWorkflow | null }) {
+export function ConverterPanel({ tool, loadedSample, compactHome = false }: { tool: ToolConfig; loadedSample?: SampleWorkflow | null; compactHome?: boolean }) {
   const fallback = fallbackConverter(tool);
   const samplePreset = presetFromSample(loadedSample);
   const converter = fallback ? { ...fallback, ...toolPresets[tool.slug], ...tool.converter, ...samplePreset } : null;
@@ -370,6 +371,123 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
   const smoothing = converter?.smoothing ?? 25;
   const detail = converter?.detail ?? 96;
   const depthLabel = mode === "lithophane" ? "Max thickness" : mode === "heightmap" ? "Max height" : "Relief height";
+  const isAi3dTask = tool.slug === "ai-image-to-3d";
+  const generateButtonLabel = isAi3dTask ? "Check AI 3D availability and prepare fallback" : "Choose an image, then generate STL";
+  const statusWaitingLabel = isAi3dTask ? "Provider check needed" : "Waiting for image";
+  const resultSectionTitle = isAi3dTask ? "Provider state, STL fallback, result preview" : "Preview, validate, download";
+  const homeMode = compactHome;
+
+  if (homeMode) {
+    return (
+      <div data-converter-root="true" className="converterWorkspace converterWorkspaceHome">
+        <form
+          data-converter-form="true"
+          data-tool={tool.slug}
+          data-mode={mode}
+          data-sample-preset={loadedSample ? "true" : undefined}
+          data-sample-slug={loadedSample ? sampleWorkflowSlug(loadedSample.title) : undefined}
+          data-sample-title={loadedSample?.title}
+          data-sample-category={loadedSample?.category}
+          data-filename={converter?.filename ?? "pngtostl-output.stl"}
+          data-min-thickness-mm={converter?.minThicknessMm ?? 0.8}
+          data-max-thickness-mm={converter?.maxThicknessMm ?? 3.2}
+          data-empty-message={converter?.preview ?? "Upload an image to generate STL geometry. STL files do not preserve color."}
+          data-compact-home="true"
+          action="#converter"
+        >
+          <section className="converterControls converterControlsHome" aria-label="Upload and STL settings">
+            {loadedSample ? (
+              <div className="loadedSamplePreset" data-loaded-sample-preset="true">
+                <span>Sample preset loaded</span>
+                <strong>{loadedSample.title}</strong>
+                <small>{loadedSample.recommendedPreset}</small>
+              </div>
+            ) : null}
+            <div className="converterPanelTitle">
+              <div>
+                <span className="smallMuted">Upload image</span>
+                <strong>Start with one file</strong>
+              </div>
+              <span className="creditPill">Free preview</span>
+            </div>
+
+            <div className="uploadDropzone compactDropzone">
+              <div>
+                <strong>{tool.uploadLabel}</strong>
+                <p>{converter?.helper ?? "Drop an image to check the safest STL route."}</p>
+              </div>
+              <label className="customFileInput">
+                <input type="file" name="file" accept={accept} disabled={!canConvert} />
+                <span className="customFileButton">Choose file</span>
+                <span className="customFileName" data-file-name="true">No file selected</span>
+              </label>
+            </div>
+
+            <div className="qualityChooser compactQualityChooser" aria-label="Quality preset">
+              <div className="qualityHeader">
+                <span>Preview speed</span>
+              </div>
+              <div className="qualitySegments">
+                <label>
+                  <input type="radio" name="quality" value="fast" defaultChecked />
+                  <span>Quick</span>
+                </label>
+                <label>
+                  <input type="radio" name="quality" value="standard" />
+                  <span>Balanced</span>
+                </label>
+                <label>
+                  <input type="radio" name="quality" value="high" />
+                  <span>Detailed</span>
+                </label>
+              </div>
+            </div>
+
+            <button data-generate-stl="true" className="btnPrimary converterGenerateButton" type="button" disabled={!canConvert}>
+              {generateButtonLabel}
+            </button>
+          </section>
+
+          <section className="resultWorkspace resultWorkspaceHome resultWorkspaceHomeCompact" aria-label="STL preview and download">
+            <div className="resultHeader">
+              <div>
+                <span className="smallMuted">Output preview</span>
+                <h2 className="sectionTitle">Check the STL route before you print</h2>
+              </div>
+              <span className="pill statusPill">Free preview</span>
+            </div>
+            <div className="homePreviewMock" aria-hidden="true">
+              <div className="homePreviewMockImage">
+                <span />
+                <span />
+                <span />
+              </div>
+              <div className="homePreviewMockFlow">
+                <strong>PNG artwork</strong>
+                <span>→</span>
+                <strong>Relief STL</strong>
+              </div>
+            </div>
+            <p className="homePreviewNote">Upload an image to preview the safest path: logo extrusion, photo relief, lithophane, or heightmap-style STL.</p>
+            <div className="homePreviewMeta">
+              <div>
+                <span>Formats</span>
+                <strong>PNG, JPG, WebP, GIF, BMP</strong>
+              </div>
+              <div>
+                <span>Privacy</span>
+                <strong>browser-first preview flow</strong>
+              </div>
+              <div>
+                <span>Download</span>
+                <strong>print-ready STL workflow</strong>
+              </div>
+            </div>
+          </section>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div data-converter-root="true" className="converterWorkspace">
@@ -385,6 +503,7 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
         data-min-thickness-mm={converter?.minThicknessMm ?? 0.8}
         data-max-thickness-mm={converter?.maxThicknessMm ?? 3.2}
         data-empty-message={converter?.preview ?? "Upload an image to generate STL geometry. STL files do not preserve color."}
+        data-compact-home={homeMode ? "true" : undefined}
         action="#converter"
       >
         <section className="converterControls" aria-label="Upload and STL settings">
@@ -398,107 +517,73 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
           <div className="converterPanelTitle">
             <div>
               <span className="smallMuted">Upload image</span>
-              <strong>Choose input mode</strong>
+              <strong>Choose input</strong>
             </div>
             <span className="creditPill">Free preview</span>
           </div>
 
-          <div className="uploadModeTabs" role="tablist" aria-label="Image upload mode">
-            <button type="button" className="active" role="tab" aria-selected="true">Single image</button>
-            <button type="button" role="tab" aria-selected="false" disabled>One image at a time</button>
-          </div>
-
-          <div className="uploadDropzone">
+          <div className="uploadDropzone compactDropzone">
             <div>
               <strong>{tool.uploadLabel}</strong>
-              <p>Drop an image here or choose a file. Supported: {tool.supported}</p>
             </div>
             <label className="customFileInput">
               <input type="file" name="file" accept={accept} disabled={!canConvert} />
               <span className="customFileButton">Choose file</span>
               <span className="customFileName" data-file-name="true">No file selected</span>
             </label>
-            <small>{converter?.helper ?? tool.promise}</small>
-            <ul className="trustNotes" aria-label="Processing notes">
-              <li>STL output is single-material geometry, not color.</li>
-              <li>Files are processed only for this conversion request.</li>
-              <li>Recommended image size: under 2048×2048 for faster previews.</li>
-            </ul>
           </div>
 
-          <div className="imageDiagnosis" data-image-diagnosis="true" hidden>
-            <div>
-              <span className="smallMuted">Image check</span>
-              <strong data-diagnosis-title="true">Upload an image to get a recommendation</strong>
-              <p data-diagnosis-message="true">Transparent logos, icons, stickers, and simple silhouettes are the safest inputs for clean STL extrusion.</p>
-            </div>
-            <div className="diagnosisFacts" aria-label="Image suitability facts">
-              <span data-diagnosis-alpha="true">Transparency: waiting</span>
-              <span data-diagnosis-subject="true">Subject coverage: waiting</span>
-              <span data-diagnosis-complexity="true">Complexity: waiting</span>
-            </div>
-            <Link href="/lithophane-generator" className="diagnosisLink" data-lithophane-suggestion="true" hidden>Try lithophane</Link>
-            <button className="diagnosisAction" data-smoother-suggestion="true" type="button" hidden>Apply smoother</button>
-          </div>
-
-          <div className="qualityChooser" aria-label="Quality preset">
+          <div className="qualityChooser compactQualityChooser" aria-label="Quality preset">
             <div className="qualityHeader">
               <span>Quality</span>
-              <b>Preview before download</b>
             </div>
             <div className="qualitySegments">
               <label>
                 <input type="radio" name="quality" value="fast" defaultChecked />
                 <span>Quick</span>
-                <small>128 mesh</small>
               </label>
               <label>
                 <input type="radio" name="quality" value="standard" />
                 <span>Standard</span>
-                <small>256 mesh</small>
               </label>
               <label>
                 <input type="radio" name="quality" value="high" />
                 <span>Detailed</span>
-                <small>352 mesh</small>
               </label>
             </div>
           </div>
 
           <button data-generate-stl="true" className="btnPrimary converterGenerateButton" type="button" disabled={!canConvert}>
-            Choose an image, then generate STL
+            {generateButtonLabel}
           </button>
 
-          {canConvert && !hasHidden(converter!, "mode") ? (
-            <label className="converterField">
-              <span>Output mode</span>
-              <select name="mode" defaultValue={mode}>
-                {Object.entries(modeLabels).map(([value, label]) => (
-                  <option key={value} value={value}>{label}</option>
-                ))}
-              </select>
-              <small>Choose structured artwork for complex drawings, clean extrude for logos/icons, raised-surface panels for tonal images, backlit photo panels for photos, or grayscale depth maps.</small>
-            </label>
-          ) : null}
-
-          <div className="basicSettings">
-            <RangeField name="widthMm" label="Output width" value={`${widthMm} mm`} min="30" max="180" help="Set the printable width for this output." />
-            {!converter || !hasHidden(converter, "depth") ? (
-              <RangeField name="depth" label={depthLabel} value={`${depth.toFixed(1)} mm`} min="0.3" max="8" step="0.1" help={mode === "lithophane" ? "Controls the darkest/thickest areas of the lithophane." : mode === "heightmap" ? "Controls the tallest terrain or surface peaks." : "Controls raised surface height."} />
-            ) : null}
-          </div>
-
-          <details className="advancedSettings">
-            <summary>Advanced print settings</summary>
+          <details className="advancedSettings compactAdvancedSettings">
+            <summary>More settings</summary>
             <div>
+              {canConvert && !hasHidden(converter!, "mode") ? (
+                <label className="converterField">
+                  <span>Output mode</span>
+                  <select name="mode" defaultValue={mode}>
+                    {Object.entries(modeLabels).map(([value, label]) => (
+                      <option key={value} value={value}>{label}</option>
+                    ))}
+                  </select>
+                </label>
+              ) : null}
+              <div className="basicSettings">
+                <RangeField name="widthMm" label="Output width" value={`${widthMm} mm`} min="30" max="180" help="Printable width." />
+                {!converter || !hasHidden(converter, "depth") ? (
+                  <RangeField name="depth" label={depthLabel} value={`${depth.toFixed(1)} mm`} min="0.3" max="8" step="0.1" help={mode === "lithophane" ? "Thickness." : mode === "heightmap" ? "Height." : "Relief."} />
+                ) : null}
+              </div>
               {!converter || !hasHidden(converter, "base") ? (
-                <RangeField name="baseMm" label="Base thickness" value={`${baseMm.toFixed(1)} mm`} min="0.4" max="4" step="0.2" help="Adds printable support under generated geometry when this mode needs it." />
+                <RangeField name="baseMm" label="Base thickness" value={`${baseMm.toFixed(1)} mm`} min="0.4" max="4" step="0.2" help="Support." />
               ) : null}
               {!converter || !hasHidden(converter, "threshold") ? (
-                <RangeField name="threshold" label="Edge threshold" value={`${threshold}%`} min="5" max="95" step="1" help="Higher values keep only darker, clearer lines." />
+                <RangeField name="threshold" label="Edge threshold" value={`${threshold}%`} min="5" max="95" step="1" help="Keeps darker lines." />
               ) : null}
-              <RangeField name="smoothing" label="Smoothing" value={`${smoothing}%`} min="0" max="100" step="5" help="Softens jagged pixel edges before STL export." />
-              <RangeField name="detail" label="Detail level" value={detail} min="48" max="352" step="4" help="Higher detail keeps more image shape. Large files take longer." />
+              <RangeField name="smoothing" label="Smoothing" value={`${smoothing}%`} min="0" max="100" step="5" help="Softens edges." />
+              <RangeField name="detail" label="Detail level" value={detail} min="48" max="352" step="4" help="Higher detail keeps more shape." />
               {!converter || !hasHidden(converter, "invert") ? (
                 <label className="checkField">
                   <input type="checkbox" name="invert" defaultChecked={Boolean(converter?.invert)} />
@@ -514,25 +599,20 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
           <div className="resultHeader">
             <div>
               <span className="smallMuted">Result workspace</span>
-              <h2 className="sectionTitle">Preview, validate, download</h2>
+              <h2 className="sectionTitle">{resultSectionTitle}</h2>
             </div>
-            <span data-converter-status className="pill statusPill">Waiting for image</span>
+            <span data-converter-status className="pill statusPill">{statusWaitingLabel}</span>
           </div>
 
-          <div className="previewStage">
+          <div className="previewStage compactPreviewStage">
             <div className="viewportToolbar" aria-label="Preview viewport controls">
               <span className="active">Solid</span>
-              <span>Edges</span>
               <span>Wireframe</span>
-              <span>Front</span>
-              <span>Iso</span>
-              <span>Top</span>
               <span>Reset view</span>
             </div>
             <div className="previewEmptyState" data-preview-empty-state="true">
               <span aria-hidden="true">▧</span>
               <strong>Ready to generate</strong>
-              <p>Upload an image, choose quality, then preview the STL here before downloading.</p>
             </div>
             <canvas data-stl-preview="true" aria-label="Generated STL preview" />
             <div data-converter-message>
@@ -547,13 +627,6 @@ export function ConverterPanel({ tool, loadedSample }: { tool: ToolConfig; loade
             </div>
             <img data-clean-preview-image="true" alt="Cleaned sketch preview before STL generation" />
           </div>
-
-          <ol className="generationStepper" aria-label="Generation flow">
-            <li>Upload image</li>
-            <li>Generate mesh</li>
-            <li>Preview STL</li>
-            <li>Download</li>
-          </ol>
 
           <div data-result-metrics="true" className="resultMetrics" />
 

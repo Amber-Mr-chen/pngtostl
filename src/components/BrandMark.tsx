@@ -11,7 +11,10 @@ export function BrandMark() {
         height={27}
         decoding="async"
       />
-      PNGtoSTL
+      <span>
+        <strong>PNGtoSTL</strong>
+        <small>Image to STL workspace</small>
+      </span>
     </Link>
   );
 }

@@ -6,11 +6,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://pngtostl.net"),
   title: {
-    default: "Image to STL Converter for 3D Printing | PNGtoSTL",
+    default: "PNGtoSTL - Image to STL, Relief, Lithophane, and AI 3D Workflows",
     template: "%s | PNGtoSTL",
   },
   description:
-    "Upload PNG, JPG, WebP, GIF, or BMP to create printable STL files for relief signs, logo badges, lithophanes, and heightmap surfaces in your browser.",
+    "PNGtoSTL turns images into printable STL workflows: image to STL, logo badges, photo relief, lithophane panels, heightmaps, and honest AI 3D task routing.",
   alternates: {
     canonical: "/",
   },
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://pngtostl.net",
     siteName: "PNGtoSTL",
-    title: "Image to STL Converter for 3D Printing | PNGtoSTL",
-    description: "Upload PNG, JPG, WebP, GIF, or BMP to create printable STL files for relief signs, logo badges, lithophanes, and heightmap surfaces in your browser.",
+    title: "PNGtoSTL - Image to STL, Relief, Lithophane, and AI 3D Workflows",
+    description: "PNGtoSTL turns images into printable STL workflows: image to STL, logo badges, photo relief, lithophane panels, heightmaps, and honest AI 3D task routing.",
     images: [
       {
         url: "/og-icon.png",
@@ -56,6 +56,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
         <script src="https://analytics.ahrefs.com/analytics.js" data-key="pe/qASRBRNEqjq6mKdRPEw" async />
         <script async src="https://plausible.shipsolo.io/js/pa-hH9PJovRN2vjpuGZf0nY3.js" />
         <script

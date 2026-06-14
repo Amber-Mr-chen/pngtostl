@@ -81,9 +81,9 @@ const toolGuidance: Record<string, {
     printTips: ["Crop tightly around the subject before uploading.", "Use smoother relief settings when fur, fabric, or background texture becomes noise.", "Try lithophane mode for portraits that depend on smooth tonal shading or backlight."],
   },
   "ai-image-to-3d": {
-    bestFor: ["Users comparing current relief STL tools with upcoming AI full-3D generation.", "Planning single-image, multi-image, GLB, and STL export workflows before a paid AI pipeline launches.", "Images that need an honest fit check before choosing relief, lithophane, logo, or future AI 3D generation."],
-    avoid: ["Assuming full AI 3D reconstruction is already live on PNGtoSTL.", "Selling Pro quality before GLB/STL AI output has been verified.", "Using one ordinary image when multiple views would be needed for better true 3D shape."],
-    printTips: ["Use current STL relief tools for printable 2.5D output today.", "Use multiple-angle source photos when future AI 3D generation is available.", "Keep current generated STL files slicer-checked; AI 3D output will still need printability review."],
+    bestFor: ["Users who need one AI 3D / STL decision workspace instead of a roadmap page.", "Checking whether provider-based full 3D is available before falling back to printable STL.", "Complex artwork that may need structured 2.5D STL when true full 3D is not configured."],
+    avoid: ["Assuming full AI 3D is instant, guaranteed, or available without provider configuration.", "Using AI 3D when a logo badge, photo panel, relief, or heightmap workflow already solves the job.", "Calling structured artwork true full 3D; it is a layered printable STL fallback."],
+    printTips: ["Keep provider availability visible before starting a task.", "Use Image to STL, Logo to STL, Photo Panel, or Depth Map when the fallback route is the practical output.", "Treat provider results and STL fallback as separate states inside one workspace."],
   },
   "logo-to-stl": {
     bestFor: ["Simple SVG or transparent PNG logos with strong edges.", "Badges, plaques, signs, product marks, makerspace labels, and name plates.", "Flat artwork that should become a raised logo on a printable base."],
@@ -251,62 +251,6 @@ export function ToolPage({ tool, loadedSample }: { tool: ToolConfig; loadedSampl
             </ul>
           </aside>
         </section>
-
-        {tool.slug === "ai-image-to-3d" ? (
-          <section className="shell" style={{ marginTop: 20, padding: 22, display: "grid", gap: 16 }}>
-            <div>
-              <p className="homeKicker">AI 3D roadmap</p>
-              <h2 style={{ margin: 0 }}>Preview the future workflow without pretending it is live.</h2>
-              <p className="smallMuted" style={{ marginBottom: 0 }}>
-                The current live path stays relief-first. This page now shows the future AI product as a concrete layout: preview, account history, credits, and commercial access live in separate blocks instead of one vague paragraph.
-              </p>
-            </div>
-
-            <div className="outputRealityGrid">
-              <article className="outputRealityBlock">
-                <strong>Now</strong>
-                <p>Relief STL, logo badges, lithophanes, and heightmaps are the live printable outputs.</p>
-              </article>
-              <article className="outputRealityBlock">
-                <strong>Preview</strong>
-                <p>GLB preview belongs here later, alongside STL export, when the actual AI mesh pipeline exists.</p>
-              </article>
-              <article className="outputRealityBlock">
-                <strong>My Creations</strong>
-                <p>A saved creation library should appear only after the product can really store and recall jobs.</p>
-              </article>
-              <article className="outputRealityBlock">
-                <strong>Credits</strong>
-                <p>Usage credits can sit above generation once a real billing rule exists, not before.</p>
-              </article>
-            </div>
-
-            <div className="outputRealityGrid">
-              <article className="outputRealityBlock">
-                <strong>History</strong>
-                <p>Conversion history fits the account layer after generation is stable and auditable.</p>
-              </article>
-              <article className="outputRealityBlock">
-                <strong>Batch / API</strong>
-                <p>Commercial batch jobs and API access should open through a request flow, not a fake self-serve switch.</p>
-              </article>
-              <article className="outputRealityBlock">
-                <strong>Pricing</strong>
-                <p>A pricing page can explain the path from free single-file conversion to paid volume usage.</p>
-              </article>
-              <article className="outputRealityBlock">
-                <strong>Reality check</strong>
-                <p>The current page is intentionally honest: it exposes the future structure without claiming the feature is already finished.</p>
-              </article>
-            </div>
-
-            <div className="heroActions">
-              <Link className="btnPrimary" href="/pricing">View pricing path</Link>
-              <Link className="btnSecondary" href="/developers">Request batch/API access</Link>
-            </div>
-          </section>
-        ) : null}
-
 
         <section id="converter" className="toolConverterBlock">
           {advisorOnly ? (

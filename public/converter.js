@@ -66,6 +66,7 @@
       window.pngtostlEvents.push({ event: eventName, payload, ts: Date.now() });
       window.dispatchEvent(new CustomEvent('pngtostl:event', { detail: { name: eventName, payload } }));
       if (typeof window.gtag === 'function') window.gtag('event', eventName, payload);
+      if (typeof window.plausible === 'function') window.plausible(eventName, { props: payload });
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: eventName, ...payload });
     }
@@ -352,9 +353,8 @@
         setText(diagnosisMessage, copy('Looking for transparency, clear subject coverage, and excessive texture/noise.', '正在检查透明度、主体占比以及过多纹理/噪点。'));
       }
       try {
-        const info = await inspectImageFile(file);
-        updateDiagnosis(info);
-        setText(message, file.name + copy(' selected.\nCheck the recommendation, then generate the STL preview.', ' 已选择。\n查看推荐结果后生成 STL 预览。'));
+        const imageInfo = await inspectImageFile(file);
+        const classification = classifyImage(imageInfo);
       } catch (_) {
         setText(diagnosisTitle, copy('Image check unavailable', '图片检查暂不可用'));
         setText(diagnosisMessage, copy('You can still generate, but use simple transparent logos or icons for the cleanest STL output.', '仍可继续生成，但简单透明标志或图标的 STL 效果最干净。'));
@@ -541,11 +541,93 @@
         return;
       }
 
+      const isAi3dTask = form.dataset.tool === 'ai-image-to-3d';
+      if (isAi3dTask) {
+        setButtonState(copy('Starting Meshy task...', '正在启动 Meshy 任务……'), true);
+        setText(status, copy('Submitting to Meshy', '正在提交到 Meshy'));
+        setText(message, copy('Submitting the image to Meshy and waiting for a task id...', '正在把图片提交给 Meshy 并等待任务 ID……'));
+        const meshyFormData = new FormData();
+        meshyFormData.set('file', file);
+        try {
+          const startResponse = await fetch('/api/ai-3d/meshy', { method: 'POST', body: meshyFormData });
+          const startBody = await startResponse.json().catch(() => ({}));
+          if (!startResponse.ok) {
+            const meshyMessage = startBody && startBody.message ? startBody.message : copy('AI 3D is not configured on this deployment yet.', '此部署尚未配置 AI 3D。');
+            setText(status, copy('AI 3D unavailable', 'AI 3D 未开通'));
+            setText(message, meshyMessage);
+            trackBoth('ai3d_meshy_not_configured', 'pngtostl_ai3d_meshy_not_configured', { status: startResponse.status, error: startBody && startBody.error ? startBody.error : 'start_failed' });
+            return;
+          }
+          const taskId = startBody && startBody.task && (startBody.task.id || startBody.task.result) ? (startBody.task.id || startBody.task.result) : startBody && (startBody.id || startBody.result) ? (startBody.id || startBody.result) : '';
+          if (!taskId) {
+            setText(status, copy('AI 3D unavailable', 'AI 3D 未开通'));
+            setText(message, copy('Meshy did not return a task id.', 'Meshy 没有返回任务 ID。'));
+            trackBoth('ai3d_meshy_missing_task_id', 'pngtostl_ai3d_meshy_missing_task_id', {});
+            return;
+          }
+          setText(status, copy('Meshy task created', 'Meshy 任务已创建'));
+          let task = startBody.task || startBody;
+          const startedAt = Date.now();
+          while (task && task.status && !['SUCCEEDED', 'FAILED', 'CANCELED'].includes(String(task.status).toUpperCase())) {
+            if (Date.now() - startedAt > 120000) throw new Error('Meshy task polling timed out.');
+            await new Promise((resolve) => setTimeout(resolve, 3000));
+            const pollResponse = await fetch('/api/ai-3d/meshy?id=' + encodeURIComponent(taskId));
+            const pollBody = await pollResponse.json().catch(() => ({}));
+            if (!pollResponse.ok) {
+              const pollMessage = pollBody && pollBody.message ? pollBody.message : 'Could not check the AI 3D task.';
+              throw new Error(pollMessage);
+            }
+            task = pollBody && pollBody.task ? pollBody.task : pollBody;
+            const statusValue = String(task && task.status ? task.status : 'UNKNOWN').toUpperCase();
+            setText(status, copy('Meshy status', 'Meshy 状态') + ': ' + statusValue);
+            setText(message, copy('Task id: ', '任务 ID：') + taskId + copy('\nWaiting for Meshy to finish generating model URLs...', '\n等待 Meshy 生成模型链接……'));
+          }
+          const statusValue = String(task && task.status ? task.status : 'UNKNOWN').toUpperCase();
+          const modelUrls = task && task.model_urls ? task.model_urls : {};
+          const links = [
+            modelUrls.glb ? { label: 'GLB', href: modelUrls.glb } : null,
+            modelUrls.obj ? { label: 'OBJ', href: modelUrls.obj } : null,
+            modelUrls.stl ? { label: 'STL', href: modelUrls.stl } : null,
+            modelUrls.pre_remeshed_glb ? { label: 'Pre-remeshed GLB', href: modelUrls.pre_remeshed_glb } : null,
+          ].filter(Boolean);
+          if (statusValue === 'SUCCEEDED' && links.length) {
+            setText(status, copy('AI 3D ready', 'AI 3D 已就绪'));
+            setText(message, copy('Meshy task finished. Open the model URL below.', 'Meshy 任务已完成。请打开下方模型链接。'));
+            setMetrics([
+              { label: copy('Task', '任务'), value: taskId },
+              { label: copy('Status', '状态'), value: statusValue },
+              { label: copy('Models', '模型'), value: String(links.length) },
+            ]);
+            if (downloadLink) {
+              downloadLink.style.display = 'block';
+              downloadLink.href = links[0].href;
+              downloadLink.download = links[0].href.split('/').pop() || 'meshy-model';
+              downloadLink.textContent = copy('Open model URL', '打开模型链接');
+              downloadLink.onclick = null;
+            }
+            if (message) {
+              message.innerHTML = copy('Meshy task finished. Model links:', 'Meshy 任务已完成。模型链接：') + '<br>' + links.map((item) => '<a href="' + item.href + '" target="_blank" rel="noreferrer">' + item.label + '</a>').join(' ');
+            }
+            trackBoth('ai3d_meshy_task_succeeded', 'pngtostl_ai3d_meshy_task_succeeded', { task_id: taskId, status: statusValue, model_count: links.length });
+            return;
+          }
+          const failureMessage = task && task.task_error ? (typeof task.task_error === 'string' ? task.task_error : task.task_error.message) : 'Meshy task failed or was canceled.';
+          setText(status, copy('AI 3D failed', 'AI 3D 失败'));
+          setText(message, failureMessage || copy('Meshy task failed or was canceled.', 'Meshy 任务失败或被取消。'));
+          trackBoth('ai3d_meshy_task_failed', 'pngtostl_ai3d_meshy_task_failed', { task_id: taskId, status: statusValue, reason: failureMessage || 'task_failed' });
+          return;
+        } catch (error) {
+          setText(status, copy('AI 3D unavailable', 'AI 3D 未开通'));
+          setText(message, error && error.message ? error.message : copy('AI 3D generation is not available right now.', 'AI 3D 当前不可用。'));
+          trackBoth('ai3d_meshy_error', 'pngtostl_ai3d_meshy_error', { reason: error && error.message ? error.message : 'unknown' });
+          return;
+        }
+      }
+
       setButtonState(copy('Generating STL...', '正在生成 STL……'), true);
       setText(status, copy('Checking image', '检查图片中'));
       setText(message, copy('Reading the image and choosing a safe STL workflow...', '正在读取图片并选择稳定的 STL 工作流……'));
       const imageInfo = await inspectImageFile(file);
-      updateDiagnosis(imageInfo);
       const classification = classifyImage(imageInfo);
       const shouldCutoutSubject = imageInfo.hasTransparency || imageInfo.removableBackground;
       const preferContourWorkflow = shouldCutoutSubject || classification.level === 'good' || classification.suggestContour;
