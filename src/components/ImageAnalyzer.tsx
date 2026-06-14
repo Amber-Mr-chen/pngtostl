@@ -112,7 +112,12 @@ export function ImageAnalyzer({ title = "Image suitability analyzer" }: { title?
         <h2 className="sectionTitle">{title}</h2>
         <p className="smallMuted" style={{ margin: 0 }}>{status}</p>
       </div>
-      <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => onFile(event.currentTarget.files?.[0])} />
+      <input
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        aria-label="Upload an image to analyze"
+        onChange={(event) => onFile(event.currentTarget.files?.[0])}
+      />
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(250px, 0.85fr)", gap: 14 }}>
         <div style={panelStyle}>
           <span className="smallMuted">Recommendation</span>
