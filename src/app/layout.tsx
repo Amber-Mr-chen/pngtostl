@@ -38,6 +38,12 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "PNGtoSTL - Image to STL, Relief, Lithophane, and AI 3D Workflows",
+    description: "PNGtoSTL turns images into printable STL workflows: image to STL, logo badges, photo relief, lithophane panels, heightmaps, and honest AI 3D task routing.",
+    images: ["/og-image.png"],
+  },
 };
 
 const GA_MEASUREMENT_ID = "G-ZPV5EZHN4G";
