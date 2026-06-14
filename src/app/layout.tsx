@@ -31,10 +31,10 @@ export const metadata: Metadata = {
     description: "PNGtoSTL turns images into printable STL workflows: image to STL, logo badges, photo relief, lithophane panels, heightmaps, and honest AI 3D task routing.",
     images: [
       {
-        url: "/og-icon.png",
-        width: 512,
-        height: 512,
-        alt: "PNGtoSTL icon",
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "PNGtoSTL image to STL converter preview",
       },
     ],
   },
