@@ -565,7 +565,7 @@ export default function HomePage() {
         </div>
       </footer>
 
-      <Script id="pngtostl-model-viewer" type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js" strategy="afterInteractive" />
+      <Script id="pngtostl-model-viewer" type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js" strategy="lazyOnload" />
       <Script id="pngtostl-stl-preview" src="/stl-preview.js?v=ref-20260612" strategy="afterInteractive" />
       <Script id="pngtostl-converter" src="/converter.js?v=ref-20260612" strategy="afterInteractive" />
     </main>
