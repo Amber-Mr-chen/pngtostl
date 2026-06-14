@@ -354,7 +354,7 @@
       }
       try {
         const imageInfo = await inspectImageFile(file);
-        const classification = classifyImage(imageInfo);
+        updateDiagnosis(imageInfo);
       } catch (_) {
         setText(diagnosisTitle, copy('Image check unavailable', '图片检查暂不可用'));
         setText(diagnosisMessage, copy('You can still generate, but use simple transparent logos or icons for the cleanest STL output.', '仍可继续生成，但简单透明标志或图标的 STL 效果最干净。'));
@@ -556,14 +556,14 @@
             setText(status, copy('AI 3D unavailable', 'AI 3D 未开通'));
             setText(message, meshyMessage);
             trackBoth('ai3d_meshy_not_configured', 'pngtostl_ai3d_meshy_not_configured', { status: startResponse.status, error: startBody && startBody.error ? startBody.error : 'start_failed' });
-            return;
+            throw new Error(meshyMessage);
           }
           const taskId = startBody && startBody.task && (startBody.task.id || startBody.task.result) ? (startBody.task.id || startBody.task.result) : startBody && (startBody.id || startBody.result) ? (startBody.id || startBody.result) : '';
           if (!taskId) {
             setText(status, copy('AI 3D unavailable', 'AI 3D 未开通'));
             setText(message, copy('Meshy did not return a task id.', 'Meshy 没有返回任务 ID。'));
             trackBoth('ai3d_meshy_missing_task_id', 'pngtostl_ai3d_meshy_missing_task_id', {});
-            return;
+            throw new Error('Meshy did not return a task id.');
           }
           setText(status, copy('Meshy task created', 'Meshy 任务已创建'));
           let task = startBody.task || startBody;
@@ -615,12 +615,10 @@
           setText(status, copy('AI 3D failed', 'AI 3D 失败'));
           setText(message, failureMessage || copy('Meshy task failed or was canceled.', 'Meshy 任务失败或被取消。'));
           trackBoth('ai3d_meshy_task_failed', 'pngtostl_ai3d_meshy_task_failed', { task_id: taskId, status: statusValue, reason: failureMessage || 'task_failed' });
-          return;
         } catch (error) {
           setText(status, copy('AI 3D unavailable', 'AI 3D 未开通'));
-          setText(message, error && error.message ? error.message : copy('AI 3D generation is not available right now.', 'AI 3D 当前不可用。'));
+          setText(message, (error && error.message ? error.message : copy('AI 3D generation is not available right now.', 'AI 3D 当前不可用。')) + copy('\nFalling back to structured STL preview.', '\n将改用结构化 STL 预览。'));
           trackBoth('ai3d_meshy_error', 'pngtostl_ai3d_meshy_error', { reason: error && error.message ? error.message : 'unknown' });
-          return;
         }
       }
 

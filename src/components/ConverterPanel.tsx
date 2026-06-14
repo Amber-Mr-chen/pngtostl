@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { sampleWorkflowSlug, type SampleWorkflow, type ToolConfig } from "@/lib/tools";
 
 const defaultModeBySlug: Record<string, NonNullable<ToolConfig["converter"]>["mode"]> = {
@@ -483,6 +484,16 @@ export function ConverterPanel({ tool, loadedSample, compactHome = false }: { to
                 <strong>print-ready STL workflow</strong>
               </div>
             </div>
+            <span data-converter-status className="pill statusPill" hidden>{statusWaitingLabel}</span>
+            <div className="previewStage" hidden>
+              <div data-preview-empty-state="true" hidden />
+              <canvas data-stl-preview="true" aria-label="Generated STL preview" />
+              <div data-converter-message>{converter?.preview ?? "Upload an image to generate STL geometry."}</div>
+            </div>
+            <div data-result-metrics="true" className="resultMetrics" />
+            <a data-download-stl="true" className="btnPrimary downloadButton" href="#" download={converter?.filename ?? "pngtostl-output.stl"}>
+              Download STL
+            </a>
           </section>
         </form>
       </div>
@@ -525,12 +536,28 @@ export function ConverterPanel({ tool, loadedSample, compactHome = false }: { to
           <div className="uploadDropzone compactDropzone">
             <div>
               <strong>{tool.uploadLabel}</strong>
+              <small>{converter?.helper ?? "Upload an image to check the safest STL route."}</small>
             </div>
             <label className="customFileInput">
               <input type="file" name="file" accept={accept} disabled={!canConvert} />
               <span className="customFileButton">Choose file</span>
               <span className="customFileName" data-file-name="true">No file selected</span>
             </label>
+          </div>
+
+          <div className="imageDiagnosis" data-image-diagnosis="true" hidden>
+            <div>
+              <span className="eyebrow">Image check</span>
+              <strong data-diagnosis-title="true">Upload an image to get a recommendation</strong>
+              <p data-diagnosis-message="true">Transparent logos, icons, stickers, and simple silhouettes are the safest inputs for clean STL extrusion.</p>
+            </div>
+            <div className="diagnosisFacts">
+              <span data-diagnosis-alpha="true">Transparency: waiting</span>
+              <span data-diagnosis-subject="true">Subject coverage: waiting</span>
+              <span data-diagnosis-complexity="true">Complexity: waiting</span>
+            </div>
+            <Link data-lithophane-suggestion="true" className="diagnosisLink" href="/lithophane-generator" hidden>Try lithophane</Link>
+            <button data-smoother-suggestion="true" className="diagnosisAction" type="button" hidden>Apply smoother</button>
           </div>
 
           <div className="qualityChooser compactQualityChooser" aria-label="Quality preset">
